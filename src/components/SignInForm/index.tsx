@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import * as ROUTES from '../../customExports/routes';
 import { FirebaseContext } from '../Firebase/context';
 import { FIREBASE_NOT_ACCESSIBLE } from '../../customExports/labels';
+import SignInFormStyle from './SignInFormStyle';
 
 interface FormState {
   email: string;
@@ -51,31 +52,16 @@ const SignInForm: React.FC = () => {
   };
 
   const { email, password, error } = formState;
-  const isInvalid = password === '' || email === '';
 
   if (!firebase) return <h1>{FIREBASE_NOT_ACCESSIBLE}</h1>;
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        name="email"
-        value={email}
-        onChange={onChange}
-        type="text"
-        placeholder="Email Address"
-      />
-      <input
-        name="password"
-        value={password}
-        onChange={onChange}
-        type="password"
-        placeholder="Password"
-      />
-      <button disabled={isInvalid} type="submit">
-        Sign In
-      </button>
-
-      <p>{error}</p>
-    </form>
+    <SignInFormStyle
+      email={email}
+      password={password}
+      error={error}
+      onChange={onChange}
+      onSubmit={onSubmit}
+    />
   );
 };
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../customExports/routes';
 import SignOut from '../SignOut';
 import { AuthUserContext } from '../AuthProvider/context';
+import NavigationNonAuth from './NavigationNonAuth';
 
 const Navigation: React.FC = () => (
   <div>
@@ -26,17 +27,6 @@ const NavigationAuth: React.FC = () => (
     </li>
     <li>
       <SignOut />
-    </li>
-  </ul>
-);
-
-const NavigationNonAuth: React.FC = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
     </li>
   </ul>
 );

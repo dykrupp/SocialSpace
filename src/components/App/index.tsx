@@ -4,7 +4,6 @@ import * as ROUTES from '../../customExports/routes';
 import Navigation from '../Navigation';
 import LandingPage from '../Landing';
 import SignUpPage from '../SignUp';
-import SignInPage from '../SignIn';
 import ForgotPasswordPage from '../ForgotPassword';
 import HomePage from '../Home';
 import AccountPage from '../Account';
@@ -18,10 +17,9 @@ const App: React.FC = () => {
       <Router>
         <div>
           <Navigation />
-          <hr />
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
           <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-          <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+          {/* <Route path={ROUTES.SIGN_IN} component={SignInPage} /> */}
           <Route path={ROUTES.FORGOT_PASSWORD} component={ForgotPasswordPage} />
           <AuthProtectedRoute exact path={ROUTES.HOME} component={HomePage} />
           <AuthProtectedRoute
