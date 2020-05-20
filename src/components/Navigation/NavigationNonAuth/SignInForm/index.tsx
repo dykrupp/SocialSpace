@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { FirebaseError } from 'firebase';
 import { useHistory } from 'react-router';
-import * as ROUTES from '../../customExports/routes';
-import { FirebaseContext } from '../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../customExports/labels';
+import * as ROUTES from '../../../../customExports/routes';
+import { FirebaseContext } from '../../../Firebase/context';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../../customExports/labels';
 import SignInFormStyle from './SignInFormStyle';
 
 interface FormState {

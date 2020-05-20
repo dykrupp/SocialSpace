@@ -3,10 +3,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import SignInForm from '../SignInForm';
-
-//TODO -> Make use of 'import { useMediaQuery } from 'react-responsive' to swap out signInForm to a button when screen width decreases
-//OR make the inputs resize width on size change
+import SignInForm from '../NavigationNonAuth/SignInForm';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -16,6 +13,15 @@ const useStyles = makeStyles(() =>
     title: {
       flexGrow: 1,
     },
+    appBar: {
+      height: '82px',
+      justifyContent: 'center',
+      flexDirection: 'row',
+    },
+    toolBar: {
+      height: '82px',
+      width: '75%',
+    },
   })
 );
 
@@ -24,8 +30,8 @@ const NavigationNonAuth: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar position="static" className={classes.appBar}>
+        <Toolbar className={classes.toolBar}>
           <Typography variant="h6" className={classes.title}>
             SocialSpace
           </Typography>

@@ -8,7 +8,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const customTheme = createMuiTheme({
   palette: {
-    type: 'light',
+    type: 'dark',
   },
 });
 

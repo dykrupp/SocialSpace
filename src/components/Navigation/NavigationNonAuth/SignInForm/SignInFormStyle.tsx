@@ -15,13 +15,21 @@ interface FormStyleProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      display: 'flex',
+      alignItems: 'center',
       '& > *': {
         margin: theme.spacing(1),
-        width: '25ch',
+        width: '22ch',
       },
     },
     buttonBase: {
       verticalAlign: 'bottom',
+    },
+    textField: {
+      marginTop: '-10px',
+    },
+    textAlign: {
+      textAlign: 'center',
     },
   })
 );
@@ -38,10 +46,10 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
 
   return (
     <form className={classes.root} onSubmit={onSubmit} noValidate>
+      <p className={classes.textAlign}>{error}</p>
       <TextField
-        required
         name="email"
-        id="outlined-basic"
+        className={classes.textField}
         label="Email Address"
         value={email}
         onChange={onChange}
@@ -50,7 +58,7 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
       />
       <TextField
         name="password"
-        id="outlined-password-input"
+        className={classes.textField}
         label="Password"
         value={password}
         onChange={onChange}
@@ -59,14 +67,13 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
       />
       <Button
         className={classes.buttonBase}
+        color="primary"
         variant="contained"
-        color="secondary"
         disabled={isInvalid}
         type="submit"
       >
         Login
       </Button>
-      <p>{error}</p>
     </form>
   );
 };

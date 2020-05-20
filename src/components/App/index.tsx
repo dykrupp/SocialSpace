@@ -19,7 +19,6 @@ const App: React.FC = () => {
           <Navigation />
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
           <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-          {/* <Route path={ROUTES.SIGN_IN} component={SignInPage} /> */}
           <Route path={ROUTES.FORGOT_PASSWORD} component={ForgotPasswordPage} />
           <AuthProtectedRoute exact path={ROUTES.HOME} component={HomePage} />
           <AuthProtectedRoute
