@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import ForgotPasswordLink from '../../../ForgotPassword/ForgotPasswordLink';
 
 interface FormStyleProps {
   email: string;
@@ -27,9 +28,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     textField: {
       marginTop: '-10px',
+      color: 'white',
     },
     textAlign: {
       textAlign: 'center',
+      color: 'red',
+    },
+    input: {
+      color: 'white',
     },
   })
 );
@@ -54,6 +60,12 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
         value={email}
         onChange={onChange}
         type="text"
+        InputProps={{
+          className: classes.input,
+        }}
+        InputLabelProps={{
+          className: classes.input,
+        }}
         placeholder="Email Address"
       />
       <TextField
@@ -62,6 +74,12 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
         label="Password"
         value={password}
         onChange={onChange}
+        InputProps={{
+          className: classes.input,
+        }}
+        InputLabelProps={{
+          className: classes.input,
+        }}
         type="password"
         placeholder="Password"
       />
@@ -74,6 +92,7 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
       >
         Login
       </Button>
+      <ForgotPasswordLink />
     </form>
   );
 };

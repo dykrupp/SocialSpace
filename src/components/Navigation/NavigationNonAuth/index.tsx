@@ -4,6 +4,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SignInForm from '../NavigationNonAuth/SignInForm';
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../../customExports/routes';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -20,7 +22,12 @@ const useStyles = makeStyles(() =>
     },
     toolBar: {
       height: '82px',
-      width: '75%',
+      width: '80%',
+    },
+    link: {
+      color: 'white',
+      textDecoration: 'none',
+      outline: 0,
     },
   })
 );
@@ -33,7 +40,13 @@ const NavigationNonAuth: React.FC = () => {
       <AppBar position="static" className={classes.appBar}>
         <Toolbar className={classes.toolBar}>
           <Typography variant="h6" className={classes.title}>
-            SocialSpace
+            <Link
+              className={classes.link}
+              title="Go to SocialSpace Landing Page"
+              to={ROUTES.LANDING}
+            >
+              SocialSpace
+            </Link>
           </Typography>
           <SignInForm />
         </Toolbar>

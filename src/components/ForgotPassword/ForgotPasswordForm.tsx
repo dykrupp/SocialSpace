@@ -4,6 +4,7 @@ import { FIREBASE_NOT_ACCESSIBLE } from '../../customExports/labels';
 import { FirebaseError } from 'firebase';
 import { useHistory } from 'react-router';
 import * as ROUTES from '../../customExports/routes';
+import ForgotPasswordFormStyle from './ForgotPasswordFormStyle';
 
 interface FormState {
   email: string;
@@ -26,7 +27,7 @@ const ForgotPasswordForm: React.FC = () => {
         .resetPassword(formState.email)
         .then(() => {
           setFormState(() => initialFormState);
-          history.push(ROUTES.SIGN_IN);
+          history.push(ROUTES.LANDING);
         })
         .catch((error: FirebaseError) => {
           setFormState((previousState) => {
@@ -47,24 +48,15 @@ const ForgotPasswordForm: React.FC = () => {
   };
 
   const { email, error } = formState;
-  const isInvalid = email === '';
 
   if (!firebase) return <h1>{FIREBASE_NOT_ACCESSIBLE}</h1>;
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        name="email"
-        value={email}
-        onChange={onEmailChange}
-        type="text"
-        placeholder="Email Address"
-      />
-      <button disabled={isInvalid} type="submit">
-        Reset My Password
-      </button>
-
-      <p>{error}</p>
-    </form>
+    <ForgotPasswordFormStyle
+      email={email}
+      error={error}
+      onChange={onEmailChange}
+      onSubmit={onSubmit}
+    />
   );
 };
 

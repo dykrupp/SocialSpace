@@ -5,18 +5,23 @@ import App from './components/App';
 import Firebase from './components/Firebase';
 import { FirebaseContext } from './components/Firebase/context';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const customTheme = createMuiTheme({
   palette: {
-    type: 'dark',
+    background: {
+      default: '#e9ebee',
+    },
   },
 });
 
 ReactDOM.render(
   <ThemeProvider theme={customTheme}>
-    <FirebaseContext.Provider value={new Firebase()}>
-      <App />
-    </FirebaseContext.Provider>
+    <CssBaseline>
+      <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+      </FirebaseContext.Provider>
+    </CssBaseline>
   </ThemeProvider>,
   document.getElementById('root')
 );
