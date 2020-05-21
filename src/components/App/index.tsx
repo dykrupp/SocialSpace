@@ -12,8 +12,8 @@ import AuthProtectedRoute from '../AuthProtectedRoute';
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div id="App">
           <Navigation />
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
@@ -26,8 +26,8 @@ const App: React.FC = () => {
           />
           <AuthProtectedRoute exact path={ROUTES.ADMIN} component={AdminPage} />
         </div>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { FirebaseContext } from '../Firebase/context';
 import { AuthUser } from '../../customExports/types';
 import { useHistory } from 'react-router';
+import * as ROUTES from '../../customExports/routes';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -16,8 +17,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const listener = firebase?.auth.onAuthStateChanged((authUser) => {
-      if (authUser) setAuthorizedUser(authUser);
-      else setAuthorizedUser(null);
+      if (authUser) {
+        setAuthorizedUser(authUser);
+        history.push(ROUTES.HOME);
+      } else {
+        setAuthorizedUser(null);
+        history.push(ROUTES.LANDING);
+      }
     });
 
     return function cleanup(): void {

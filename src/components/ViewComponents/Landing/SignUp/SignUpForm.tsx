@@ -1,7 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { FirebaseError } from 'firebase';
-import { useHistory } from 'react-router';
-import * as ROUTES from '../../../../customExports/routes';
 import { FirebaseContext } from '../../../Firebase/context';
 import { FIREBASE_NOT_ACCESSIBLE } from '../../../../customExports/labels';
 import SignUpFormStyle from './SignUpFormStyle';
@@ -29,7 +27,6 @@ const initialFormState: FormState = {
 const SignUpForm: React.FC = () => {
   const [formState, setFormState] = useState<FormState>(initialFormState);
   const firebase = useContext(FirebaseContext);
-  const history = useHistory();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     const { username, email, passwordOne, birthday, gender } = formState;
@@ -42,10 +39,6 @@ const SignUpForm: React.FC = () => {
               .user(authUser.user.uid)
               .set({ username, email, birthday, gender });
           }
-        })
-        .then(() => {
-          setFormState(() => initialFormState);
-          history.push(ROUTES.HOME);
         })
         .catch((error: FirebaseError) => {
           setFormState((previousState) => {

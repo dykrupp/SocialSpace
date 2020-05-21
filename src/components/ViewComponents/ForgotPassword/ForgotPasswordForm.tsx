@@ -25,10 +25,7 @@ const ForgotPasswordForm: React.FC = () => {
     if (firebase) {
       firebase
         .resetPassword(formState.email)
-        .then(() => {
-          setFormState(() => initialFormState);
-          history.push(ROUTES.LANDING);
-        })
+        .then(() => history.push(ROUTES.LANDING))
         .catch((error: FirebaseError) => {
           setFormState((previousState) => {
             return { ...previousState, error: error.message };
