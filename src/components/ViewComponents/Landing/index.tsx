@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import SignUpPage from './SignUp';
+import LandingInfo from './LandingInfo';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -11,8 +12,14 @@ const useStyles = makeStyles(() => ({
   },
   gridContainer: {
     height: '100%',
-    width: '980px',
+    width: '1000px',
     margin: 'auto',
+  },
+  signUpGridItem: {
+    width: '460px',
+  },
+  landingInfoGridItem: {
+    width: '540px',
   },
 }));
 
@@ -21,11 +28,11 @@ const Landing: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <Grid container className={classes.gridContainer}>
-        <Grid item xs style={{ background: 'yellow', width: '500px' }}>
-          Hello
+      <Grid spacing={3} container className={classes.gridContainer}>
+        <Grid item className={classes.landingInfoGridItem}>
+          <LandingInfo />
         </Grid>
-        <Grid item style={{ width: '460px' }}>
+        <Grid item className={classes.signUpGridItem}>
           <SignUpPage />
         </Grid>
       </Grid>

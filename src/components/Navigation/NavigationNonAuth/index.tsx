@@ -17,7 +17,7 @@ const useStyles = makeStyles(() =>
     },
     appBar: {
       height: '82px',
-      justifyContent: 'center',
+      justifyContent: 'space-evenly',
       flexDirection: 'row',
       minWidth: '1200px',
     },
