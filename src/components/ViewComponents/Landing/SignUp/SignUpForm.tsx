@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
-import SignUpLink from './SignUpLink';
 import { FirebaseError } from 'firebase';
 import { useHistory } from 'react-router';
-import * as ROUTES from '../../customExports/routes';
-import { FirebaseContext } from '../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../customExports/labels';
+import * as ROUTES from '../../../../customExports/routes';
+import { FirebaseContext } from '../../../Firebase/context';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../../customExports/labels';
+import SignUpFormStyle from './SignUpFormStyle';
 
 interface FormState {
   username: string;
@@ -12,6 +12,8 @@ interface FormState {
   passwordOne: string;
   passwordTwo: string;
   error: string;
+  birthday: string;
+  gender: string;
 }
 
 const initialFormState: FormState = {
@@ -20,6 +22,8 @@ const initialFormState: FormState = {
   passwordOne: '',
   passwordTwo: '',
   error: '',
+  birthday: '1995-05-21',
+  gender: '',
 };
 
 const SignUpForm: React.FC = () => {
@@ -28,13 +32,15 @@ const SignUpForm: React.FC = () => {
   const history = useHistory();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    const { username, email, passwordOne } = formState;
+    const { username, email, passwordOne, birthday, gender } = formState;
     if (firebase) {
       firebase
         .createUser(email, passwordOne)
         .then((authUser) => {
           if (authUser.user) {
-            return firebase.user(authUser.user.uid).set({ username, email });
+            return firebase
+              .user(authUser.user.uid)
+              .set({ username, email, birthday, gender });
           }
         })
         .then(() => {
@@ -59,54 +65,30 @@ const SignUpForm: React.FC = () => {
     });
   };
 
-  const isInvalid =
-    formState.passwordOne !== formState.passwordTwo ||
-    formState.passwordOne === '' ||
-    formState.email === '' ||
-    formState.username === '';
-
-  const { username, email, passwordOne, passwordTwo, error } = formState;
+  const {
+    username,
+    email,
+    passwordOne,
+    passwordTwo,
+    error,
+    birthday,
+    gender,
+  } = formState;
 
   if (!firebase) return <h1>{FIREBASE_NOT_ACCESSIBLE}</h1>;
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        name="username"
-        value={username}
-        onChange={onChange}
-        type="text"
-        placeholder="Full Name"
-      />
-      <input
-        name="email"
-        value={email}
-        onChange={onChange}
-        type="text"
-        placeholder="Email Address"
-      />
-      <input
-        name="passwordOne"
-        value={passwordOne}
-        onChange={onChange}
-        type="password"
-        placeholder="Password"
-      />
-      <input
-        name="passwordTwo"
-        value={passwordTwo}
-        onChange={onChange}
-        type="password"
-        placeholder="Confirm Password"
-      />
-      <button type="submit" disabled={isInvalid}>
-        Sign Up
-      </button>
-
-      <p>{error}</p>
-    </form>
+    <SignUpFormStyle
+      username={username}
+      email={email}
+      passwordOne={passwordOne}
+      passwordTwo={passwordTwo}
+      birthday={birthday}
+      onChange={onChange}
+      onSubmit={onSubmit}
+      gender={gender}
+      error={error}
+    />
   );
 };
 
 export default SignUpForm;
-
-export { SignUpLink };

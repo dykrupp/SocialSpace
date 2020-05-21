@@ -19,6 +19,7 @@ const useStyles = makeStyles(() =>
       height: '82px',
       justifyContent: 'center',
       flexDirection: 'row',
+      minWidth: '1200px',
     },
     toolBar: {
       height: '82px',

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react';
-import { FirebaseContext } from '../Firebase/context';
+import { FirebaseContext } from '../../Firebase/context';
 
 interface User {
   username: string;

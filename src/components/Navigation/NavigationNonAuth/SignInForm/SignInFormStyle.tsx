@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import ForgotPasswordLink from '../../../ForgotPassword/ForgotPasswordLink';
+import ForgotPasswordLink from './ForgotPasswordLink';
 
 interface FormStyleProps {
   email: string;
@@ -13,32 +13,30 @@ interface FormStyleProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      '& > *': {
-        margin: theme.spacing(1),
-        width: '22ch',
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '22ch',
     },
-    buttonBase: {
-      verticalAlign: 'bottom',
-    },
-    textField: {
-      marginTop: '-10px',
-      color: 'white',
-    },
-    textAlign: {
-      textAlign: 'center',
-      color: 'red',
-    },
-    input: {
-      color: 'white',
-    },
-  })
-);
+  },
+  buttonBase: {
+    verticalAlign: 'bottom',
+  },
+  textField: {
+    marginTop: '-10px',
+    color: 'white',
+  },
+  textAlign: {
+    textAlign: 'center',
+    color: 'red',
+  },
+  input: {
+    color: 'white',
+  },
+}));
 
 const SignInFormStyle: React.FC<FormStyleProps> = ({
   email,
