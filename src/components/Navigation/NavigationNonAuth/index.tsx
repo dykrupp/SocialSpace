@@ -1,37 +1,35 @@
 import React from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SignInForm from '../NavigationNonAuth/SignInForm';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../../customExports/routes';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    title: {
-      flexGrow: 1,
-    },
-    appBar: {
-      height: '82px',
-      justifyContent: 'space-evenly',
-      flexDirection: 'row',
-      minWidth: '1200px',
-    },
-    toolBar: {
-      height: '82px',
-      width: '80%',
-    },
-    link: {
-      color: 'white',
-      textDecoration: 'none',
-      outline: 0,
-    },
-  })
-);
+const useStyles = makeStyles(() => ({
+  root: {
+    flexGrow: 1,
+  },
+  title: {
+    flexGrow: 1,
+  },
+  appBar: {
+    height: '82px',
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    minWidth: '1200px',
+  },
+  toolBar: {
+    height: '82px',
+    width: '80%',
+  },
+  link: {
+    color: 'white',
+    textDecoration: 'none',
+    outline: 0,
+  },
+}));
 
 const NavigationNonAuth: React.FC = () => {
   const classes = useStyles();

@@ -1,34 +1,12 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../customExports/routes';
-import SignOut from '../SignOut';
 import { AuthUserContext } from '../AuthProvider/context';
 import NavigationNonAuth from './NavigationNonAuth';
+import NavigationAuth from './NavigationAuth';
 
 const Navigation: React.FC = () => (
   <div>
     {useContext(AuthUserContext) ? <NavigationAuth /> : <NavigationNonAuth />}
   </div>
-);
-
-const NavigationAuth: React.FC = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.HOME}>Home</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ADMIN}>Admin</Link>
-    </li>
-    <li>
-      <SignOut />
-    </li>
-  </ul>
 );
 
 export default Navigation;
