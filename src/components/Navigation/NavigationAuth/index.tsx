@@ -13,7 +13,6 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -22,6 +21,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import * as ROUTES from '../../../customExports/routes';
 import { Link } from 'react-router-dom';
 import { FirebaseContext } from '../../Firebase/context';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,6 +105,7 @@ const NavigationAuth: React.FC = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const firebase = useContext(FirebaseContext);
+  const history = useHistory();
 
   const handleProfileMenuOpen = (
     event: React.MouseEvent<HTMLElement>
@@ -136,8 +137,26 @@ const NavigationAuth: React.FC = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {firebase && (
+        <MenuItem
+          onClick={(): void => {
+            handleMenuClose();
+            history.push(ROUTES.PROFILE);
+          }}
+        >
+          Profile
+        </MenuItem>
+      )}
+      {firebase && (
+        <MenuItem
+          onClick={(): void => {
+            handleMenuClose();
+            history.push(ROUTES.SETTINGS);
+          }}
+        >
+          Settings
+        </MenuItem>
+      )}
       {firebase && (
         <MenuItem
           onClick={(): void => {
@@ -196,14 +215,6 @@ const NavigationAuth: React.FC = () => {
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar variant="dense">
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             <Link
               className={classes.link}

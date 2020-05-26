@@ -8,7 +8,7 @@ interface User {
   uid: string;
 }
 
-const Admin: React.FC = () => {
+const Profile: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const [isLoading, setLoadingState] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -64,4 +64,4 @@ const UserList: React.FC<UserListProps> = ({ users }): JSX.Element => (
   </ul>
 );
 
-export default Admin;
+export default Profile;
