@@ -1,4 +1,5 @@
 import { createContext } from 'react';
-import { AuthUser } from '../../customExports/types';
+
+export type AuthUser = firebase.User | null;
 
 export const AuthUserContext = createContext<AuthUser>(null);

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import SignUpPage from './SignUp';
 import LandingInfo from './LandingInfo';
+import { AuthUserContext } from '../../AuthProvider/context';
+import { Redirect } from 'react-router-dom';
+import * as ROUTES from '../../../customExports/routes';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,6 +29,7 @@ const useStyles = makeStyles(() => ({
 const Landing: React.FC = () => {
   const classes = useStyles();
 
+  if (useContext(AuthUserContext)) return <Redirect to={ROUTES.HOME} />;
   return (
     <div className={classes.root}>
       <Grid spacing={3} container className={classes.gridContainer}>

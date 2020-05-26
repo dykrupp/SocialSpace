@@ -1,10 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AuthUserContext } from './context';
+import { AuthUserContext, AuthUser } from './context';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../Firebase/context';
-import { AuthUser } from '../../customExports/types';
 import { useHistory } from 'react-router';
-import * as ROUTES from '../../customExports/routes';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -12,18 +10,14 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const firebase = useContext(FirebaseContext);
-  const [authorizedUser, setAuthorizedUser] = useState<AuthUser>(null);
+  const [authUser, setAuthUser] = useState<AuthUser>(null);
+  const [isLoading, setIsLoading] = useState(true); //used to prevent loading views until we get feedback from firebase
   const history = useHistory();
 
   useEffect(() => {
     const listener = firebase?.auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        setAuthorizedUser(authUser);
-        history.push(ROUTES.HOME);
-      } else {
-        setAuthorizedUser(null);
-        history.push(ROUTES.LANDING);
-      }
+      setAuthUser(authUser);
+      setIsLoading(false);
     });
 
     return function cleanup(): void {
@@ -31,11 +25,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, [firebase, history]);
 
-  return (
-    <AuthUserContext.Provider value={authorizedUser}>
-      {children}
-    </AuthUserContext.Provider>
-  );
+  if (isLoading)
+    return <h1 style={{ textAlign: 'center' }}>Loading Please Wait</h1>;
+  else
+    return (
+      <AuthUserContext.Provider value={authUser}>
+        {children}
+      </AuthUserContext.Provider>
+    );
 };
 
 AuthProvider.propTypes = {
