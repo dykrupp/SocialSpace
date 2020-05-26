@@ -26,7 +26,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           });
           setIsLoading(false);
         });
-      } else setIsLoading(false);
+      } else {
+        setAuthUser(null);
+        setIsLoading(false);
+      }
     });
 
     return function cleanup(): void {
