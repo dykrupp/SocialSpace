@@ -3,6 +3,7 @@ import { AuthUserContext, AuthUser } from './context';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../Firebase/context';
 import { useHistory } from 'react-router';
+import { User } from '../ViewComponents/Landing/SignUp/SignUpForm';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -16,8 +17,16 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const listener = firebase?.auth.onAuthStateChanged((authUser) => {
-      setAuthUser(authUser);
-      setIsLoading(false);
+      setIsLoading(true);
+
+      if (authUser) {
+        firebase?.user(authUser.uid).on('value', (snapshot) => {
+          setAuthUser(() => {
+            return { ...authUser, ...(snapshot.val() as User) };
+          });
+          setIsLoading(false);
+        });
+      } else setIsLoading(false);
     });
 
     return function cleanup(): void {

@@ -5,7 +5,7 @@ import { FIREBASE_NOT_ACCESSIBLE } from '../../../../customExports/labels';
 import SignUpFormStyle from './SignUpFormStyle';
 
 interface FormState {
-  username: string;
+  fullName: string;
   email: string;
   passwordOne: string;
   passwordTwo: string;
@@ -15,7 +15,7 @@ interface FormState {
 }
 
 const initialFormState: FormState = {
-  username: '',
+  fullName: '',
   email: '',
   passwordOne: '',
   passwordTwo: '',
@@ -24,20 +24,31 @@ const initialFormState: FormState = {
   gender: '',
 };
 
+export type User = {
+  fullName: string;
+  email: string;
+  birthday: string;
+  gender: string;
+};
+
 const SignUpForm: React.FC = () => {
   const [formState, setFormState] = useState<FormState>(initialFormState);
   const firebase = useContext(FirebaseContext);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    const { username, email, passwordOne, birthday, gender } = formState;
+    const { fullName, email, passwordOne, birthday, gender } = formState;
     if (firebase) {
       firebase
         .createUser(email, passwordOne)
         .then((authUser) => {
           if (authUser.user) {
-            return firebase
-              .user(authUser.user.uid)
-              .set({ username, email, birthday, gender });
+            const user: User = {
+              fullName: fullName,
+              email: email,
+              birthday: birthday,
+              gender: gender,
+            };
+            return firebase.user(authUser.user.uid).set(user);
           }
         })
         .catch((error: FirebaseError) => {
@@ -59,7 +70,7 @@ const SignUpForm: React.FC = () => {
   };
 
   const {
-    username,
+    fullName,
     email,
     passwordOne,
     passwordTwo,
@@ -71,7 +82,7 @@ const SignUpForm: React.FC = () => {
   if (!firebase) return <h1>{FIREBASE_NOT_ACCESSIBLE}</h1>;
   return (
     <SignUpFormStyle
-      username={username}
+      fullName={fullName}
       email={email}
       passwordOne={passwordOne}
       passwordTwo={passwordTwo}

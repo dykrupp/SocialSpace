@@ -10,7 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
 interface FormStyleProps {
-  username: string;
+  fullName: string;
   email: string;
   error: string;
   passwordOne: string;
@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const SignUpFormStyle: React.FC<FormStyleProps> = ({
-  username,
+  fullName,
   email,
   error,
   passwordOne,
@@ -57,7 +57,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
     passwordOne !== passwordTwo ||
     passwordOne === '' ||
     email === '' ||
-    username === '' ||
+    fullName === '' ||
     birthday === '' ||
     gender === '';
 
@@ -65,8 +65,8 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
     <form onSubmit={onSubmit} noValidate>
       <div className={classes.flexRow}>
         <TextField
-          name="username"
-          value={username}
+          name="fullName"
+          value={fullName}
           onChange={onChange}
           type="text"
           placeholder="Full Name"
@@ -159,7 +159,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
 };
 
 SignUpFormStyle.propTypes = {
-  username: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   error: PropTypes.string.isRequired,
   passwordOne: PropTypes.string.isRequired,
