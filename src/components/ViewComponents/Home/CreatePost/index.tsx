@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { AuthUserContext } from '../AuthProvider/context';
+import { AuthUserContext } from '../../../AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { FirebaseContext } from '../Firebase/context';
+import { FirebaseContext } from '../../../Firebase/context';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';

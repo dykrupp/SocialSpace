@@ -56,6 +56,9 @@ class Firebase {
   post = (uid: string, dateTime: string): app.database.Reference =>
     this.db.ref(`users/${uid}/posts/${dateTime}`);
 
+  posts = (uid: string): app.database.Reference =>
+    this.db.ref(`users/${uid}/posts/`);
+
   users = (): app.database.Reference => this.db.ref('users');
 }
 
