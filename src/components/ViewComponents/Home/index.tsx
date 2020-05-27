@@ -1,8 +1,8 @@
 import React from 'react';
-import PostStatus from '../../PostStatus';
+import CreatePost from '../../CreatePost';
 
 const Home: React.FC = () => {
-  return <PostStatus />;
+  return <CreatePost />;
 };
 
 export default Home;
