@@ -60,7 +60,7 @@ const CreatePost: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const classes = useStyles();
   const [post, setPost] = useState('');
-  const [picture, setPicture] = useState<File>();
+  const [picture, setPicture] = useState<File | null>();
   const [anchorEl, setAnchorEl] = React.useState<HTMLImageElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>): void => {
@@ -77,7 +77,18 @@ const CreatePost: React.FC = () => {
 
   const onClick = (): void => {
     if (firebase && authUser) {
-      firebase.post(authUser.uid, new Date().toUTCString()).set({ post });
+      const utcDateTime = new Date().toUTCString();
+
+      firebase.post(authUser.uid, utcDateTime).set({ post });
+
+      if (picture) {
+        firebase.storage
+          .ref(`users/${authUser.uid}/posts/${utcDateTime}/media`)
+          .put(picture);
+
+        setPicture(null);
+      }
+
       setPost('');
     }
   };
