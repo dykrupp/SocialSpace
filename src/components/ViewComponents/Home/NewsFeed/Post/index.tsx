@@ -10,6 +10,7 @@ interface PostProps {
   post: string;
   username: string;
   dateTime: string;
+  media: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Post: React.FC<PostProps> = ({ post, username, dateTime }) => {
+const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
   const classes = useStyles();
 
   return (
@@ -38,6 +39,11 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime }) => {
         <Grid item xs={12}>
           <Typography variant="h6">{post}</Typography>
         </Grid>
+        <Grid item xs={12}>
+          {media !== '' && (
+            <img style={{ maxHeight: '250px' }} src={media} alt="postedMedia" />
+          )}
+        </Grid>
       </Grid>
     </Paper>
   );
@@ -47,6 +53,7 @@ Post.propTypes = {
   post: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   dateTime: PropTypes.string.isRequired,
+  media: PropTypes.any,
 };
 
 export default Post;

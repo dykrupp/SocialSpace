@@ -12,7 +12,7 @@ import * as Collections from 'typescript-collections';
 interface Post {
   post: string;
   dateTime: string;
-  media: File | null;
+  media: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -33,6 +33,7 @@ const NewsFeed: React.FC = () => {
     const currentPosts: Post[] = Object.keys(postsObject).map((key) => ({
       ...postsObject[key],
       dateTime: key,
+      media: '',
     }));
     return currentPosts.sort((a, b) => {
       const secondDate: any = new Date(b.dateTime);
@@ -51,12 +52,12 @@ const NewsFeed: React.FC = () => {
         //grab all associated media relative to the uid before setting posts state
         storageRef.listAll().then((list) => {
           new Promise<Collections.Dictionary<string, any>>((resolve) => {
-            const dict = new Collections.Dictionary<string, any>();
+            const dict = new Collections.Dictionary<string, string>();
             list.prefixes.forEach((prefix, index, array) => {
               prefix
                 .child('media')
                 .getDownloadURL()
-                .then((url) => {
+                .then((url: string) => {
                   dict.setValue(prefix.name, url);
                   if (index === array.length - 1) resolve(dict);
                 });
@@ -72,9 +73,10 @@ const NewsFeed: React.FC = () => {
         });
       });
     }
+    return function cleanup(): void {
+      if (firebase && authUser) firebase.posts(authUser.uid).off();
+    };
   }, [firebase, authUser]);
-
-  console.log(posts);
 
   if (!authUser) return null;
   return (
@@ -88,6 +90,7 @@ const NewsFeed: React.FC = () => {
             post={post.post}
             username={authUser.fullName}
             dateTime={post.dateTime}
+            media={post.media}
           />
         </Grid>
       ))}

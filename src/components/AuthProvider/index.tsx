@@ -34,6 +34,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return function cleanup(): void {
       if (listener) listener();
+      firebase?.users().off();
     };
   }, [firebase, history]);
 
