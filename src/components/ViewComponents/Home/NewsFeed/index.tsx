@@ -59,7 +59,9 @@ const NewsFeed: React.FC = () => {
                 .getDownloadURL()
                 .then((url: string) => {
                   dict.setValue(prefix.name, url);
-                  if (index === array.length - 1) resolve(dict);
+                  if (dict.size() === array.length) {
+                    resolve(dict);
+                  }
                 });
             });
           }).then((dict) => {
