@@ -8,6 +8,8 @@ interface User {
   uid: string;
 }
 
+//TODO -> Continue here designing page for editing profile etc
+
 const Profile: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const [isLoading, setLoadingState] = useState(false);

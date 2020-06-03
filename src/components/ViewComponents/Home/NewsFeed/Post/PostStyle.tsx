@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
   },
-  commentRow: {
+  commentInputRow: {
     display: 'flex',
     justifyContent: 'space-between',
   },
@@ -105,19 +105,11 @@ export const PostStyle: React.FC<PostStyleProps> = ({
   return (
     <Paper elevation={3} className={classes.paper}>
       <Grid container spacing={1}>
-        <Grid item xs={12} className={classes.gridRow}>
-          <p>{username}</p>
-          <p className={classes.marginLeft}>
-            {calcTimeSince(Date.parse(dateTime))}
-          </p>
-          {username === authUser?.fullName && (
-            <Tooltip title="Delete Post">
-              <IconButton component="label" onClick={deletePost}>
-                <DeleteIcon color="primary" />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Grid>
+        <HeaderRow
+          dateTime={dateTime}
+          username={username}
+          deletePost={deletePost}
+        />
         <Grid item xs={12} className={classes.centeredRow}>
           <Typography variant="h6">{post}</Typography>
         </Grid>
@@ -166,30 +158,13 @@ export const PostStyle: React.FC<PostStyleProps> = ({
         </Grid>
         {isCommentsOpen &&
           comments.map((comment: Comment) => (
-            <Paper
-              elevation={2}
+            <PaperComment
               key={comment.dateTime}
-              variant="outlined"
-              className={classes.commentPaper}
-            >
-              <div className={classes.commentDiv}>
-                <p>{comment.fullName}</p>
-                <p>{calcTimeSince(Date.parse(comment.dateTime))}</p>
-                {authUser?.fullName === comment.fullName && (
-                  <Tooltip title="Delete Comment">
-                    <IconButton
-                      component="label"
-                      onClick={(): void => deleteComment(comment.dateTime)}
-                    >
-                      <DeleteIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </div>
-              <p className={classes.commentText}>{comment.comment}</p>
-            </Paper>
+              comment={comment}
+              deleteComment={deleteComment}
+            />
           ))}
-        <Grid item xs={12} className={classes.commentRow}>
+        <Grid item xs={12} className={classes.commentInputRow}>
           <TextField
             id="standard-textarea"
             label="Add Comment"
@@ -230,4 +205,79 @@ PostStyle.propTypes = {
   onCommentsOpenClick: PropTypes.func.isRequired,
   likes: PropTypes.arrayOf(PropTypes.any).isRequired,
   comments: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
+
+interface HeaderRowProps {
+  dateTime: string;
+  username: string;
+  deletePost: () => void;
+}
+
+const HeaderRow: React.FC<HeaderRowProps> = ({
+  dateTime,
+  username,
+  deletePost,
+}) => {
+  const classes = useStyles();
+  const authUser = useContext(AuthUserContext);
+
+  return (
+    <Grid item xs={12} className={classes.gridRow}>
+      <p>{username}</p>
+      <p className={classes.marginLeft}>
+        {calcTimeSince(Date.parse(dateTime))}
+      </p>
+      {username === authUser?.fullName && (
+        <Tooltip title="Delete Post">
+          <IconButton component="label" onClick={deletePost}>
+            <DeleteIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Grid>
+  );
+};
+
+HeaderRow.propTypes = {
+  username: PropTypes.string.isRequired,
+  dateTime: PropTypes.string.isRequired,
+  deletePost: PropTypes.func.isRequired,
+};
+
+interface PaperCommentProps {
+  comment: Comment;
+  deleteComment: (commentDateTime: string) => void;
+}
+
+const PaperComment: React.FC<PaperCommentProps> = ({
+  comment,
+  deleteComment,
+}) => {
+  const classes = useStyles();
+  const authUser = useContext(AuthUserContext);
+
+  return (
+    <Paper elevation={2} variant="outlined" className={classes.commentPaper}>
+      <div className={classes.commentDiv}>
+        <p>{comment.fullName}</p>
+        <p>{calcTimeSince(Date.parse(comment.dateTime))}</p>
+        {authUser?.fullName === comment.fullName && (
+          <Tooltip title="Delete Comment">
+            <IconButton
+              component="label"
+              onClick={(): void => deleteComment(comment.dateTime)}
+            >
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Tooltip>
+        )}
+      </div>
+      <p className={classes.commentText}>{comment.comment}</p>
+    </Paper>
+  );
+};
+
+PaperComment.propTypes = {
+  comment: PropTypes.any.isRequired,
+  deleteComment: PropTypes.func.isRequired,
 };
