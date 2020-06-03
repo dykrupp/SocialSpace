@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import SignUpPage from './SignUp';
 import LandingInfo from './LandingInfo';
-import { AuthUserContext } from '../../AuthProvider/context';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { Redirect } from 'react-router-dom';
-import * as ROUTES from '../../../customExports/routes';
+import * as ROUTES from '../../../constants/routes';
 
 const useStyles = makeStyles(() => ({
   root: {

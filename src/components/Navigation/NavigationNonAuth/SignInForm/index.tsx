@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { FirebaseError } from 'firebase';
 import { FirebaseContext } from '../../../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../../../customExports/labels';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
 import SignInFormStyle from './SignInFormStyle';
 
 interface FormState {

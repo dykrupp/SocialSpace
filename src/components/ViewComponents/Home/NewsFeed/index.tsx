@@ -4,7 +4,7 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CreatePost from './CreatePost';
 import { FirebaseContext } from '../../../Firebase/context';
-import { AuthUserContext } from '../../../AuthProvider/context';
+import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { Grid } from '@material-ui/core';
 import Post from './Post';
 import * as Collections from 'typescript-collections';
@@ -22,6 +22,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const getSortedPosts = (snapShot: firebase.database.DataSnapshot): Post[] => {
+  const postsObject = snapShot.val();
+  const currentPosts: Post[] = Object.keys(postsObject).map((key) => ({
+    ...postsObject[key],
+    dateTime: key,
+    media: '',
+  }));
+  return currentPosts.sort((a, b) => {
+    const secondDate: any = new Date(b.dateTime);
+    const firstDate: any = new Date(a.dateTime);
+    return secondDate - firstDate;
+  });
+};
+
 const NewsFeed: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
@@ -29,34 +43,16 @@ const NewsFeed: React.FC = () => {
   const classes = useStyles();
   const numOfPosts = useRef(0);
 
-  const getSortedPosts = (snapShot: firebase.database.DataSnapshot): Post[] => {
-    const postsObject = snapShot.val();
-    const currentPosts: Post[] = Object.keys(postsObject).map((key) => ({
-      ...postsObject[key],
-      dateTime: key,
-      media: '',
-    }));
-    return currentPosts.sort((a, b) => {
-      const secondDate: any = new Date(b.dateTime);
-      const firstDate: any = new Date(a.dateTime);
-      return secondDate - firstDate;
-    });
-  };
-
-  //Get all posts w/ associated media (eventually just filter to users that are being 'followed')
+  //TODO -> Introduce Paging here instead of grabbing ALL && only get data for users that are being 'followed'
   useEffect(() => {
     if (firebase && authUser) {
-      console.log('hello');
       firebase.posts(authUser.uid).on('value', (snapShot) => {
-        console.log(snapShot.val());
-        console.log(numOfPosts.current);
-
         if (snapShot.val() === null) {
           setPosts([]);
+          numOfPosts.current = 0;
           return;
         } else if (Object.keys(snapShot.val()).length === numOfPosts.current) {
-          //Ignore triggers stemming from children pushes
-          console.log('early return hit');
+          //Ignore event triggers from children
           return;
         }
 
@@ -80,7 +76,6 @@ const NewsFeed: React.FC = () => {
                 });
             });
           }).then((dict) => {
-            console.log(dict);
             const postsWithMedia = sortedPosts.map((post) => {
               if (dict.keys().includes(post.dateTime)) {
                 return { ...post, media: dict.getValue(post.dateTime) };
@@ -94,7 +89,6 @@ const NewsFeed: React.FC = () => {
     }
     return function cleanup(): void {
       if (firebase && authUser) {
-        console.log('cleanup');
         firebase.posts(authUser.uid).off();
       }
     };

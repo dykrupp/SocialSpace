@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { AuthUserContext } from '../../../../AuthProvider/context';
+import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { FirebaseContext } from '../../../../Firebase/context';
@@ -62,18 +62,6 @@ const CreatePost: React.FC = () => {
   const [picture, setPicture] = useState<File | null>();
   const [anchorEl, setAnchorEl] = React.useState<HTMLImageElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLImageElement>): void => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = (): void => {
-    setAnchorEl(null);
-  };
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setPost(event.target.value);
-  };
-
   const sendFirebasePost = (utcDateTime: string): void => {
     if (firebase && authUser) {
       firebase
@@ -85,7 +73,7 @@ const CreatePost: React.FC = () => {
     }
   };
 
-  const onClick = (): void => {
+  const onPostButtonClick = (): void => {
     if (firebase && authUser) {
       const utcDateTime = new Date().toUTCString();
 
@@ -101,12 +89,26 @@ const CreatePost: React.FC = () => {
     }
   };
 
+  const onPostInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setPost(event.target.value);
+  };
+
   const onPictureChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     if (event.target.files) {
       setPicture(event.target.files[0]);
     }
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLImageElement>): void => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (): void => {
+    setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
@@ -122,7 +124,7 @@ const CreatePost: React.FC = () => {
             name="status"
             type="text"
             value={post}
-            onChange={onChange}
+            onChange={onPostInputChange}
             className={classes.post}
             placeholder={`What's on your mind ${
               authUser?.fullName.split(' ')[0]
@@ -184,7 +186,7 @@ const CreatePost: React.FC = () => {
         <Grid item xs={12} className={classes.buttonRow}>
           <Button
             disabled={isInvalid}
-            onClick={onClick}
+            onClick={onPostButtonClick}
             color="primary"
             variant="contained"
             className={classes.postButton}

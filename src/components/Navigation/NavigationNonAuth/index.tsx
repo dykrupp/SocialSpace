@@ -4,7 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SignInForm from '../NavigationNonAuth/SignInForm';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../customExports/routes';
+import * as ROUTES from '../../../constants/routes';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({

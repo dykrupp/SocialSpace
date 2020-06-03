@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { FirebaseContext } from '../Firebase/context';
+import { FirebaseContext } from '../../Firebase/context';
 import { FirebaseError } from 'firebase';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../customExports/labels';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../constants/labels';
 
 interface FormState {
   passwordOne: string;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import ChangePasswordForm from '../../ChangePassword';
-import { AuthUserContext } from '../../AuthProvider/context';
+import ChangePasswordForm from '../ChangePassword';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 
 const Settings: React.FC = () => {
   return (
