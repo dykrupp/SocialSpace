@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-undef */
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CreatePost from './CreatePost';
 import { FirebaseContext } from '../../../Firebase/context';
@@ -27,6 +27,7 @@ const NewsFeed: React.FC = () => {
   const authUser = useContext(AuthUserContext);
   const [posts, setPosts] = useState<Post[]>([]);
   const classes = useStyles();
+  const numOfPosts = useRef(0);
 
   const getSortedPosts = (snapShot: firebase.database.DataSnapshot): Post[] => {
     const postsObject = snapShot.val();
@@ -45,7 +46,20 @@ const NewsFeed: React.FC = () => {
   //Get all posts w/ associated media (eventually just filter to users that are being 'followed')
   useEffect(() => {
     if (firebase && authUser) {
+      console.log('hello');
       firebase.posts(authUser.uid).on('value', (snapShot) => {
+        console.log(snapShot.val());
+        console.log(numOfPosts.current);
+
+        if (snapShot.val() === null) {
+          setPosts([]);
+          return;
+        } else if (Object.keys(snapShot.val()).length === numOfPosts.current) {
+          //Ignore triggers stemming from children pushes
+          console.log('early return hit');
+          return;
+        }
+
         const sortedPosts = getSortedPosts(snapShot);
         const storageRef = firebase.storage.ref(`users/${authUser.uid}/posts/`);
 
@@ -53,6 +67,7 @@ const NewsFeed: React.FC = () => {
         storageRef.listAll().then((list) => {
           new Promise<Collections.Dictionary<string, any>>((resolve) => {
             const dict = new Collections.Dictionary<string, string>();
+            if (list.prefixes.length === 0) resolve(dict);
             list.prefixes.forEach((prefix, index, array) => {
               prefix
                 .child('media')
@@ -65,18 +80,23 @@ const NewsFeed: React.FC = () => {
                 });
             });
           }).then((dict) => {
+            console.log(dict);
             const postsWithMedia = sortedPosts.map((post) => {
               if (dict.keys().includes(post.dateTime)) {
                 return { ...post, media: dict.getValue(post.dateTime) };
               } else return post;
             });
+            numOfPosts.current = postsWithMedia.length;
             setPosts(postsWithMedia);
           });
         });
       });
     }
     return function cleanup(): void {
-      if (firebase && authUser) firebase.posts(authUser.uid).off();
+      if (firebase && authUser) {
+        console.log('cleanup');
+        firebase.posts(authUser.uid).off();
+      }
     };
   }, [firebase, authUser]);
 

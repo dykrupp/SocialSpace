@@ -59,6 +59,28 @@ class Firebase {
   posts = (uid: string): app.database.Reference =>
     this.db.ref(`users/${uid}/posts/`);
 
+  like = (
+    uid: string,
+    postDateTime: string,
+    currentUserId: string
+  ): app.database.Reference =>
+    this.db.ref(`users/${uid}/posts/${postDateTime}/likes/${currentUserId}`);
+
+  likes = (uid: string, postDateTime: string): app.database.Reference =>
+    this.db.ref(`users/${uid}/posts/${postDateTime}/likes`);
+
+  comment = (
+    uid: string,
+    postDateTime: string,
+    commentDateTime: string
+  ): app.database.Reference =>
+    this.db.ref(
+      `users/${uid}/posts/${postDateTime}/comments/${commentDateTime}`
+    );
+
+  comments = (uid: string, postDateTime: string): app.database.Reference =>
+    this.db.ref(`users/${uid}/posts/${postDateTime}/comments/`);
+
   users = (): app.database.Reference => this.db.ref('users');
 }
 

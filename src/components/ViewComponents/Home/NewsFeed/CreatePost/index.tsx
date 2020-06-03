@@ -74,21 +74,30 @@ const CreatePost: React.FC = () => {
     setPost(event.target.value);
   };
 
+  const sendFirebasePost = (utcDateTime: string): void => {
+    if (firebase && authUser) {
+      firebase
+        .post(authUser.uid, utcDateTime)
+        .set({ post })
+        .then(() => {
+          setPost('');
+        });
+    }
+  };
+
   const onClick = (): void => {
     if (firebase && authUser) {
       const utcDateTime = new Date().toUTCString();
 
-      firebase.post(authUser.uid, utcDateTime).set({ post });
-
       if (picture) {
         firebase.storage
           .ref(`users/${authUser.uid}/posts/${utcDateTime}/media`)
-          .put(picture);
-
-        setPicture(null);
-      }
-
-      setPost('');
+          .put(picture)
+          .then(() => {
+            sendFirebasePost(utcDateTime);
+            setPicture(null);
+          });
+      } else sendFirebasePost(utcDateTime);
     }
   };
 
