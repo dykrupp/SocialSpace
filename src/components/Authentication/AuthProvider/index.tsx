@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
 import { User } from '../../../constants/interfaces';
+import { IsLoading } from '../../IsLoading';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -38,8 +39,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, [firebase, history]);
 
-  if (isLoading)
-    return <h1 style={{ textAlign: 'center' }}>Loading Please Wait</h1>;
+  if (isLoading) return <IsLoading />;
   else
     return (
       <AuthUserContext.Provider value={authUser}>

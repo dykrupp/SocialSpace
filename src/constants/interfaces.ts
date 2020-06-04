@@ -24,3 +24,7 @@ export interface Post {
   likes: Like[];
   dateTime: string;
 }
+
+export interface UserProfile extends User {
+  posts: Post[] | null;
+}

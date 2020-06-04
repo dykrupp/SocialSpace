@@ -11,6 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
+import { getFirstName } from '../../../../../utils/helperFunctions';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -116,6 +117,7 @@ const CreatePost: React.FC = () => {
   const fileURL = picture ? URL.createObjectURL(picture) : '';
   const isInvalid = post === '' && !picture;
 
+  if (!authUser) return null;
   return (
     <Paper elevation={3} className={classes.paper}>
       <Grid container spacing={2}>
@@ -126,9 +128,9 @@ const CreatePost: React.FC = () => {
             value={post}
             onChange={onPostInputChange}
             className={classes.post}
-            placeholder={`What's on your mind ${
-              authUser?.fullName.split(' ')[0]
-            }?`}
+            placeholder={`What's on your mind ${getFirstName(
+              authUser.fullName
+            )}?`}
             variant="outlined"
             label="Create Post"
           />

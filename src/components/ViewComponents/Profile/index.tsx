@@ -1,34 +1,29 @@
-/* eslint-disable no-undef */
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../Firebase/context';
 import { makeStyles } from '@material-ui/core/styles';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useParams } from 'react-router-dom';
-import { User, Post } from '../../../constants/interfaces';
+import { UserProfile } from '../../../constants/interfaces';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import { IsLoading } from '../../IsLoading';
 import {
   addMediaToPosts,
   getSortedPosts,
 } from '../../../utils/helperFunctions';
+import { AccountInfo } from './AccountInfo';
 
 const useStyles = makeStyles(() => ({
-  profileDiv: {
+  mainDiv: {
     padding: '20px',
   },
-  profileImage: {
-    width: '150px',
-    height: '150px',
-  },
 }));
-
-interface UserProfile extends User {
-  posts: Post[] | null;
-}
 
 export const ProfilePage: React.FC = () => {
   const classes = useStyles();
   const { userUID } = useParams();
   const firebase = useContext(FirebaseContext);
   const [userProfile, setUserProfile] = useState<UserProfile>();
+  const [isLoading, setIsLoading] = useState(true);
+  const authUser = useContext(AuthUserContext);
 
   useEffect(() => {
     firebase?.user(userUID).on('value', async (snapShot) => {
@@ -39,6 +34,7 @@ export const ProfilePage: React.FC = () => {
         getSortedPosts(userProfile.posts)
       );
       setUserProfile(userProfile);
+      setIsLoading(false);
     });
 
     return function cleanup(): void {
@@ -46,13 +42,12 @@ export const ProfilePage: React.FC = () => {
     };
   }, [firebase, userUID]);
 
+  if (isLoading || !userProfile || !authUser) return <IsLoading />;
+  const isUsersProfile = authUser.uid === userUID;
   return (
-    <div className={classes.profileDiv}>
-      <div>
-        <AccountCircle className={classes.profileImage} />
-        <p>{userProfile?.fullName}</p>
-      </div>
-      <p>{userUID}</p>
+    <div className={classes.mainDiv}>
+      <AccountInfo isUsersProfile={isUsersProfile} userProfile={userProfile} />
+      <hr />
     </div>
   );
 };

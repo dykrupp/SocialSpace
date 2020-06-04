@@ -10,6 +10,7 @@ import {
   addMediaToPosts,
   getSortedPosts,
 } from '../../../../utils/helperFunctions';
+import { IsLoading } from '../../../IsLoading';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,8 +60,7 @@ const NewsFeed: React.FC = () => {
   }, [firebase, authUser]);
 
   if (!authUser) return null;
-  else if (isLoading)
-    return <h1 style={{ textAlign: 'center' }}>Loading Please Wait</h1>;
+  else if (isLoading) return <IsLoading />;
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
