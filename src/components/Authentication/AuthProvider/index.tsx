@@ -3,7 +3,7 @@ import { AuthUserContext, AuthUser } from './context';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
-import { User } from '../../ViewComponents/Landing/SignUp/SignUpForm';
+import { User } from '../../../constants/interfaces';
 
 interface AuthProviderProps {
   children: React.ReactNode;

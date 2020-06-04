@@ -8,7 +8,7 @@ import HomePage from '../Home';
 import AuthProvider from '../../Authentication/AuthProvider';
 import AuthProtectedRoute from '../../Authentication/AuthProtectedRoute';
 import SettingsPage from '../Settings';
-import ProfilePage from '../Profile';
+import { ProfilePage } from '../Profile';
 
 const App: React.FC = () => {
   return (
@@ -17,11 +17,14 @@ const App: React.FC = () => {
         <div id="App">
           <Navigation />
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
-          <Route path={ROUTES.FORGOT_PASSWORD} component={ForgotPasswordPage} />
+          <Route
+            exact
+            path={ROUTES.FORGOT_PASSWORD}
+            component={ForgotPasswordPage}
+          />
           <AuthProtectedRoute exact path={ROUTES.HOME} component={HomePage} />
           <AuthProtectedRoute
-            exact
-            path={ROUTES.PROFILE}
+            path={`${ROUTES.PROFILE}/:userUID`}
             component={ProfilePage}
           />
           <AuthProtectedRoute

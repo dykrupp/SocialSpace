@@ -3,23 +3,13 @@ import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { PostStyle } from './PostStyle';
+import { Comment, Like } from '../../../../../constants/interfaces';
 
 export interface PostProps {
   post: string;
   username: string;
   dateTime: string;
   media: string;
-}
-
-export interface Comment {
-  comment: string;
-  dateTime: string;
-  fullName: string;
-}
-
-export interface Like {
-  uid: string;
-  fullName: string;
 }
 
 const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
@@ -43,7 +33,7 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
       const utcDateTime = new Date().toUTCString();
       firebase
         .comment(authUser.uid, dateTime, utcDateTime)
-        .set({ comment, fullName: authUser.fullName });
+        .set({ comment, userUID: authUser.uid, fullName: authUser.fullName });
       setComment('');
     }
   };
@@ -138,7 +128,7 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
 
         const currentLikes: Like[] = Object.keys(likesObject).map((key) => ({
           ...likesObject[key],
-          uid: key,
+          userUID: key,
         }));
 
         numOfLikes.current = currentLikes.length;

@@ -22,6 +22,7 @@ import * as ROUTES from '../../../constants/routes';
 import { Link } from 'react-router-dom';
 import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,15 +98,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const NavigationAuth: React.FC = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const isMenuOpen = Boolean(anchorEl);
   const [
     mobileMoreAnchorEl,
     setMobileMoreAnchorEl,
   ] = React.useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const firebase = useContext(FirebaseContext);
   const history = useHistory();
+  const authUser = useContext(AuthUserContext);
 
   const handleProfileMenuOpen = (
     event: React.MouseEvent<HTMLElement>
@@ -141,7 +142,7 @@ const NavigationAuth: React.FC = () => {
         <MenuItem
           onClick={(): void => {
             handleMenuClose();
-            history.push(ROUTES.PROFILE);
+            history.push(`${ROUTES.PROFILE}/${authUser?.uid}`);
           }}
         >
           Profile

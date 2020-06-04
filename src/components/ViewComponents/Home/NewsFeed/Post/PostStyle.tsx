@@ -14,7 +14,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { calcTimeSince } from '../../../../../utils/helperFunctions';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
-import { PostProps, Like, Comment } from './index';
+import { PostProps } from './index';
+import { Like, Comment } from '../../../../../constants/interfaces';
 
 interface PostStyleProps extends PostProps {
   deletePost: () => void;

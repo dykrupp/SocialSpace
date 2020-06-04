@@ -3,6 +3,7 @@ import { FirebaseError } from 'firebase';
 import { FirebaseContext } from '../../../Firebase/context';
 import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
 import SignUpFormStyle from './SignUpFormStyle';
+import { User } from '../../../../constants/interfaces';
 
 interface FormState {
   fullName: string;
@@ -22,13 +23,6 @@ const initialFormState: FormState = {
   error: '',
   birthday: '1995-05-21',
   gender: '',
-};
-
-export type User = {
-  fullName: string;
-  email: string;
-  birthday: string;
-  gender: string;
 };
 
 const SignUpForm: React.FC = () => {

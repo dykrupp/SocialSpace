@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-undef */
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CreatePost from './CreatePost';
@@ -7,13 +5,11 @@ import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { Grid } from '@material-ui/core';
 import Post from './Post';
-import * as Collections from 'typescript-collections';
-
-interface Post {
-  post: string;
-  dateTime: string;
-  media: string;
-}
+import { Post as PostInterface } from '../../../../constants/interfaces';
+import {
+  addMediaToPosts,
+  getSortedPosts,
+} from '../../../../utils/helperFunctions';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,69 +18,37 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const getSortedPosts = (snapShot: firebase.database.DataSnapshot): Post[] => {
-  const postsObject = snapShot.val();
-  const currentPosts: Post[] = Object.keys(postsObject).map((key) => ({
-    ...postsObject[key],
-    dateTime: key,
-    media: '',
-  }));
-  return currentPosts.sort((a, b) => {
-    const secondDate: any = new Date(b.dateTime);
-    const firstDate: any = new Date(a.dateTime);
-    return secondDate - firstDate;
-  });
-};
-
 const NewsFeed: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostInterface[]>([]);
   const classes = useStyles();
   const numOfPosts = useRef(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   //TODO -> Introduce Paging here instead of grabbing ALL && only get data for users that are being 'followed'
   useEffect(() => {
     if (firebase && authUser) {
-      firebase.posts(authUser.uid).on('value', (snapShot) => {
+      firebase.posts(authUser.uid).on('value', async (snapShot) => {
         if (snapShot.val() === null) {
           setPosts([]);
           numOfPosts.current = 0;
           return;
         } else if (Object.keys(snapShot.val()).length === numOfPosts.current) {
-          //Ignore event triggers from children
-          return;
+          return; //Ignore event triggers from children
         }
 
-        const sortedPosts = getSortedPosts(snapShot);
-        const storageRef = firebase.storage.ref(`users/${authUser.uid}/posts/`);
+        const currentPosts = await addMediaToPosts(
+          firebase,
+          authUser.uid,
+          getSortedPosts(snapShot.val())
+        );
 
-        //grab all associated media relative to the uid before setting posts state
-        storageRef.listAll().then((list) => {
-          new Promise<Collections.Dictionary<string, any>>((resolve) => {
-            const dict = new Collections.Dictionary<string, string>();
-            if (list.prefixes.length === 0) resolve(dict);
-            list.prefixes.forEach((prefix, index, array) => {
-              prefix
-                .child('media')
-                .getDownloadURL()
-                .then((url: string) => {
-                  dict.setValue(prefix.name, url);
-                  if (dict.size() === array.length) {
-                    resolve(dict);
-                  }
-                });
-            });
-          }).then((dict) => {
-            const postsWithMedia = sortedPosts.map((post) => {
-              if (dict.keys().includes(post.dateTime)) {
-                return { ...post, media: dict.getValue(post.dateTime) };
-              } else return post;
-            });
-            numOfPosts.current = postsWithMedia.length;
-            setPosts(postsWithMedia);
-          });
-        });
+        if (currentPosts) {
+          numOfPosts.current = currentPosts.length;
+          setPosts(currentPosts);
+          setIsLoading(false);
+        }
       });
     }
     return function cleanup(): void {
@@ -95,12 +59,14 @@ const NewsFeed: React.FC = () => {
   }, [firebase, authUser]);
 
   if (!authUser) return null;
+  else if (isLoading)
+    return <h1 style={{ textAlign: 'center' }}>Loading Please Wait</h1>;
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
         <CreatePost />
       </Grid>
-      {posts.map((post: Post) => (
+      {posts.map((post: PostInterface) => (
         <Grid item key={post.dateTime}>
           <Post
             post={post.post}
