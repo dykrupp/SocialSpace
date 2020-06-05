@@ -1,32 +1,34 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import CreatePost from './CreatePost';
 import { FirebaseContext } from '../Firebase/context';
-import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import { Grid } from '@material-ui/core';
 import Post from './Post';
 import { Post as PostInterface } from '../../constants/interfaces';
 import { addMediaToPosts, getSortedPosts } from '../../utils/helperFunctions';
 import { IsLoading } from '../IsLoading';
 import PropTypes from 'prop-types';
+import { AuthUserContext } from '../Authentication/AuthProvider/context';
 
 interface NewsFeedProps {
   isUserPostsOnly: boolean;
+  userUID: string;
 }
 
-const NewsFeed: React.FC<NewsFeedProps> = ({ isUserPostsOnly }) => {
+const NewsFeed: React.FC<NewsFeedProps> = ({ isUserPostsOnly, userUID }) => {
   const firebase = useContext(FirebaseContext);
-  const authUser = useContext(AuthUserContext);
   const [posts, setPosts] = useState<PostInterface[]>([]);
   const numOfPosts = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
+  const authUser = useContext(AuthUserContext);
 
   //TODO -> Introduce Paging here instead of grabbing ALL && only get data for users that are being 'followed'
   useEffect(() => {
-    if (firebase && authUser && isUserPostsOnly) {
-      firebase.posts(authUser.uid).on('value', async (snapShot) => {
+    if (firebase && isUserPostsOnly) {
+      firebase.posts(userUID).on('value', async (snapShot) => {
         if (snapShot.val() === null) {
-          setPosts([]);
           numOfPosts.current = 0;
+          setPosts([]);
+          setIsLoading(false);
           return;
         } else if (Object.keys(snapShot.val()).length === numOfPosts.current) {
           return; //Ignore event triggers from children
@@ -34,7 +36,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isUserPostsOnly }) => {
 
         const currentPosts = await addMediaToPosts(
           firebase,
-          authUser.uid,
+          userUID,
           getSortedPosts(snapShot.val())
         );
 
@@ -47,12 +49,13 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isUserPostsOnly }) => {
     }
 
     return function cleanup(): void {
-      if (authUser) firebase?.posts(authUser.uid).off();
+      firebase?.posts(userUID).off();
     };
-  }, [firebase, authUser, isUserPostsOnly]);
+  }, [firebase, isUserPostsOnly, userUID]);
 
-  if (!authUser) return null;
-  else if (isLoading) return <IsLoading />;
+  if (isLoading) return <IsLoading />;
+  else if (!authUser) return null;
+  //TODO -> Replace username with actual post username when implementing the dynamic news feed
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
@@ -74,6 +77,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isUserPostsOnly }) => {
 
 NewsFeed.propTypes = {
   isUserPostsOnly: PropTypes.bool.isRequired,
+  userUID: PropTypes.string.isRequired,
 };
 
 export default NewsFeed;

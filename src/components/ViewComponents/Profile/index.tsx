@@ -2,13 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../Firebase/context';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
-import { UserProfile } from '../../../constants/interfaces';
+import { UserProfileUID } from '../../../constants/interfaces';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { IsLoading } from '../../IsLoading';
-import {
-  addMediaToPosts,
-  getSortedPosts,
-} from '../../../utils/helperFunctions';
 import { AccountInfo } from './AccountInfo';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -36,19 +32,14 @@ export const ProfilePage: React.FC = () => {
   const classes = useStyles();
   const { userUID } = useParams();
   const firebase = useContext(FirebaseContext);
-  const [userProfile, setUserProfile] = useState<UserProfile>();
+  const [userProfile, setUserProfile] = useState<UserProfileUID>();
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
   const [tabIndex, setTabIndex] = React.useState(0);
 
   useEffect(() => {
     firebase?.user(userUID).on('value', async (snapShot) => {
-      const userProfile = snapShot.val() as UserProfile;
-      userProfile.posts = await addMediaToPosts(
-        firebase,
-        userUID,
-        getSortedPosts(userProfile.posts)
-      );
+      const userProfile: UserProfileUID = { ...snapShot.val(), uid: userUID };
       setUserProfile(userProfile);
       setIsLoading(false);
     });
@@ -95,7 +86,9 @@ export const ProfilePage: React.FC = () => {
           </AppBar>
         </Grid>
         <Grid item style={{ textAlign: 'center' }}>
-          {tabIndex === 0 && <NewsFeed isUserPostsOnly={true} />}
+          {tabIndex === 0 && (
+            <NewsFeed isUserPostsOnly={true} userUID={userProfile.uid} />
+          )}
           {tabIndex === 1 && <h1>Following</h1>}
           {tabIndex === 2 && <h1>Followers</h1>}
         </Grid>

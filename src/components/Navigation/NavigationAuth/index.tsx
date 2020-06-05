@@ -1,15 +1,11 @@
-import React, { useContext } from 'react';
-import {
-  fade,
-  makeStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core/styles';
+import React, { useContext, useState, useEffect } from 'react';
+import { fade, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -23,77 +19,86 @@ import { Link } from 'react-router-dom';
 import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import { UserProfileUID } from '../../../constants/interfaces';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    grow: {
-      flexGrow: 1,
+const useStyles = makeStyles((theme: Theme) => ({
+  mainDiv: {
+    flexGrow: 1,
+    minWidth: '760px',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    display: 'flex',
+    width: '200px',
+    justifyContent: 'center',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+      minWidth: '250px',
+      width: 'auto',
     },
-    title: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100% !important',
+    [theme.breakpoints.up('md')]: {
+      width: '100% !important',
     },
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginRight: theme.spacing(2),
-      marginLeft: 0,
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-      },
-    },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
       display: 'flex',
-      alignItems: 'center',
+      width: '200px',
       justifyContent: 'center',
     },
-    inputRoot: {
-      color: 'inherit',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
-    sectionDesktop: {
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
       display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
     },
-    sectionMobile: {
-      display: 'flex',
-      [theme.breakpoints.up('md')]: {
-        display: 'none',
-      },
-    },
-    link: {
-      color: 'white',
-      textDecoration: 'none',
-      outline: 0,
-    },
-  })
-);
+  },
+  link: {
+    color: 'white',
+    textDecoration: 'none',
+    outline: 0,
+  },
+  searchInput: {
+    color: 'white',
+    marginLeft: '50px',
+  },
+}));
 
 const NavigationAuth: React.FC = () => {
   const classes = useStyles();
@@ -107,6 +112,34 @@ const NavigationAuth: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const history = useHistory();
   const authUser = useContext(AuthUserContext);
+  const [users, setUsers] = useState<UserProfileUID[]>([]);
+  const [searchString, setSearchString] = useState('');
+
+  const onSearchSubmit = (): void => {
+    const searchedUser = users.find((user) => user.fullName === searchString);
+    if (searchedUser) history.push(`${ROUTES.PROFILE}/${searchedUser.uid}`);
+  };
+
+  useEffect(() => {
+    firebase?.users().on('value', (snapshot) => {
+      const usersObject = snapshot.val();
+
+      const usersList = Object.keys(usersObject).map((key) => ({
+        ...usersObject[key],
+        uid: key,
+      })) as UserProfileUID[];
+
+      setUsers(usersList.filter((user) => user.uid !== authUser?.uid));
+    });
+
+    return function cleanup(): void {
+      firebase?.users().off();
+    };
+  }, [firebase, authUser]);
+
+  const handleChange = (event: React.ChangeEvent<{}>, value: string): void => {
+    setSearchString(value);
+  };
 
   const handleProfileMenuOpen = (
     event: React.MouseEvent<HTMLElement>
@@ -213,7 +246,7 @@ const NavigationAuth: React.FC = () => {
   );
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.mainDiv}>
       <AppBar position="static">
         <Toolbar variant="dense">
           <Typography className={classes.title} variant="h6" noWrap>
@@ -225,20 +258,29 @@ const NavigationAuth: React.FC = () => {
               SocialSpace
             </Link>
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          <div className={classes.grow}>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <Autocomplete
+                freeSolo
+                classes={{
+                  input: classes.searchInput,
+                }}
+                autoComplete={true}
+                inputValue={searchString}
+                onInputChange={handleChange}
+                onKeyPress={(
+                  event: React.KeyboardEvent<HTMLDivElement>
+                ): void => {
+                  if (event.key === 'Enter') onSearchSubmit();
+                }}
+                options={users.map((option) => option.fullName)}
+                renderInput={(params): JSX.Element => <TextField {...params} />}
+              />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
           </div>
-          <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">

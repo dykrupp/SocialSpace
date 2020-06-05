@@ -28,3 +28,7 @@ export interface Post {
 export interface UserProfile extends User {
   posts: Post[] | null;
 }
+
+export interface UserProfileUID extends UserProfile {
+  uid: string;
+}
