@@ -75,5 +75,5 @@ export const addMediaToPosts = async (
     });
 };
 
-export const getFirstName = (fullName: string) => fullName.split(' ')[0];
-
+export const getFirstName = (fullName: string): string =>
+  fullName.split(' ')[0];

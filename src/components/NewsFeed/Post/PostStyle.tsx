@@ -12,10 +12,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { calcTimeSince } from '../../../../../utils/helperFunctions';
-import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
+import { calcTimeSince } from '../../../utils/helperFunctions';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { PostProps } from './index';
-import { Like, Comment } from '../../../../../constants/interfaces';
+import { Like, Comment } from '../../../constants/interfaces';
 
 interface PostStyleProps extends PostProps {
   deletePost: () => void;

@@ -1,35 +1,28 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import CreatePost from './CreatePost';
-import { FirebaseContext } from '../../../Firebase/context';
-import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
+import { FirebaseContext } from '../Firebase/context';
+import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import { Grid } from '@material-ui/core';
 import Post from './Post';
-import { Post as PostInterface } from '../../../../constants/interfaces';
-import {
-  addMediaToPosts,
-  getSortedPosts,
-} from '../../../../utils/helperFunctions';
-import { IsLoading } from '../../../IsLoading';
+import { Post as PostInterface } from '../../constants/interfaces';
+import { addMediaToPosts, getSortedPosts } from '../../utils/helperFunctions';
+import { IsLoading } from '../IsLoading';
+import PropTypes from 'prop-types';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '500px',
-    margin: '0 auto',
-  },
-}));
+interface NewsFeedProps {
+  isUserPostsOnly: boolean;
+}
 
-const NewsFeed: React.FC = () => {
+const NewsFeed: React.FC<NewsFeedProps> = ({ isUserPostsOnly }) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [posts, setPosts] = useState<PostInterface[]>([]);
-  const classes = useStyles();
   const numOfPosts = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
 
   //TODO -> Introduce Paging here instead of grabbing ALL && only get data for users that are being 'followed'
   useEffect(() => {
-    if (firebase && authUser) {
+    if (firebase && authUser && isUserPostsOnly) {
       firebase.posts(authUser.uid).on('value', async (snapShot) => {
         if (snapShot.val() === null) {
           setPosts([]);
@@ -52,17 +45,16 @@ const NewsFeed: React.FC = () => {
         }
       });
     }
+
     return function cleanup(): void {
-      if (firebase && authUser) {
-        firebase.posts(authUser.uid).off();
-      }
+      if (authUser) firebase?.posts(authUser.uid).off();
     };
-  }, [firebase, authUser]);
+  }, [firebase, authUser, isUserPostsOnly]);
 
   if (!authUser) return null;
   else if (isLoading) return <IsLoading />;
   return (
-    <Grid container direction="column" spacing={2} className={classes.root}>
+    <Grid container direction="column" spacing={2}>
       <Grid item>
         <CreatePost />
       </Grid>
@@ -78,6 +70,10 @@ const NewsFeed: React.FC = () => {
       ))}
     </Grid>
   );
+};
+
+NewsFeed.propTypes = {
+  isUserPostsOnly: PropTypes.bool.isRequired,
 };
 
 export default NewsFeed;

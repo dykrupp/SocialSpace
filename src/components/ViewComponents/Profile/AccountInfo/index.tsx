@@ -14,12 +14,13 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
   },
   profileImage: {
-    width: '150px',
-    height: '150px',
+    width: '125px',
+    height: '125px',
+    alignSelf: 'center',
   },
   editImage: {
-    width: '75px',
-    height: '75px',
+    width: '60px',
+    height: '60px',
   },
   accountInfoColumn: {
     display: 'flex',

@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { FirebaseContext } from '../../../../Firebase/context';
+import { FirebaseContext } from '../../Firebase/context';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -11,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
-import { getFirstName } from '../../../../../utils/helperFunctions';
+import { getFirstName } from '../../../utils/helperFunctions';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
   },
   postButton: {
-    width: '80%',
+    width: '40%',
   },
 }));
 

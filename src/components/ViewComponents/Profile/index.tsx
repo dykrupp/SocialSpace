@@ -10,9 +10,24 @@ import {
   getSortedPosts,
 } from '../../../utils/helperFunctions';
 import { AccountInfo } from './AccountInfo';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
+import { Grid } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import PeopleIcon from '@material-ui/icons/People';
+import NewsFeed from '../../NewsFeed';
 
 const useStyles = makeStyles(() => ({
-  mainDiv: {
+  mainSurface: {
+    flexGrow: 1,
+    width: '750px',
+    margin: '0 auto',
+    marginTop: '20px',
+  },
+  gridContainer: {
     padding: '20px',
   },
 }));
@@ -24,6 +39,7 @@ export const ProfilePage: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile>();
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
+  const [tabIndex, setTabIndex] = React.useState(0);
 
   useEffect(() => {
     firebase?.user(userUID).on('value', async (snapShot) => {
@@ -42,12 +58,48 @@ export const ProfilePage: React.FC = () => {
     };
   }, [firebase, userUID]);
 
+  const handleChange = (
+    event: React.ChangeEvent<{}>,
+    newValue: number
+  ): void => {
+    setTabIndex(newValue);
+  };
+
   if (isLoading || !userProfile || !authUser) return <IsLoading />;
   const isUsersProfile = authUser.uid === userUID;
   return (
-    <div className={classes.mainDiv}>
-      <AccountInfo isUsersProfile={isUsersProfile} userProfile={userProfile} />
-      <hr />
-    </div>
+    <Paper elevation={3} className={classes.mainSurface}>
+      <Grid container direction="column" className={classes.gridContainer}>
+        <Grid item>
+          <AccountInfo
+            isUsersProfile={isUsersProfile}
+            userProfile={userProfile}
+          />
+        </Grid>
+        <Grid item>
+          <hr />
+        </Grid>
+        <Grid item>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={tabIndex}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab icon={<ReceiptIcon />} label="Posts" />
+              <Tab icon={<PeopleIcon />} label="Following" />
+              <Tab icon={<PersonPinIcon />} label="Followers" />
+            </Tabs>
+          </AppBar>
+        </Grid>
+        <Grid item style={{ textAlign: 'center' }}>
+          {tabIndex === 0 && <NewsFeed isUserPostsOnly={true} />}
+          {tabIndex === 1 && <h1>Following</h1>}
+          {tabIndex === 2 && <h1>Followers</h1>}
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
