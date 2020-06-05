@@ -51,35 +51,40 @@ class Firebase {
     } else return Promise.resolve();
   };
 
-  user = (uid: string): app.database.Reference => this.db.ref(`users/${uid}`);
+  user = (userUID: string): app.database.Reference =>
+    this.db.ref(`users/${userUID}`);
 
-  post = (uid: string, dateTime: string): app.database.Reference =>
-    this.db.ref(`users/${uid}/posts/${dateTime}`);
+  post = (userUID: string, dateTime: string): app.database.Reference =>
+    this.db.ref(`posts/${userUID}/${dateTime}`);
 
-  posts = (uid: string): app.database.Reference =>
-    this.db.ref(`users/${uid}/posts/`);
+  posts = (userUID: string): app.database.Reference =>
+    this.db.ref(`posts/${userUID}`);
 
+  //TODO -> Consider restructuring so that comments and likes don't affect posts.on()
   like = (
-    uid: string,
+    postUserID: string,
     postDateTime: string,
-    currentUserId: string
+    likeUserId: string
   ): app.database.Reference =>
-    this.db.ref(`users/${uid}/posts/${postDateTime}/likes/${currentUserId}`);
+    this.db.ref(`posts/${postUserID}/${postDateTime}/likes/${likeUserId}`);
 
-  likes = (uid: string, postDateTime: string): app.database.Reference =>
-    this.db.ref(`users/${uid}/posts/${postDateTime}/likes`);
+  likes = (postUserID: string, postDateTime: string): app.database.Reference =>
+    this.db.ref(`posts/${postUserID}/${postDateTime}/likes`);
 
   comment = (
-    uid: string,
+    postUserID: string,
     postDateTime: string,
     commentDateTime: string
   ): app.database.Reference =>
     this.db.ref(
-      `users/${uid}/posts/${postDateTime}/comments/${commentDateTime}`
+      `posts/${postUserID}/${postDateTime}/comments/${commentDateTime}`
     );
 
-  comments = (uid: string, postDateTime: string): app.database.Reference =>
-    this.db.ref(`users/${uid}/posts/${postDateTime}/comments/`);
+  comments = (
+    postUserID: string,
+    postDateTime: string
+  ): app.database.Reference =>
+    this.db.ref(`posts/${postUserID}/${postDateTime}/comments`);
 
   users = (): app.database.Reference => this.db.ref('users');
 }
