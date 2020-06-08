@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '35px',
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
-    minWidth: '500px',
+    maxWidth: '500px',
+    width: '100%',
     display: 'flex',
   },
   sectionDesktop: {
@@ -76,7 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   autoComplete: {
     width: '100%',
-    marginRight: '20px',
   },
 }));
 

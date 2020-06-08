@@ -6,8 +6,14 @@ import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '750px',
-    margin: '0 auto',
+    display: 'flex',
+    justifyContent: 'center',
+    minWidth: '760px',
+  },
+  gridContainer: {
+    width: '740px',
+    marginLeft: '10px',
+    marginRight: '10px',
   },
 }));
 
@@ -17,9 +23,11 @@ const Home: React.FC = () => {
 
   if (!authUser) return null;
   return (
-    <Grid container className={classes.root}>
-      <NewsFeed isUserPostsOnly={true} userUID={authUser.uid} />
-    </Grid>
+    <div className={classes.root}>
+      <Grid container className={classes.gridContainer}>
+        <NewsFeed isUserPostsOnly={true} userUID={authUser.uid} />
+      </Grid>
+    </div>
   );
 };
 
