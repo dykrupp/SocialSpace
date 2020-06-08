@@ -26,8 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     minWidth: '760px',
   },
-  grow: {
-    flexGrow: 1,
+  searchDiv: {
+    display: 'flex',
+    flex: '1',
+    justifyContent: 'center',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -37,43 +39,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '200px',
     justifyContent: 'center',
   },
-  search: {
+  searchBar: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      minWidth: '250px',
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
+    height: '35px',
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
+    minWidth: '500px',
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100% !important',
-    [theme.breakpoints.up('md')]: {
-      width: '100% !important',
-    },
   },
   sectionDesktop: {
     display: 'none',
@@ -96,7 +73,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   searchInput: {
     color: 'white',
-    marginLeft: '50px',
+  },
+  autoComplete: {
+    width: '100%',
+    marginRight: '20px',
   },
 }));
 
@@ -114,11 +94,8 @@ const NavigationAuth: React.FC = () => {
   const authUser = useContext(AuthUserContext);
   const [users, setUsers] = useState<UserProfileUID[]>([]);
   const [searchString, setSearchString] = useState('');
-
-  const onSearchSubmit = (): void => {
-    const searchedUser = users.find((user) => user.fullName === searchString);
-    if (searchedUser) history.push(`${ROUTES.PROFILE}/${searchedUser.uid}`);
-  };
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const menuId = 'primary-search-account-menu';
 
   useEffect(() => {
     firebase?.users().on('value', (snapshot) => {
@@ -160,7 +137,14 @@ const NavigationAuth: React.FC = () => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
+  const onSearchSubmit = (): void => {
+    const searchedUser = users.find((user) => user.fullName === searchString);
+    if (searchedUser) {
+      history.push(`${ROUTES.PROFILE}/${searchedUser.uid}`);
+      setSearchString('');
+    }
+  };
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -204,7 +188,6 @@ const NavigationAuth: React.FC = () => {
     </Menu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -258,13 +241,18 @@ const NavigationAuth: React.FC = () => {
               SocialSpace
             </Link>
           </Typography>
-          <div className={classes.grow}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
+          <div className={classes.searchDiv}>
+            <div className={classes.searchBar}>
+              <IconButton
+                color="inherit"
+                onClick={(): void => onSearchSubmit()}
+              >
                 <SearchIcon />
-              </div>
+              </IconButton>
               <Autocomplete
                 freeSolo
+                disableClearable
+                className={classes.autoComplete}
                 classes={{
                   input: classes.searchInput,
                 }}
@@ -277,7 +265,16 @@ const NavigationAuth: React.FC = () => {
                   if (event.key === 'Enter') onSearchSubmit();
                 }}
                 options={users.map((option) => option.fullName)}
-                renderInput={(params): JSX.Element => <TextField {...params} />}
+                renderInput={(params): JSX.Element => (
+                  <TextField
+                    {...params}
+                    placeholder="Search SocialSpace..."
+                    InputProps={{
+                      ...params.InputProps,
+                      disableUnderline: true,
+                    }}
+                  />
+                )}
               />
             </div>
           </div>

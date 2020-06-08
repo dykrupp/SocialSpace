@@ -60,7 +60,6 @@ class Firebase {
   posts = (userUID: string): app.database.Reference =>
     this.db.ref(`posts/${userUID}`);
 
-  //TODO -> Consider restructuring so that comments and likes don't affect posts.on()
   like = (
     postUserID: string,
     postDateTime: string,
