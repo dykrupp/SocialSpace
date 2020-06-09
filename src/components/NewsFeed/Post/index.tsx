@@ -8,11 +8,18 @@ import { Comment, Like } from '../../../constants/interfaces';
 export interface PostProps {
   post: string;
   username: string;
+  userUID: string;
   dateTime: string;
   media: string;
 }
 
-const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
+const Post: React.FC<PostProps> = ({
+  post,
+  username,
+  userUID,
+  dateTime,
+  media,
+}) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [comment, setComment] = useState('');
@@ -32,7 +39,7 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
     if (firebase && authUser) {
       const utcDateTime = new Date().toUTCString();
       firebase
-        .comment(authUser.uid, dateTime, utcDateTime)
+        .comment(userUID, dateTime, utcDateTime)
         .set({ comment, userUID: authUser.uid, fullName: authUser.fullName });
       setComment('');
     }
@@ -45,14 +52,14 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
   const addLike = (): void => {
     if (firebase && authUser) {
       firebase
-        .like(authUser.uid, dateTime, authUser.uid)
+        .like(userUID, dateTime, authUser.uid)
         .set({ fullName: authUser.fullName });
     }
   };
 
   const removeLike = (): void => {
     if (firebase && authUser) {
-      firebase.like(authUser.uid, dateTime, authUser.uid).remove();
+      firebase.like(userUID, dateTime, authUser.uid).remove();
     }
   };
 
@@ -60,22 +67,22 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
     if (firebase && authUser) {
       if (media !== '') {
         firebase.storage
-          .ref(`users/${authUser.uid}/posts/${dateTime}/media`)
+          .ref(`users/${userUID}/posts/${dateTime}/media`)
           .delete()
-          .then(() => firebase.post(authUser.uid, dateTime).remove());
-      } else firebase.post(authUser.uid, dateTime).remove();
+          .then(() => firebase.post(userUID, dateTime).remove());
+      } else firebase.post(userUID, dateTime).remove();
     }
   };
 
   const deleteComment = (commentDateTime: string): void => {
     if (firebase && authUser) {
-      firebase.comment(authUser.uid, dateTime, commentDateTime).remove();
+      firebase.comment(userUID, dateTime, commentDateTime).remove();
     }
   };
 
   useEffect(() => {
     if (firebase && authUser) {
-      firebase.comments(authUser.uid, dateTime).on('value', (snapShot) => {
+      firebase.comments(userUID, dateTime).on('value', (snapShot) => {
         const commentsObject = snapShot.val();
 
         if (commentsObject === null) {
@@ -108,13 +115,13 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
     }
 
     return function cleanup(): void {
-      if (firebase && authUser) firebase.comments(authUser.uid, dateTime).off();
+      if (firebase && authUser) firebase.comments(userUID, dateTime).off();
     };
-  }, [firebase, authUser, dateTime]);
+  }, [firebase, authUser, dateTime, userUID]);
 
   useEffect(() => {
     if (firebase && authUser) {
-      firebase.likes(authUser.uid, dateTime).on('value', (snapShot) => {
+      firebase.likes(userUID, dateTime).on('value', (snapShot) => {
         const likesObject = snapShot.val();
 
         if (likesObject === null) {
@@ -137,9 +144,9 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
     }
 
     return function cleanup(): void {
-      if (firebase && authUser) firebase.likes(authUser.uid, dateTime).off();
+      if (firebase && authUser) firebase.likes(userUID, dateTime).off();
     };
-  }, [firebase, authUser, dateTime]);
+  }, [firebase, authUser, dateTime, userUID]);
 
   return (
     <PostStyle
@@ -158,6 +165,7 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
       comments={comments}
       likes={likes}
       removeLike={removeLike}
+      userUID={userUID}
     />
   );
 };
@@ -165,6 +173,7 @@ const Post: React.FC<PostProps> = ({ post, username, dateTime, media }) => {
 Post.propTypes = {
   post: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
+  userUID: PropTypes.string.isRequired,
   dateTime: PropTypes.string.isRequired,
   media: PropTypes.string.isRequired,
 };

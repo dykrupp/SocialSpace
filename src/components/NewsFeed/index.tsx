@@ -83,6 +83,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
             username={post.createdByName}
             dateTime={post.dateTime}
             media={post.media}
+            userUID={userUID}
           />
         </Grid>
       ))}

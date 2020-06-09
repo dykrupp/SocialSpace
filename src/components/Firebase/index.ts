@@ -54,6 +54,20 @@ class Firebase {
   user = (userUID: string): app.database.Reference =>
     this.db.ref(`users/${userUID}`);
 
+  users = (): app.database.Reference => this.db.ref('users');
+
+  followers = (userUID: string): app.database.Reference =>
+    this.db.ref(`users/${userUID}/followers`);
+
+  follower = (userUID: string, followerUID: string): app.database.Reference =>
+    this.db.ref(`users/${userUID}/followers/${followerUID}`);
+
+  following = (userUID: string, followerUID: string): app.database.Reference =>
+    this.db.ref(`users/${userUID}/following/${followerUID}`);
+
+  follows = (userUID: string): app.database.Reference =>
+    this.db.ref(`users/${userUID}/following/`);
+
   post = (userUID: string, dateTime: string): app.database.Reference =>
     this.db.ref(`posts/${userUID}/${dateTime}`);
 
@@ -84,8 +98,6 @@ class Firebase {
     postDateTime: string
   ): app.database.Reference =>
     this.db.ref(`posts/${postUserID}/${postDateTime}/comments`);
-
-  users = (): app.database.Reference => this.db.ref('users');
 }
 
 export default Firebase;

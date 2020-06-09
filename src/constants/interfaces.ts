@@ -3,6 +3,8 @@ export interface User {
   email: string;
   birthday: string;
   gender: string;
+  following: string[];
+  followers: string[];
 }
 
 export interface Comment {
