@@ -12,6 +12,7 @@ import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import { getFirstName } from '../../../utils/helperFunctions';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -55,7 +56,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CreatePost: React.FC = () => {
+interface CreatePostProps {
+  createdByUserUID: string;
+  postUserUID: string;
+}
+
+const CreatePost: React.FC<CreatePostProps> = ({
+  createdByUserUID,
+  postUserUID,
+}) => {
   const authUser = useContext(AuthUserContext);
   const firebase = useContext(FirebaseContext);
   const classes = useStyles();
@@ -66,8 +75,12 @@ const CreatePost: React.FC = () => {
   const sendFirebasePost = (utcDateTime: string): void => {
     if (firebase && authUser) {
       firebase
-        .post(authUser.uid, utcDateTime)
-        .set({ post })
+        .post(postUserUID, utcDateTime)
+        .set({
+          post,
+          createdByUID: createdByUserUID,
+          createdByName: authUser.fullName,
+        })
         .then(() => {
           setPost('');
         });
@@ -80,7 +93,7 @@ const CreatePost: React.FC = () => {
 
       if (picture) {
         firebase.storage
-          .ref(`users/${authUser.uid}/posts/${utcDateTime}/media`)
+          .ref(`users/${postUserUID}/posts/${utcDateTime}/media`)
           .put(picture)
           .then(() => {
             sendFirebasePost(utcDateTime);
@@ -199,6 +212,11 @@ const CreatePost: React.FC = () => {
       </Grid>
     </Paper>
   );
+};
+
+CreatePost.propTypes = {
+  createdByUserUID: PropTypes.string.isRequired,
+  postUserUID: PropTypes.string.isRequired,
 };
 
 export default CreatePost;

@@ -23,6 +23,8 @@ export interface Post {
   comments: Comment[];
   likes: Like[];
   dateTime: string;
+  createdByUID: string;
+  createdByName: string;
 }
 
 export interface UserProfile extends User {

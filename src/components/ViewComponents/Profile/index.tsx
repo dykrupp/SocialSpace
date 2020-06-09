@@ -45,7 +45,7 @@ export const ProfilePage: React.FC = () => {
     });
 
     return function cleanup(): void {
-      if (firebase) firebase.user(userUID).off();
+      firebase?.user(userUID).off();
     };
   }, [firebase, userUID]);
 
@@ -87,7 +87,7 @@ export const ProfilePage: React.FC = () => {
         </Grid>
         <Grid item style={{ textAlign: 'center' }}>
           {tabIndex === 0 && (
-            <NewsFeed isUserPostsOnly={true} userUID={userProfile.uid} />
+            <NewsFeed isProfileFeed={true} userUID={userProfile.uid} />
           )}
           {tabIndex === 1 && <h1>Following</h1>}
           {tabIndex === 2 && <h1>Followers</h1>}
