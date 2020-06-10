@@ -24,20 +24,27 @@ export const calcTimeSince = (milliseconds: number): string => {
   return `${Math.floor(seconds)} seconds ago`;
 };
 
-export const getSortedPosts = (postsObject: any): Post[] => {
+export const getSortedPosts = (posts: Post[]): Post[] => {
+  return posts.sort((a, b) => {
+    const secondDate = new Date(b.dateTime).valueOf();
+    const firstDate = new Date(a.dateTime).valueOf();
+    return secondDate - firstDate;
+  });
+};
+
+export const convertToPosts = (
+  snapShot: firebase.database.DataSnapshot
+): Post[] => {
+  const postsObject = snapShot.val();
   const currentPosts: Post[] = Object.keys(postsObject).map((key) => ({
     ...postsObject[key],
     dateTime: key,
     media: '',
   }));
-  return currentPosts.sort((a, b) => {
-    const secondDate: any = new Date(b.dateTime);
-    const firstDate: any = new Date(a.dateTime);
-    return secondDate - firstDate;
-  });
+  return currentPosts;
 };
 
-export const addMediaToPosts = async (
+export const addMediaUrl = async (
   firebase: Firebase,
   userUID: string,
   posts: Post[]
@@ -47,7 +54,6 @@ export const addMediaToPosts = async (
   return await storageRef
     .listAll()
     .then(async (list) => {
-      // eslint-disable-next-line no-undef
       return await new Promise<Collections.Dictionary<string, any>>(
         (resolve) => {
           const dict = new Collections.Dictionary<string, string>();

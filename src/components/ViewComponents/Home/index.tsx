@@ -25,7 +25,7 @@ const Home: React.FC = () => {
   return (
     <div className={classes.root}>
       <Grid container className={classes.gridContainer}>
-        <NewsFeed isProfileFeed={true} userUID={authUser.uid} />
+        <NewsFeed isProfileFeed={false} userUID={authUser.uid} />
       </Grid>
     </div>
   );
