@@ -57,15 +57,11 @@ export const ProfilePage: React.FC = () => {
   };
 
   if (isLoading || !userProfile || !authUser) return <IsLoading />;
-  const isUsersProfile = authUser.uid === userUID;
   return (
     <Paper elevation={3} className={classes.mainSurface}>
       <Grid container direction="column" className={classes.gridContainer}>
         <Grid item>
-          <AccountInfo
-            isUsersProfile={isUsersProfile}
-            userProfile={userProfile}
-          />
+          <AccountInfo userProfile={userProfile} />
         </Grid>
         <Grid item>
           <hr />
@@ -87,7 +83,7 @@ export const ProfilePage: React.FC = () => {
         </Grid>
         <Grid item style={{ textAlign: 'center' }}>
           {tabIndex === 0 && (
-            <NewsFeed isProfileFeed={true} userUID={userProfile.uid} />
+            <NewsFeed userProfile={userProfile} userUID={userProfile.uid} />
           )}
           {tabIndex === 1 && <h1>Following</h1>}
           {tabIndex === 2 && <h1>Followers</h1>}

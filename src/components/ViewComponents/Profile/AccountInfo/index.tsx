@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { UserProfileUID } from '../../../../constants/interfaces';
@@ -45,13 +45,9 @@ const useStyles = makeStyles(() => ({
 
 interface AccountInfoProps {
   userProfile: UserProfileUID;
-  isUsersProfile: boolean;
 }
 
-export const AccountInfo: React.FC<AccountInfoProps> = ({
-  userProfile,
-  isUsersProfile,
-}) => {
+export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   const classes = useStyles();
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
@@ -80,6 +76,16 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({
       firebase?.following(authUser.uid, userProfile.uid).remove();
     }
   };
+
+  useEffect(() => {
+    if (authUser && userProfile && userProfile.followers) {
+      setIsFollowingUser(
+        Object.keys(userProfile.followers).includes(authUser.uid)
+      );
+    }
+  }, [authUser, userProfile]);
+
+  const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
 
   return (
     <div className={classes.flexDiv}>
@@ -140,5 +146,4 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({
 
 AccountInfo.propTypes = {
   userProfile: PropTypes.any.isRequired,
-  isUsersProfile: PropTypes.bool.isRequired,
 };

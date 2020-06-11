@@ -3,7 +3,10 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import CreatePost from './CreatePost';
 import { FirebaseContext } from '../Firebase/context';
 import { Grid } from '@material-ui/core';
-import { Post as PostInterface } from '../../constants/interfaces';
+import {
+  Post as PostInterface,
+  UserProfileUID,
+} from '../../constants/interfaces';
 import { IsLoading } from '../IsLoading';
 import PropTypes from 'prop-types';
 import { AuthUserContext } from '../Authentication/AuthProvider/context';
@@ -15,18 +18,25 @@ import {
 } from '../../utils/helperFunctions';
 
 interface NewsFeedProps {
-  isProfileFeed: boolean;
   userUID: string;
+  userProfile: UserProfileUID | null;
 }
 
 const LimitNewsFeedBy = 10;
 
-const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
+const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
   const firebase = useContext(FirebaseContext);
   const [posts, setPosts] = useState<PostInterface[]>([]);
   const previousPosts = useRef<PostInterface[]>();
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
+
+  const areFriends = (userProfile: UserProfileUID): boolean => {
+    return authUser && userProfile.followers && userProfile.following
+      ? Object.keys(userProfile.following).includes(authUser.uid) &&
+          Object.keys(userProfile.followers).includes(authUser.uid)
+      : false;
+  };
 
   const containsUniquePost = (
     snapShot: firebase.database.DataSnapshot
@@ -50,7 +60,11 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
         setPosts([]);
         setIsLoading(false);
         return;
-      } else if (!containsUniquePost(snapShot)) return; //Ignore event triggers from children (comments/likes)
+      } else if (
+        !containsUniquePost(snapShot) &&
+        Object.keys(snapShot.val()).length === previousPosts.current?.length
+      )
+        return; //Ignore event triggers from children (comments/likes)
 
       const postsWithMediaURL = await addMediaUrl(
         firebase,
@@ -74,37 +88,74 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
           .limitToLast(LimitNewsFeedBy)
           .on('value', async (snapShot) => {
             if (snapShot.val() !== null) {
-              if (!containsUniquePost(snapShot)) return; //Ignore event triggers from children (comments/likes)
+              const numPrevUserPosts = previousPosts.current?.filter(
+                (post) => post.createdByUID === feedUID
+              ).length;
 
-              const sortedPosts = await addMediaUrl(
-                firebase,
-                userUID,
-                getSortedPosts(convertToPosts(snapShot))
-              );
+              const currentUserPosts = convertToPosts(snapShot);
 
-              if (sortedPosts) {
-                setPosts((posts) => {
-                  const uniqueArr = getSortedPosts(
-                    posts
-                      .concat(sortedPosts)
-                      .filter(
-                        (item, index, array) =>
-                          index ===
-                          array.findIndex(
-                            (element) => element.dateTime === item.dateTime
-                          )
-                      )
-                  );
-                  previousPosts.current = uniqueArr;
-                  return uniqueArr;
-                });
+              if (
+                !containsUniquePost(snapShot) &&
+                numPrevUserPosts &&
+                currentUserPosts.length === numPrevUserPosts
+              ) {
+                return; //Ignore event triggers from children (comments/likes)
+              } else if (
+                previousPosts.current &&
+                numPrevUserPosts &&
+                currentUserPosts.length === numPrevUserPosts - 1
+              ) {
+                //Removing Post
+                const previousUserPosts = previousPosts.current.filter(
+                  (previousPost) => previousPost.createdByUID === feedUID
+                );
+
+                const postToRemove = previousUserPosts.filter((x) =>
+                  currentUserPosts.some(
+                    (i) => i.post !== x.post && i.dateTime !== x.dateTime
+                  )
+                )[0];
+
+                setPosts((posts) =>
+                  posts.filter((post) => post !== postToRemove)
+                );
+              } else {
+                //Adding post
+                const sortedPosts = await addMediaUrl(
+                  firebase,
+                  feedUID,
+                  getSortedPosts(currentUserPosts)
+                );
+
+                if (sortedPosts) {
+                  setPosts((posts) => {
+                    const uniqueArr = getSortedPosts(
+                      posts
+                        .concat(sortedPosts)
+                        .filter(
+                          (item, index, array) =>
+                            index ===
+                            array.findIndex(
+                              (element) => element.dateTime === item.dateTime
+                            )
+                        )
+                    );
+                    previousPosts.current = uniqueArr;
+                    return uniqueArr;
+                  });
+                }
+
+                if (index === array.length - 1) setIsLoading(false);
               }
-
-              if (index === array.length - 1) setIsLoading(false);
             } else if (
-              !previousPosts.current ||
-              previousPosts.current.length === 1
+              previousPosts.current &&
+              previousPosts.current.length > 1
             ) {
+              //handle case where last post from feedUID is removed
+              setPosts((posts) =>
+                posts.filter((post) => post.createdByUID !== feedUID)
+              );
+            } else {
               //handle case where there are no posts
               previousPosts.current = [];
               setPosts([]);
@@ -117,7 +168,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
 
   //TODO -> Introduce Paging here so we don't get all posts in one large chunk
   useEffect(() => {
-    if (firebase && isProfileFeed) {
+    if (firebase && userProfile) {
       firebase.posts(userUID).on('value', async (snapShot) => {
         setProfilePosts(snapShot);
       });
@@ -126,32 +177,30 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
     return function cleanup(): void {
       firebase?.posts(userUID).off();
     };
-  }, [firebase, isProfileFeed, userUID]);
+  }, [firebase, userProfile, userUID]);
 
   //TODO -> Introduce Paging here so we don't get all posts in one large chunk
   useEffect(() => {
     let feedUIDS = [''];
 
-    if (firebase && !isProfileFeed && authUser) {
-      firebase
-        .follows(userUID)
-        .once('value')
-        .then((followSnapShot) => {
-          feedUIDS = //add current user to feedUIDS
-            followSnapShot.val() === null
-              ? new Array(authUser.uid)
-              : Object.keys(followSnapShot.val()).concat(authUser.uid);
+    if (firebase && !userProfile && authUser) {
+      firebase.follows(userUID).on('value', (followSnapShot) => {
+        feedUIDS = //add current user to feedUIDS
+          followSnapShot.val() === null
+            ? new Array(authUser.uid)
+            : Object.keys(followSnapShot.val()).concat(authUser.uid);
 
-          setNewsFeedPosts(feedUIDS);
-        });
+        setNewsFeedPosts(feedUIDS);
+      });
     }
 
     return function cleanup(): void {
+      firebase?.follows(userUID).off();
       feedUIDS.forEach((feedUID) => {
         firebase?.posts(feedUID).off();
       });
     };
-  }, [firebase, isProfileFeed, authUser, userUID]);
+  }, [firebase, userProfile, authUser, userUID]);
 
   const isAuthUsersFeed = authUser?.uid === userUID;
 
@@ -166,7 +215,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
             postUserUID={authUser.uid}
           />
         )}
-        {!isAuthUsersFeed && (
+        {!isAuthUsersFeed && userProfile && areFriends(userProfile) && (
           <CreatePost createdByUserUID={authUser.uid} postUserUID={userUID} />
         )}
       </Grid>
@@ -186,7 +235,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ isProfileFeed, userUID }) => {
 };
 
 NewsFeed.propTypes = {
-  isProfileFeed: PropTypes.bool.isRequired,
+  userProfile: PropTypes.any,
   userUID: PropTypes.string.isRequired,
 };
 
