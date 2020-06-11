@@ -21,8 +21,8 @@ const useStyles = makeStyles(() => ({
     alignSelf: 'center',
   },
   editImage: {
-    width: '60px',
-    height: '60px',
+    width: '50px',
+    height: '50px',
   },
   accountInfoColumn: {
     display: 'flex',
@@ -31,7 +31,8 @@ const useStyles = makeStyles(() => ({
   },
   accountInfoRow: {
     display: 'flex',
-    flex: '1',
+    width: '50%',
+    textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -93,18 +94,26 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
       <div className={classes.accountInfoColumn}>
         <div className={classes.flexDiv}>
           <div className={classes.accountInfoRow}>
-            <h2>{`Full Name: ${userProfile.fullName}`}</h2>
+            <h3>
+              Full Name: <br /> {userProfile.fullName}
+            </h3>
           </div>
           <div className={classes.accountInfoRow}>
-            <h2>{`Email: ${userProfile.email}`}</h2>
+            <h3>
+              Email: <br /> {userProfile.email}
+            </h3>
           </div>
         </div>
         <div className={classes.flexDiv}>
           <div className={classes.accountInfoRow}>
-            <h2>{`Birthday: ${userProfile.birthday}`}</h2>
+            <h3>
+              Birthday: <br /> {userProfile.birthday}
+            </h3>
           </div>
           <div className={classes.accountInfoRow}>
-            <h2>{`Gender: ${userProfile.gender}`}</h2>
+            <h3>
+              Gender: <br /> {userProfile.gender}
+            </h3>
           </div>
         </div>
       </div>

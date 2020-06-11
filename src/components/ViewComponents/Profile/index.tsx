@@ -17,11 +17,15 @@ import PeopleIcon from '@material-ui/icons/People';
 import NewsFeed from '../../NewsFeed';
 
 const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    minWidth: '760px',
+  },
   mainSurface: {
-    flexGrow: 1,
+    display: 'flex',
     width: '750px',
-    margin: '0 auto',
-    marginTop: '20px',
+    margin: '20px',
   },
   gridContainer: {
     padding: '20px',
@@ -58,37 +62,39 @@ export const ProfilePage: React.FC = () => {
 
   if (isLoading || !userProfile || !authUser) return <IsLoading />;
   return (
-    <Paper elevation={3} className={classes.mainSurface}>
-      <Grid container direction="column" className={classes.gridContainer}>
-        <Grid item>
-          <AccountInfo userProfile={userProfile} />
+    <div className={classes.root}>
+      <Paper elevation={3} className={classes.mainSurface}>
+        <Grid container direction="column" className={classes.gridContainer}>
+          <Grid item>
+            <AccountInfo userProfile={userProfile} />
+          </Grid>
+          <Grid item>
+            <hr />
+          </Grid>
+          <Grid item>
+            <AppBar position="static" color="default">
+              <Tabs
+                value={tabIndex}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                variant="fullWidth"
+              >
+                <Tab icon={<ReceiptIcon />} label="Posts" />
+                <Tab icon={<PeopleIcon />} label="Following" />
+                <Tab icon={<PersonPinIcon />} label="Followers" />
+              </Tabs>
+            </AppBar>
+          </Grid>
+          <Grid item style={{ textAlign: 'center' }}>
+            {tabIndex === 0 && (
+              <NewsFeed userProfile={userProfile} userUID={userProfile.uid} />
+            )}
+            {tabIndex === 1 && <h1>Following</h1>}
+            {tabIndex === 2 && <h1>Followers</h1>}
+          </Grid>
         </Grid>
-        <Grid item>
-          <hr />
-        </Grid>
-        <Grid item>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={tabIndex}
-              onChange={handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="fullWidth"
-            >
-              <Tab icon={<ReceiptIcon />} label="Posts" />
-              <Tab icon={<PeopleIcon />} label="Following" />
-              <Tab icon={<PersonPinIcon />} label="Followers" />
-            </Tabs>
-          </AppBar>
-        </Grid>
-        <Grid item style={{ textAlign: 'center' }}>
-          {tabIndex === 0 && (
-            <NewsFeed userProfile={userProfile} userUID={userProfile.uid} />
-          )}
-          {tabIndex === 1 && <h1>Following</h1>}
-          {tabIndex === 2 && <h1>Followers</h1>}
-        </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </div>
   );
 };

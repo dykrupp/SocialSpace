@@ -11,9 +11,10 @@ const useStyles = makeStyles(() => ({
     minWidth: '760px',
   },
   gridContainer: {
-    width: '740px',
-    marginLeft: '10px',
-    marginRight: '10px',
+    width: '750px',
+    marginLeft: '20px',
+    marginRight: '20px',
+    marginBottom: '20px',
   },
 }));
 
