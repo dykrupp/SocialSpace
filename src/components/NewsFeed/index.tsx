@@ -51,33 +51,56 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
     } else return true;
   };
 
-  const setProfilePosts = async (
-    snapShot: firebase.database.DataSnapshot
+  const resetPosts = (): void => {
+    previousPosts.current = [];
+    setPosts([]);
+    setIsLoading(false);
+  };
+
+  const addNewsFeedPost = async (
+    feedUID: string,
+    currentUserPosts: PostInterface[]
   ): Promise<void> => {
     if (firebase) {
-      if (snapShot.val() === null) {
-        previousPosts.current = [];
-        setPosts([]);
-        setIsLoading(false);
-        return;
-      } else if (
-        !containsUniquePost(snapShot) &&
-        Object.keys(snapShot.val()).length === previousPosts.current?.length
-      )
-        return; //Ignore event triggers from children (comments/likes)
-
-      const postsWithMediaURL = await addMediaUrl(
+      const sortedPosts = await addMediaUrl(
         firebase,
-        userUID,
-        getSortedPosts(convertToPosts(snapShot))
+        feedUID,
+        getSortedPosts(currentUserPosts)
       );
 
-      if (postsWithMediaURL) {
-        previousPosts.current = postsWithMediaURL;
-        setPosts(postsWithMediaURL);
-        setIsLoading(false);
+      if (sortedPosts) {
+        setPosts((posts) => {
+          const uniqueArr = getSortedPosts(
+            posts
+              .concat(sortedPosts)
+              .filter(
+                (item, index, array) =>
+                  index ===
+                  array.findIndex(
+                    (element) => element.dateTime === item.dateTime
+                  )
+              )
+          );
+          previousPosts.current = uniqueArr;
+          return uniqueArr;
+        });
       }
     }
+  };
+
+  const removeNewsFeedPost = (
+    previousUserPosts: PostInterface[],
+    currentUserPosts: PostInterface[]
+  ): void => {
+    const postToRemove = previousUserPosts.filter((previousPost) =>
+      currentUserPosts.some(
+        (currentPost) =>
+          currentPost.post !== previousPost.post &&
+          currentPost.dateTime !== previousPost.dateTime
+      )
+    )[0];
+
+    setPosts((posts) => posts.filter((post) => post !== postToRemove));
   };
 
   const setNewsFeedPosts = (feedUIDS: string[]): void => {
@@ -88,63 +111,25 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
           .limitToLast(LimitNewsFeedBy)
           .on('value', async (snapShot) => {
             if (snapShot.val() !== null) {
-              const numPrevUserPosts = previousPosts.current?.filter(
-                (post) => post.createdByUID === feedUID
-              ).length;
-
               const currentUserPosts = convertToPosts(snapShot);
+              const previousUserPosts = previousPosts.current?.filter(
+                (post) => post.createdByUID === feedUID
+              );
 
               if (
                 !containsUniquePost(snapShot) &&
-                numPrevUserPosts &&
-                currentUserPosts.length === numPrevUserPosts
+                previousUserPosts &&
+                currentUserPosts.length === previousUserPosts.length
               ) {
                 return; //Ignore event triggers from children (comments/likes)
               } else if (
                 previousPosts.current &&
-                numPrevUserPosts &&
-                currentUserPosts.length === numPrevUserPosts - 1
-              ) {
-                //Removing Post
-                const previousUserPosts = previousPosts.current.filter(
-                  (previousPost) => previousPost.createdByUID === feedUID
-                );
-
-                const postToRemove = previousUserPosts.filter((x) =>
-                  currentUserPosts.some(
-                    (i) => i.post !== x.post && i.dateTime !== x.dateTime
-                  )
-                )[0];
-
-                setPosts((posts) =>
-                  posts.filter((post) => post !== postToRemove)
-                );
-              } else {
-                //Adding post
-                const sortedPosts = await addMediaUrl(
-                  firebase,
-                  feedUID,
-                  getSortedPosts(currentUserPosts)
-                );
-
-                if (sortedPosts) {
-                  setPosts((posts) => {
-                    const uniqueArr = getSortedPosts(
-                      posts
-                        .concat(sortedPosts)
-                        .filter(
-                          (item, index, array) =>
-                            index ===
-                            array.findIndex(
-                              (element) => element.dateTime === item.dateTime
-                            )
-                        )
-                    );
-                    previousPosts.current = uniqueArr;
-                    return uniqueArr;
-                  });
-                }
-
+                previousUserPosts &&
+                currentUserPosts.length === previousUserPosts.length - 1
+              )
+                removeNewsFeedPost(previousUserPosts, currentUserPosts);
+              else {
+                addNewsFeedPost(feedUID, currentUserPosts);
                 if (index === array.length - 1) setIsLoading(false);
               }
             } else if (
@@ -155,14 +140,33 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
               setPosts((posts) =>
                 posts.filter((post) => post.createdByUID !== feedUID)
               );
-            } else {
-              //handle case where there are no posts
-              previousPosts.current = [];
-              setPosts([]);
-              setIsLoading(false);
-            }
+            } else resetPosts(); //handle case where there are no posts
           });
       });
+    }
+  };
+
+  const setProfilePosts = async (
+    snapShot: firebase.database.DataSnapshot
+  ): Promise<void> => {
+    if (firebase) {
+      if (snapShot.val() === null) resetPosts();
+      else if (
+        containsUniquePost(snapShot) ||
+        Object.keys(snapShot.val()).length !== previousPosts.current?.length
+      ) {
+        const postsWithMediaURL = await addMediaUrl(
+          firebase,
+          userUID,
+          getSortedPosts(convertToPosts(snapShot))
+        );
+
+        if (postsWithMediaURL) {
+          previousPosts.current = postsWithMediaURL;
+          setPosts(postsWithMediaURL);
+          setIsLoading(false);
+        }
+      }
     }
   };
 
