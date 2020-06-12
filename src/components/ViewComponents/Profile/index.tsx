@@ -20,21 +20,10 @@ import NewsFeed from '../../NewsFeed';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../../constants/routes';
 import { convertToUserProfile } from '../../../utils/helperFunctions';
-
 //TODO -> Add profile images to Links
 //TODO -> Break Link out into its own component
 
 const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    minWidth: '760px',
-  },
-  mainSurface: {
-    display: 'flex',
-    width: '750px',
-    margin: '20px',
-  },
   gridContainer: {
     padding: '20px',
   },
@@ -80,8 +69,8 @@ export const ProfilePage: React.FC = () => {
 
   if (isLoading || !userProfile || !authUser) return <IsLoading />;
   return (
-    <div className={classes.root}>
-      <Paper elevation={3} className={classes.mainSurface}>
+    <div className="mainRoot">
+      <Paper elevation={3} className="mainContainer">
         <Grid container direction="column" className={classes.gridContainer}>
           <Grid item>
             <AccountInfo userProfile={userProfile} />

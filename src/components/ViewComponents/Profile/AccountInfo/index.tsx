@@ -10,6 +10,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { getFirstName } from '../../../../utils/helperFunctions';
 import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
+import { useHistory } from 'react-router';
+import * as ROUTES from '../../../../constants/routes';
 
 const useStyles = makeStyles(() => ({
   flexDiv: {
@@ -53,6 +55,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [isFollowingUser, setIsFollowingUser] = useState(false);
+  const history = useHistory();
 
   const followUser = (): void => {
     if (authUser) {
@@ -122,9 +125,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
           <Tooltip title="Edit Profile">
             <IconButton
               component="label"
-              onClick={(): void =>
-                console.log('Open modal or redirect to page here')
-              }
+              onClick={(): void => history.push(ROUTES.EDIT_PROFILE)}
             >
               <EditIcon color="primary" className={classes.editImage} />
             </IconButton>

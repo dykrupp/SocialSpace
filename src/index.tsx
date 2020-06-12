@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/Navigation/App';
+import App from './components/App';
 import Firebase from './components/Firebase';
 import { FirebaseContext } from './components/Firebase/context';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';

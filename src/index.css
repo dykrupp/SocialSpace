@@ -12,6 +12,17 @@ body {
   height: 100%;
 }
 
+.mainRoot {
+  display: flex;
+  justify-content: center;
+  min-width: 760px;
+}
+
+.mainContainer {
+  width: 750px !important;
+  margin: 20px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
