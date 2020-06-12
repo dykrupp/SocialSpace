@@ -225,9 +225,7 @@ const HeaderRow: React.FC<HeaderRowProps> = ({
   return (
     <Grid item xs={12} className={classes.gridRow}>
       <p>{username}</p>
-      <p className={classes.marginLeft}>
-        {calcTimeSince(Date.parse(dateTime))}
-      </p>
+      <p>{calcTimeSince(Date.parse(dateTime))}</p>
       {username === authUser?.fullName && (
         <Tooltip title="Delete Post">
           <IconButton component="label" onClick={deletePost}>

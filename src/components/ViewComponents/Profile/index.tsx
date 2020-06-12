@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../Firebase/context';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,6 +17,12 @@ import AppBar from '@material-ui/core/AppBar';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
 import NewsFeed from '../../NewsFeed';
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../../constants/routes';
+import { convertToUserProfile } from '../../../utils/helperFunctions';
+
+//TODO -> Add profile images to Links
+//TODO -> Break Link out into its own component
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,6 +38,17 @@ const useStyles = makeStyles(() => ({
   gridContainer: {
     padding: '20px',
   },
+  centerTextAlign: {
+    textAlign: 'center',
+  },
+  centerContent: {
+    justifyContent: 'center',
+  },
+  link: {
+    textDecoration: 'none',
+    fontSize: '25px',
+    marginTop: '20px',
+  },
 }));
 
 export const ProfilePage: React.FC = () => {
@@ -39,12 +58,11 @@ export const ProfilePage: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfileUID>();
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
     firebase?.user(userUID).on('value', async (snapShot) => {
-      const userProfile: UserProfileUID = { ...snapShot.val(), uid: userUID };
-      setUserProfile(userProfile);
+      setUserProfile(convertToUserProfile(snapShot, userUID));
       setIsLoading(false);
     });
 
@@ -86,12 +104,44 @@ export const ProfilePage: React.FC = () => {
               </Tabs>
             </AppBar>
           </Grid>
-          <Grid item style={{ textAlign: 'center' }}>
+          <Grid container item className={classes.centerTextAlign}>
             {tabIndex === 0 && (
               <NewsFeed userProfile={userProfile} userUID={userProfile.uid} />
             )}
-            {tabIndex === 1 && <h1>Following</h1>}
-            {tabIndex === 2 && <h1>Followers</h1>}
+            {tabIndex === 1 && (
+              <Grid container item className={classes.centerContent}>
+                {!userProfile.followings && (
+                  <h1>Discover your friends by using SocialSpace Search</h1>
+                )}
+                {userProfile.followings &&
+                  userProfile.followings.map((following) => (
+                    <Link
+                      className={classes.link}
+                      key={following.userUID}
+                      to={`${ROUTES.PROFILE}/${following.userUID}`}
+                      onClick={(): void => setUserProfile((profile) => profile)}
+                    >
+                      {following.fullName}
+                    </Link>
+                  ))}
+              </Grid>
+            )}
+            {tabIndex === 2 && (
+              <Grid container item className={classes.centerContent}>
+                {!userProfile.followers && <h1>You have no followers :(</h1>}
+                {userProfile.followers &&
+                  userProfile.followers.map((follower) => (
+                    <Link
+                      className={classes.link}
+                      key={follower.userUID}
+                      to={`${ROUTES.PROFILE}/${follower.userUID}`}
+                      onClick={(): void => setUserProfile((profile) => profile)}
+                    >
+                      {follower.fullName}
+                    </Link>
+                  ))}
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Paper>

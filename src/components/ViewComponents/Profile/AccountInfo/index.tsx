@@ -81,7 +81,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   useEffect(() => {
     if (authUser && userProfile && userProfile.followers) {
       setIsFollowingUser(
-        Object.keys(userProfile.followers).includes(authUser.uid)
+        userProfile.followers.some((x) => x.userUID === authUser.uid)
       );
     }
   }, [authUser, userProfile]);

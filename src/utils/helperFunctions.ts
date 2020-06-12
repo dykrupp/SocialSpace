@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Firebase from '../components/Firebase/index';
 import * as Collections from 'typescript-collections';
-import { Post } from '../constants/interfaces';
+import { Post, UserProfileUID } from '../constants/interfaces';
 
 export const calcTimeSince = (milliseconds: number): string => {
   const seconds = Math.floor((new Date().valueOf() - milliseconds) / 1000);
@@ -42,6 +42,31 @@ export const convertToPosts = (
     media: '',
   }));
   return currentPosts;
+};
+
+export const convertToUserProfile = (
+  snapShot: firebase.database.DataSnapshot,
+  userUID: string
+): UserProfileUID => {
+  const userProfile: UserProfileUID = { ...snapShot.val(), uid: userUID };
+
+  if (userProfile.followers) {
+    userProfile.followers = Object.keys(userProfile.followers as any).map(
+      (key) => ({
+        ...(userProfile.followers as any)[key],
+        userUID: key,
+      })
+    );
+  }
+  if (userProfile.followings) {
+    userProfile.followings = Object.keys(userProfile.followings as any).map(
+      (key) => ({
+        ...(userProfile.followings as any)[key],
+        userUID: key,
+      })
+    );
+  }
+  return userProfile;
 };
 
 export const addMediaUrl = async (

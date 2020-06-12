@@ -32,8 +32,8 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
   const authUser = useContext(AuthUserContext);
 
   const areFriends = (userProfile: UserProfileUID): boolean => {
-    return authUser && userProfile.followers && userProfile.following
-      ? Object.keys(userProfile.following).includes(authUser.uid) &&
+    return authUser && userProfile.followers && userProfile.followings
+      ? Object.keys(userProfile.followings).includes(authUser.uid) &&
           Object.keys(userProfile.followers).includes(authUser.uid)
       : false;
   };
@@ -188,7 +188,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
     let feedUIDS = [''];
 
     if (firebase && !userProfile && authUser) {
-      firebase.follows(userUID).on('value', (followSnapShot) => {
+      firebase.followings(userUID).on('value', (followSnapShot) => {
         feedUIDS = //add current user to feedUIDS
           followSnapShot.val() === null
             ? new Array(authUser.uid)
@@ -199,7 +199,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
     }
 
     return function cleanup(): void {
-      firebase?.follows(userUID).off();
+      firebase?.followings(userUID).off();
       feedUIDS.forEach((feedUID) => {
         firebase?.posts(feedUID).off();
       });

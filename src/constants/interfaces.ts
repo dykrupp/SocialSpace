@@ -3,8 +3,18 @@ export interface User {
   email: string;
   birthday: string;
   gender: string;
-  following: string[];
-  followers: string[];
+  followings: Following[];
+  followers: Follower[];
+}
+
+interface Following {
+  fullName: string;
+  userUID: string;
+}
+
+interface Follower {
+  fullName: string;
+  userUID: string;
 }
 
 export interface Comment {
