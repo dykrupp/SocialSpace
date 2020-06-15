@@ -3,20 +3,26 @@ import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { PostStyle } from './PostStyle';
-import { Comment, Like } from '../../../constants/interfaces';
+import {
+  Comment,
+  Like,
+  User,
+  UserProfileUID,
+} from '../../../constants/interfaces';
+import { IsLoading } from '../../IsLoading';
 
 export interface PostProps {
   post: string;
-  username: string;
-  userUID: string;
+  postUID: string;
+  feedUID: string;
   dateTime: string;
   media: string;
 }
 
 const Post: React.FC<PostProps> = ({
   post,
-  username,
-  userUID,
+  postUID,
+  feedUID,
   dateTime,
   media,
 }) => {
@@ -26,6 +32,7 @@ const Post: React.FC<PostProps> = ({
   const [comments, setComments] = useState<Comment[]>([]);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [likes, setLikes] = useState<Like[]>([]);
+  const [postUserProfile, setPostUserProfile] = useState<UserProfileUID>();
   const numOfComments = useRef(0);
   const numOfLikes = useRef(0);
 
@@ -39,7 +46,7 @@ const Post: React.FC<PostProps> = ({
     if (firebase && authUser) {
       const utcDateTime = new Date().toUTCString();
       firebase
-        .comment(userUID, dateTime, utcDateTime)
+        .comment(feedUID, dateTime, utcDateTime)
         .set({ comment, userUID: authUser.uid, fullName: authUser.fullName });
       setComment('');
     }
@@ -52,14 +59,14 @@ const Post: React.FC<PostProps> = ({
   const addLike = (): void => {
     if (firebase && authUser) {
       firebase
-        .like(userUID, dateTime, authUser.uid)
+        .like(feedUID, dateTime, authUser.uid)
         .set({ fullName: authUser.fullName });
     }
   };
 
   const removeLike = (): void => {
     if (firebase && authUser) {
-      firebase.like(userUID, dateTime, authUser.uid).remove();
+      firebase.like(feedUID, dateTime, authUser.uid).remove();
     }
   };
 
@@ -67,22 +74,35 @@ const Post: React.FC<PostProps> = ({
     if (firebase && authUser) {
       if (media !== '') {
         firebase.storage
-          .ref(`users/${userUID}/posts/${dateTime}/media`)
+          .ref(`users/${feedUID}/posts/${dateTime}/media`)
           .delete()
-          .then(() => firebase.post(userUID, dateTime).remove());
-      } else firebase.post(userUID, dateTime).remove();
+          .then(() => firebase.post(feedUID, dateTime).remove());
+      } else firebase.post(feedUID, dateTime).remove();
     }
   };
 
   const deleteComment = (commentDateTime: string): void => {
     if (firebase && authUser) {
-      firebase.comment(userUID, dateTime, commentDateTime).remove();
+      firebase.comment(feedUID, dateTime, commentDateTime).remove();
     }
   };
 
   useEffect(() => {
+    if (firebase) {
+      firebase.user(postUID).once('value', (snapShot) => {
+        setPostUserProfile(() => {
+          return {
+            ...(snapShot.val() as User),
+            uid: postUID,
+          } as UserProfileUID;
+        });
+      });
+    }
+  }, [firebase, postUID]);
+
+  useEffect(() => {
     if (firebase && authUser) {
-      firebase.comments(userUID, dateTime).on('value', (snapShot) => {
+      firebase.comments(feedUID, dateTime).on('value', (snapShot) => {
         const commentsObject = snapShot.val();
 
         if (commentsObject === null) {
@@ -115,13 +135,13 @@ const Post: React.FC<PostProps> = ({
     }
 
     return function cleanup(): void {
-      if (firebase && authUser) firebase.comments(userUID, dateTime).off();
+      if (firebase && authUser) firebase.comments(feedUID, dateTime).off();
     };
-  }, [firebase, authUser, dateTime, userUID]);
+  }, [firebase, authUser, dateTime, feedUID]);
 
   useEffect(() => {
     if (firebase && authUser) {
-      firebase.likes(userUID, dateTime).on('value', (snapShot) => {
+      firebase.likes(feedUID, dateTime).on('value', (snapShot) => {
         const likesObject = snapShot.val();
 
         if (likesObject === null) {
@@ -144,13 +164,13 @@ const Post: React.FC<PostProps> = ({
     }
 
     return function cleanup(): void {
-      if (firebase && authUser) firebase.likes(userUID, dateTime).off();
+      if (firebase && authUser) firebase.likes(feedUID, dateTime).off();
     };
-  }, [firebase, authUser, dateTime, userUID]);
+  }, [firebase, authUser, dateTime, feedUID]);
 
+  if (!postUserProfile) return <IsLoading />;
   return (
     <PostStyle
-      username={username}
       post={post}
       dateTime={dateTime}
       media={media}
@@ -165,15 +185,15 @@ const Post: React.FC<PostProps> = ({
       comments={comments}
       likes={likes}
       removeLike={removeLike}
-      userUID={userUID}
+      userProfile={postUserProfile}
     />
   );
 };
 
 Post.propTypes = {
   post: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  userUID: PropTypes.string.isRequired,
+  postUID: PropTypes.string.isRequired,
+  feedUID: PropTypes.string.isRequired,
   dateTime: PropTypes.string.isRequired,
   media: PropTypes.string.isRequired,
 };

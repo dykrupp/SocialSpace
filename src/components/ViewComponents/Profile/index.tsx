@@ -94,9 +94,7 @@ export const ProfilePage: React.FC = () => {
             </AppBar>
           </Grid>
           <Grid container item className={classes.centerTextAlign}>
-            {tabIndex === 0 && (
-              <NewsFeed userProfile={userProfile} userUID={userProfile.uid} />
-            )}
+            {tabIndex === 0 && <NewsFeed userProfile={userProfile} />}
             {tabIndex === 1 && (
               <Grid container item className={classes.centerContent}>
                 {!userProfile.followings && (

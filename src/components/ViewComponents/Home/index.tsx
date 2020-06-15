@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   return (
     <div className="mainRoot">
       <Grid container className="mainContainer" style={{ marginTop: '0px' }}>
-        <NewsFeed userProfile={null} userUID={authUser.uid} />
+        <NewsFeed userProfile={null} />
       </Grid>
     </div>
   );

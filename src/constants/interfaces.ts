@@ -8,6 +8,10 @@ export interface User {
   profilePicURL: string;
 }
 
+export interface UserUID extends User {
+  uid: string;
+}
+
 interface Following {
   fullName: string;
   userUID: string;

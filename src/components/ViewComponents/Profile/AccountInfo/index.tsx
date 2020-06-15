@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
     width: '125px',
     height: '125px',
     alignSelf: 'center',
+    borderRadius: '50%',
   },
   editImage: {
     width: '50px',

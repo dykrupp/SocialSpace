@@ -14,35 +14,16 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { calcTimeSince } from '../../../utils/helperFunctions';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
-import { PostProps } from './index';
-import { Like, Comment } from '../../../constants/interfaces';
+import { Like, Comment, UserProfileUID } from '../../../constants/interfaces';
+import { Link } from 'react-router-dom';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import * as ROUTES from '../../../constants/routes';
 
-interface PostStyleProps extends PostProps {
-  deletePost: () => void;
-  addLike: () => void;
-  removeLike: () => void;
-  onCommentButtonClick: () => void;
-  onCommentChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  deleteComment: (commentDateTime: string) => void;
-  onCommentsOpenClick: () => void;
-  isCommentsOpen: boolean;
-  pendingComment: string;
-  likes: Like[];
-  comments: Comment[];
-}
-
-const useStyles = makeStyles(() => ({
+const postStyles = makeStyles(() => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
-  },
-  gridRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  iconButton: {
-    marginLeft: '-15px',
   },
   centeredRow: {
     display: 'flex',
@@ -59,19 +40,6 @@ const useStyles = makeStyles(() => ({
     maxHeight: '50px',
     minHeight: '50px',
   },
-  commentPaper: {
-    width: '100%',
-    marginBottom: '20px',
-    padding: '10px',
-    backgroundColor: '#e9ebee',
-  },
-  commentDiv: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  commentText: {
-    textAlign: 'center',
-  },
   marginLeft: {
     marginLeft: '20px',
   },
@@ -80,9 +48,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+interface PostStyleProps {
+  deletePost: () => void;
+  addLike: () => void;
+  removeLike: () => void;
+  onCommentButtonClick: () => void;
+  onCommentChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  deleteComment: (commentDateTime: string) => void;
+  onCommentsOpenClick: () => void;
+  isCommentsOpen: boolean;
+  pendingComment: string;
+  likes: Like[];
+  comments: Comment[];
+  userProfile: UserProfileUID;
+  post: string;
+  dateTime: string;
+  media: string;
+}
+
 export const PostStyle: React.FC<PostStyleProps> = ({
   post,
-  username,
+  userProfile,
   dateTime,
   media,
   deletePost,
@@ -97,7 +83,7 @@ export const PostStyle: React.FC<PostStyleProps> = ({
   isCommentsOpen,
   onCommentsOpenClick,
 }) => {
-  const classes = useStyles();
+  const classes = postStyles();
   const authUser = useContext(AuthUserContext);
   const isCommentInvalid = pendingComment === '';
   const didCurrentUserLikePost = likes.find(
@@ -108,8 +94,10 @@ export const PostStyle: React.FC<PostStyleProps> = ({
       <Grid container spacing={1}>
         <HeaderRow
           dateTime={dateTime}
-          username={username}
+          fullName={userProfile.fullName}
+          profilePicURL={userProfile.profilePicURL}
           deletePost={deletePost}
+          userUID={userProfile.uid}
         />
         <Grid item xs={12} className={classes.centeredRow}>
           <Typography variant="h6">{post}</Typography>
@@ -192,7 +180,7 @@ export const PostStyle: React.FC<PostStyleProps> = ({
 
 PostStyle.propTypes = {
   post: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
+  userProfile: PropTypes.any.isRequired,
   dateTime: PropTypes.string.isRequired,
   media: PropTypes.string.isRequired,
   pendingComment: PropTypes.string.isRequired,
@@ -208,25 +196,68 @@ PostStyle.propTypes = {
   comments: PropTypes.arrayOf(PropTypes.any).isRequired,
 };
 
+const headerStyles = makeStyles(() => ({
+  link: {
+    textDecoration: 'none',
+    fontSize: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '10px',
+  },
+  gridRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  profileInfo: {
+    display: 'flex',
+    flex: '1',
+  },
+  accountIconSize: {
+    fontSize: '55px',
+  },
+  profileImage: {
+    height: '55px',
+    borderRadius: '50%',
+  },
+}));
+
 interface HeaderRowProps {
   dateTime: string;
-  username: string;
+  profilePicURL: string;
+  fullName: string;
+  userUID: string;
   deletePost: () => void;
 }
 
 const HeaderRow: React.FC<HeaderRowProps> = ({
   dateTime,
-  username,
+  fullName,
+  profilePicURL,
   deletePost,
+  userUID,
 }) => {
-  const classes = useStyles();
+  const classes = headerStyles();
   const authUser = useContext(AuthUserContext);
 
   return (
-    <Grid item xs={12} className={classes.gridRow}>
-      <p>{username}</p>
+    <Grid item container xs={12} className={classes.gridRow}>
+      <div className={classes.profileInfo}>
+        {profilePicURL === '' && (
+          <AccountCircle className={classes.accountIconSize} />
+        )}
+        {profilePicURL !== '' && (
+          <img
+            src={profilePicURL}
+            className={classes.profileImage}
+            alt="Profile"
+          />
+        )}
+        <Link className={classes.link} to={`${ROUTES.PROFILE}/${userUID}`}>
+          {fullName}
+        </Link>
+      </div>
       <p>{calcTimeSince(Date.parse(dateTime))}</p>
-      {username === authUser?.fullName && (
+      {fullName === authUser?.fullName && (
         <Tooltip title="Delete Post">
           <IconButton component="label" onClick={deletePost}>
             <DeleteIcon color="primary" />
@@ -238,8 +269,10 @@ const HeaderRow: React.FC<HeaderRowProps> = ({
 };
 
 HeaderRow.propTypes = {
-  username: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired,
   dateTime: PropTypes.string.isRequired,
+  userUID: PropTypes.string.isRequired,
+  profilePicURL: PropTypes.string.isRequired,
   deletePost: PropTypes.func.isRequired,
 };
 
@@ -248,11 +281,27 @@ interface PaperCommentProps {
   deleteComment: (commentDateTime: string) => void;
 }
 
+const commentStyles = makeStyles(() => ({
+  commentPaper: {
+    width: '100%',
+    marginBottom: '20px',
+    padding: '10px',
+    backgroundColor: '#e9ebee',
+  },
+  commentDiv: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  commentText: {
+    textAlign: 'center',
+  },
+}));
+
 const PaperComment: React.FC<PaperCommentProps> = ({
   comment,
   deleteComment,
 }) => {
-  const classes = useStyles();
+  const classes = commentStyles();
   const authUser = useContext(AuthUserContext);
 
   return (

@@ -3,14 +3,14 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import CreatePost from './CreatePost';
 import { FirebaseContext } from '../Firebase/context';
 import { Grid } from '@material-ui/core';
-import {
-  Post as PostInterface,
-  UserProfileUID,
-} from '../../constants/interfaces';
 import { IsLoading } from '../IsLoading';
 import PropTypes from 'prop-types';
 import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import Post from './Post';
+import {
+  Post as PostInterface,
+  UserProfileUID,
+} from '../../constants/interfaces';
 import {
   addMediaUrl,
   getSortedPosts,
@@ -18,18 +18,21 @@ import {
 } from '../../utils/helperFunctions';
 
 interface NewsFeedProps {
-  userUID: string;
   userProfile: UserProfileUID | null;
 }
 
 const LimitNewsFeedBy = 10;
 
-const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
+//TODO -> Need to grab user and pass to post (have access to the profile picture so it can be displayed)
+//TODO -> Potentially change saving createdBy username to uid -> easier lookup
+
+const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
   const firebase = useContext(FirebaseContext);
   const [posts, setPosts] = useState<PostInterface[]>([]);
   const previousPosts = useRef<PostInterface[]>();
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
+  const feedUID = userProfile ? userProfile.uid : authUser ? authUser.uid : '';
 
   const areFriends = (userProfile: UserProfileUID): boolean => {
     return authUser && userProfile.followers && userProfile.followings
@@ -157,7 +160,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
       ) {
         const postsWithMediaURL = await addMediaUrl(
           firebase,
-          userUID,
+          feedUID,
           getSortedPosts(convertToPosts(snapShot))
         );
 
@@ -173,22 +176,22 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
   //TODO -> Introduce Paging here so we don't get all posts in one large chunk
   useEffect(() => {
     if (firebase && userProfile) {
-      firebase.posts(userUID).on('value', async (snapShot) => {
+      firebase.posts(feedUID).on('value', async (snapShot) => {
         setProfilePosts(snapShot);
       });
     }
 
     return function cleanup(): void {
-      firebase?.posts(userUID).off();
+      firebase?.posts(feedUID).off();
     };
-  }, [firebase, userProfile, userUID]);
+  }, [firebase, userProfile, feedUID]);
 
   //TODO -> Introduce Paging here so we don't get all posts in one large chunk
   useEffect(() => {
     let feedUIDS = [''];
 
     if (firebase && !userProfile && authUser) {
-      firebase.followings(userUID).on('value', (followSnapShot) => {
+      firebase.followings(feedUID).on('value', (followSnapShot) => {
         feedUIDS = //add current user to feedUIDS
           followSnapShot.val() === null
             ? new Array(authUser.uid)
@@ -199,14 +202,14 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
     }
 
     return function cleanup(): void {
-      firebase?.followings(userUID).off();
+      firebase?.followings(feedUID).off();
       feedUIDS.forEach((feedUID) => {
         firebase?.posts(feedUID).off();
       });
     };
-  }, [firebase, userProfile, authUser, userUID]);
+  }, [firebase, userProfile, authUser, feedUID]);
 
-  const isAuthUsersFeed = authUser?.uid === userUID;
+  const isAuthUsersFeed = authUser?.uid === feedUID;
 
   if (isLoading) return <IsLoading />;
   else if (!authUser || !firebase) return null;
@@ -220,17 +223,17 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
           />
         )}
         {!isAuthUsersFeed && userProfile && areFriends(userProfile) && (
-          <CreatePost createdByUserUID={authUser.uid} postUserUID={userUID} />
+          <CreatePost createdByUserUID={authUser.uid} postUserUID={feedUID} />
         )}
       </Grid>
       {posts.map((post: PostInterface) => (
         <Grid item key={post.dateTime}>
           <Post
             post={post.post}
-            username={post.createdByName}
             dateTime={post.dateTime}
             media={post.media}
-            userUID={userUID}
+            feedUID={feedUID}
+            postUID={post.createdByUID}
           />
         </Grid>
       ))}
@@ -240,7 +243,6 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, userUID }) => {
 
 NewsFeed.propTypes = {
   userProfile: PropTypes.any,
-  userUID: PropTypes.string.isRequired,
 };
 
 export default NewsFeed;
