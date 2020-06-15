@@ -90,10 +90,18 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   }, [authUser, userProfile]);
 
   const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
+  const profilePicURL = authUser ? authUser.profilePicURL : '';
 
   return (
     <div className={classes.flexDiv}>
-      <AccountCircle className={classes.profileImage} />
+      {!profilePicURL && <AccountCircle className={classes.profileImage} />}
+      {profilePicURL && (
+        <img
+          src={profilePicURL}
+          className={classes.profileImage}
+          alt="Profile"
+        />
+      )}
       <div className={classes.accountInfoColumn}>
         <div className={classes.flexDiv}>
           <div className={classes.accountInfoRow}>

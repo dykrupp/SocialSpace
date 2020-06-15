@@ -5,6 +5,7 @@ export interface User {
   gender: string;
   followings: Following[];
   followers: Follower[];
+  profilePicURL: string;
 }
 
 interface Following {

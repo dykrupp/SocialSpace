@@ -108,7 +108,7 @@ export const ProfilePage: React.FC = () => {
                       className={classes.link}
                       key={following.userUID}
                       to={`${ROUTES.PROFILE}/${following.userUID}`}
-                      onClick={(): void => setUserProfile((profile) => profile)}
+                      onClick={(): void => setTabIndex(0)}
                     >
                       {following.fullName}
                     </Link>
@@ -124,7 +124,7 @@ export const ProfilePage: React.FC = () => {
                       className={classes.link}
                       key={follower.userUID}
                       to={`${ROUTES.PROFILE}/${follower.userUID}`}
-                      onClick={(): void => setUserProfile((profile) => profile)}
+                      onClick={(): void => setTabIndex(0)}
                     >
                       {follower.fullName}
                     </Link>
