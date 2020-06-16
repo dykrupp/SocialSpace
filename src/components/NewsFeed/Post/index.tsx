@@ -13,18 +13,11 @@ import {
 export interface PostProps {
   post: string;
   postUID: string;
-  feedUID: string;
   dateTime: string;
   media: string;
 }
 
-const Post: React.FC<PostProps> = ({
-  post,
-  postUID,
-  feedUID,
-  dateTime,
-  media,
-}) => {
+const Post: React.FC<PostProps> = ({ post, postUID, dateTime, media }) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [comment, setComment] = useState('');
@@ -45,7 +38,7 @@ const Post: React.FC<PostProps> = ({
     if (firebase && authUser) {
       const utcDateTime = new Date().toUTCString();
       firebase
-        .comment(feedUID, dateTime, utcDateTime)
+        .comment(postUID, dateTime, utcDateTime)
         .set({ comment, userUID: authUser.uid, fullName: authUser.fullName });
       setComment('');
     }
@@ -58,32 +51,30 @@ const Post: React.FC<PostProps> = ({
   const addLike = (): void => {
     if (firebase && authUser) {
       firebase
-        .like(feedUID, dateTime, authUser.uid)
+        .like(postUID, dateTime, authUser.uid)
         .set({ fullName: authUser.fullName });
     }
   };
 
   const removeLike = (): void => {
     if (firebase && authUser) {
-      firebase.like(feedUID, dateTime, authUser.uid).remove();
+      firebase.like(postUID, dateTime, authUser.uid).remove();
     }
   };
 
   const deletePost = (): void => {
-    if (firebase && authUser) {
+    if (firebase) {
       if (media !== '') {
         firebase.storage
-          .ref(`users/${feedUID}/posts/${dateTime}/media`)
+          .ref(`users/${postUID}/posts/${dateTime}/media`)
           .delete()
-          .then(() => firebase.post(feedUID, dateTime).remove());
-      } else firebase.post(feedUID, dateTime).remove();
+          .then(() => firebase.post(postUID, dateTime).remove());
+      } else firebase.post(postUID, dateTime).remove();
     }
   };
 
   const deleteComment = (commentDateTime: string): void => {
-    if (firebase && authUser) {
-      firebase.comment(feedUID, dateTime, commentDateTime).remove();
-    }
+    if (firebase) firebase.comment(postUID, dateTime, commentDateTime).remove();
   };
 
   useEffect(() => {
@@ -100,8 +91,8 @@ const Post: React.FC<PostProps> = ({
   }, [firebase, postUID]);
 
   useEffect(() => {
-    if (firebase && authUser) {
-      firebase.comments(feedUID, dateTime).on('value', (snapShot) => {
+    if (firebase) {
+      firebase.comments(postUID, dateTime).on('value', (snapShot) => {
         const commentsObject = snapShot.val();
 
         if (commentsObject === null) {
@@ -134,13 +125,13 @@ const Post: React.FC<PostProps> = ({
     }
 
     return function cleanup(): void {
-      if (firebase && authUser) firebase.comments(feedUID, dateTime).off();
+      firebase?.comments(postUID, dateTime).off();
     };
-  }, [firebase, authUser, dateTime, feedUID]);
+  }, [firebase, dateTime, postUID]);
 
   useEffect(() => {
-    if (firebase && authUser) {
-      firebase.likes(feedUID, dateTime).on('value', (snapShot) => {
+    if (firebase) {
+      firebase.likes(postUID, dateTime).on('value', (snapShot) => {
         const likesObject = snapShot.val();
 
         if (likesObject === null) {
@@ -163,9 +154,9 @@ const Post: React.FC<PostProps> = ({
     }
 
     return function cleanup(): void {
-      if (firebase && authUser) firebase.likes(feedUID, dateTime).off();
+      firebase?.likes(postUID, dateTime).off();
     };
-  }, [firebase, authUser, dateTime, feedUID]);
+  }, [firebase, dateTime, postUID]);
 
   if (!postUserProfile) return null;
   return (
@@ -192,7 +183,6 @@ const Post: React.FC<PostProps> = ({
 Post.propTypes = {
   post: PropTypes.string.isRequired,
   postUID: PropTypes.string.isRequired,
-  feedUID: PropTypes.string.isRequired,
   dateTime: PropTypes.string.isRequired,
   media: PropTypes.string.isRequired,
 };

@@ -247,7 +247,6 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
             post={post.post}
             dateTime={post.dateTime}
             media={post.media}
-            feedUID={feedUID}
             postUID={post.createdByUID}
           />
         </Grid>
