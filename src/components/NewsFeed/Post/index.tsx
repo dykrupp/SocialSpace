@@ -9,7 +9,6 @@ import {
   User,
   UserProfileUID,
 } from '../../../constants/interfaces';
-import { IsLoading } from '../../IsLoading';
 
 export interface PostProps {
   post: string;
@@ -168,7 +167,7 @@ const Post: React.FC<PostProps> = ({
     };
   }, [firebase, authUser, dateTime, feedUID]);
 
-  if (!postUserProfile) return <IsLoading />;
+  if (!postUserProfile) return null;
   return (
     <PostStyle
       post={post}

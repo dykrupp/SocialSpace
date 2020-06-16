@@ -23,13 +23,10 @@ interface NewsFeedProps {
 
 const LimitNewsFeedBy = 10;
 
-//TODO -> Need to grab user and pass to post (have access to the profile picture so it can be displayed)
-//TODO -> Potentially change saving createdBy username to uid -> easier lookup
-
 const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
   const firebase = useContext(FirebaseContext);
   const [posts, setPosts] = useState<PostInterface[]>([]);
-  const previousPosts = useRef<PostInterface[]>();
+  const previousPosts = useRef<PostInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
   const feedUID = userProfile ? userProfile.uid : authUser ? authUser.uid : '';
@@ -103,15 +100,22 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
       )
     )[0];
 
-    setPosts((posts) => posts.filter((post) => post !== postToRemove));
+    previousPosts.current = previousPosts.current.filter(
+      (post) => post !== postToRemove
+    );
+
+    setPosts(() => previousPosts.current);
   };
 
   const setNewsFeedPosts = (feedUIDS: string[]): void => {
     if (firebase && authUser) {
-      feedUIDS.forEach((feedUID, index, array) => {
+      let postsCounter = 1;
+
+      for (const feedUID of feedUIDS) {
         firebase
           .posts(feedUID)
           .limitToLast(LimitNewsFeedBy)
+          // eslint-disable-next-line
           .on('value', async (snapShot) => {
             if (snapShot.val() !== null) {
               const currentUserPosts = convertToPosts(snapShot);
@@ -121,31 +125,42 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
 
               if (
                 !containsUniquePost(snapShot) &&
-                previousUserPosts &&
+                previousUserPosts.length !== 0 &&
                 currentUserPosts.length === previousUserPosts.length
               ) {
                 return; //Ignore event triggers from children (comments/likes)
               } else if (
-                previousPosts.current &&
                 previousUserPosts &&
                 currentUserPosts.length === previousUserPosts.length - 1
-              )
+              ) {
                 removeNewsFeedPost(previousUserPosts, currentUserPosts);
-              else {
-                addNewsFeedPost(feedUID, currentUserPosts);
-                if (index === array.length - 1) setIsLoading(false);
+              } else {
+                await addNewsFeedPost(feedUID, currentUserPosts);
               }
-            } else if (
-              previousPosts.current &&
-              previousPosts.current.length > 1
-            ) {
+            } else if (previousPosts.current.length >= 1) {
               //handle case where last post from feedUID is removed
-              setPosts((posts) =>
-                posts.filter((post) => post.createdByUID !== feedUID)
+              previousPosts.current = previousPosts.current.filter(
+                (post) => post.createdByUID !== feedUID
               );
-            } else resetPosts(); //handle case where there are no posts
+
+              setPosts(() => previousPosts.current);
+            }
+
+            if (
+              postsCounter === feedUIDS.length &&
+              previousPosts.current.length !== 0
+            ) {
+              setIsLoading(false);
+            } else if (
+              postsCounter >= feedUIDS.length &&
+              previousPosts.current.length === 0
+            ) {
+              resetPosts();
+            }
+
+            postsCounter++;
           });
-      });
+      }
     }
   };
 
