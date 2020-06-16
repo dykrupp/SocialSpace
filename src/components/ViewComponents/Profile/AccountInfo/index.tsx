@@ -91,14 +91,15 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   }, [authUser, userProfile]);
 
   const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
-  const profilePicURL = authUser ? authUser.profilePicURL : '';
 
   return (
     <div className={classes.flexDiv}>
-      {!profilePicURL && <AccountCircle className={classes.profileImage} />}
-      {profilePicURL && (
+      {userProfile.profilePicURL === '' && (
+        <AccountCircle className={classes.profileImage} />
+      )}
+      {userProfile.profilePicURL !== '' && (
         <img
-          src={profilePicURL}
+          src={userProfile.profilePicURL}
           className={classes.profileImage}
           alt="Profile"
         />
