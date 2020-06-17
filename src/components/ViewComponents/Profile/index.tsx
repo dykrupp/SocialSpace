@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../Firebase/context';
@@ -17,11 +16,8 @@ import AppBar from '@material-ui/core/AppBar';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
 import NewsFeed from '../../NewsFeed';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../constants/routes';
 import { convertToUserProfile } from '../../../utils/helperFunctions';
-//TODO -> Add profile images to Links
-//TODO -> Break Link out into its own component
+import { UserInfo } from './UserInfo';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
@@ -32,6 +28,8 @@ const useStyles = makeStyles(() => ({
   },
   centerContent: {
     justifyContent: 'center',
+    marginTop: '20px',
+    height: '55px',
   },
   link: {
     textDecoration: 'none',
@@ -50,7 +48,7 @@ export const ProfilePage: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
-    firebase?.user(userUID).on('value', async (snapShot) => {
+    firebase?.user(userUID).on('value', (snapShot) => {
       setUserProfile(convertToUserProfile(snapShot, userUID));
       setIsLoading(false);
     });
@@ -102,14 +100,11 @@ export const ProfilePage: React.FC = () => {
                 )}
                 {userProfile.followings &&
                   userProfile.followings.map((following) => (
-                    <Link
-                      className={classes.link}
+                    <UserInfo
                       key={following.userUID}
-                      to={`${ROUTES.PROFILE}/${following.userUID}`}
-                      onClick={(): void => setTabIndex(0)}
-                    >
-                      {following.userUID}
-                    </Link>
+                      userUID={following.userUID}
+                      setTabIndex={setTabIndex}
+                    />
                   ))}
               </Grid>
             )}
@@ -118,14 +113,11 @@ export const ProfilePage: React.FC = () => {
                 {!userProfile.followers && <h1>You have no followers :(</h1>}
                 {userProfile.followers &&
                   userProfile.followers.map((follower) => (
-                    <Link
-                      className={classes.link}
+                    <UserInfo
                       key={follower.userUID}
-                      to={`${ROUTES.PROFILE}/${follower.userUID}`}
-                      onClick={(): void => setTabIndex(0)}
-                    >
-                      {follower.userUID}
-                    </Link>
+                      userUID={follower.userUID}
+                      setTabIndex={setTabIndex}
+                    />
                   ))}
               </Grid>
             )}
