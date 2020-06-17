@@ -7,6 +7,7 @@ import { IsLoading } from '../IsLoading';
 import PropTypes from 'prop-types';
 import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import Post from './Post';
+import { Following } from '../../constants/interfaces';
 import {
   Post as PostInterface,
   UserProfileUID,
@@ -57,6 +58,18 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
     previousPosts.current = [];
     setPosts([]);
     setIsLoading(false);
+  };
+
+  const getFollowUIDS = (
+    snapShot: firebase.database.DataSnapshot
+  ): string[] => {
+    const currentFollowings = snapShot.val();
+    const followingArr: Following[] = Object.keys(currentFollowings).map(
+      (key) => ({
+        ...currentFollowings[key],
+      })
+    );
+    return followingArr.map((x) => x.userUID);
   };
 
   const addNewsFeedPost = async (
@@ -205,14 +218,14 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
 
   //TODO -> Introduce Paging here so we don't get all posts in one large chunk
   useEffect(() => {
-    let feedUIDS = [''];
+    let feedUIDS: string[] = [];
 
     if (firebase && !userProfile && authUser) {
       firebase.followings(feedUID).on('value', (followSnapShot) => {
         feedUIDS = //add current user to feedUIDS
           followSnapShot.val() === null
             ? new Array(authUser.uid)
-            : Object.keys(followSnapShot.val()).concat(authUser.uid);
+            : getFollowUIDS(followSnapShot).concat(authUser.uid);
 
         setNewsFeedPosts(feedUIDS);
       });

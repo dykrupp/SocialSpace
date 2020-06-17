@@ -12,11 +12,11 @@ export interface UserUID extends User {
   uid: string;
 }
 
-interface Following {
+export interface Following {
   userUID: string;
 }
 
-interface Follower {
+export interface Follower {
   userUID: string;
 }
 
