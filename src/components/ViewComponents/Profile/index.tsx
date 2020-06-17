@@ -108,7 +108,7 @@ export const ProfilePage: React.FC = () => {
                       to={`${ROUTES.PROFILE}/${following.userUID}`}
                       onClick={(): void => setTabIndex(0)}
                     >
-                      {following.fullName}
+                      {following.userUID}
                     </Link>
                   ))}
               </Grid>
@@ -124,7 +124,7 @@ export const ProfilePage: React.FC = () => {
                       to={`${ROUTES.PROFILE}/${follower.userUID}`}
                       onClick={(): void => setTabIndex(0)}
                     >
-                      {follower.fullName}
+                      {follower.userUID}
                     </Link>
                   ))}
               </Grid>

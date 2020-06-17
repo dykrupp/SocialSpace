@@ -33,8 +33,10 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
 
   const areFriends = (userProfile: UserProfileUID): boolean => {
     return authUser && userProfile.followers && userProfile.followings
-      ? Object.keys(userProfile.followings).includes(authUser.uid) &&
-          Object.keys(userProfile.followers).includes(authUser.uid)
+      ? userProfile.followings.filter((x) => x.userUID === authUser.uid)
+          .length !== 0 &&
+          userProfile.followers.filter((x) => x.userUID === authUser.uid)
+            .length !== 0
       : false;
   };
 
@@ -247,7 +249,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
             post={post.post}
             dateTime={post.dateTime}
             media={post.media}
-            postUID={post.createdByUID}
+            createdByUID={post.createdByUID}
           />
         </Grid>
       ))}

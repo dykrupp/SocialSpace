@@ -51,21 +51,17 @@ export const convertToUserProfile = (
   const userProfile: UserProfileUID = { ...snapShot.val(), uid: userUID };
 
   if (userProfile.followers) {
-    userProfile.followers = Object.keys(userProfile.followers as any).map(
-      (key) => ({
-        ...(userProfile.followers as any)[key],
-        userUID: key,
-      })
-    );
+    userProfile.followers = Object.keys(userProfile.followers).map((key) => ({
+      ...(userProfile.followers as any)[key],
+    }));
   }
+
   if (userProfile.followings) {
-    userProfile.followings = Object.keys(userProfile.followings as any).map(
-      (key) => ({
-        ...(userProfile.followings as any)[key],
-        userUID: key,
-      })
-    );
+    userProfile.followings = Object.keys(userProfile.followings).map((key) => ({
+      ...(userProfile.followings as any)[key],
+    }));
   }
+
   return userProfile;
 };
 

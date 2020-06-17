@@ -77,9 +77,9 @@ class Firebase {
   like = (
     postUserID: string,
     postDateTime: string,
-    likeUserId: string
+    key: string
   ): app.database.Reference =>
-    this.db.ref(`posts/${postUserID}/${postDateTime}/likes/${likeUserId}`);
+    this.db.ref(`posts/${postUserID}/${postDateTime}/likes/${key}`);
 
   likes = (postUserID: string, postDateTime: string): app.database.Reference =>
     this.db.ref(`posts/${postUserID}/${postDateTime}/likes`);

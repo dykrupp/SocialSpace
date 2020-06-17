@@ -79,7 +79,6 @@ const CreatePost: React.FC<CreatePostProps> = ({
         .set({
           post,
           createdByUID: createdByUserUID,
-          createdByName: authUser.fullName,
         })
         .then(() => {
           setPost('');

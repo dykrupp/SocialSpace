@@ -57,28 +57,36 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   const authUser = useContext(AuthUserContext);
   const [isFollowingUser, setIsFollowingUser] = useState(false);
   const history = useHistory();
+  let followerKey = '';
+  let followingKey = '';
 
   const followUser = (): void => {
     if (authUser) {
       firebase
-        ?.follower(userProfile.uid, authUser.uid)
-        .set({ fullName: authUser.fullName })
-        .then(() => setIsFollowingUser(true));
+        ?.followers(userProfile.uid)
+        .push({ userUID: authUser.uid })
+        .then((ref) => {
+          followerKey = ref.key ? ref.key : '';
+          setIsFollowingUser(true);
+        });
 
       firebase
-        ?.following(authUser.uid, userProfile.uid)
-        .set({ fullName: userProfile.fullName });
+        ?.followings(authUser.uid)
+        .push({ userUID: userProfile.uid })
+        .then((ref) => {
+          followingKey = ref.key ? ref.key : '';
+        });
     }
   };
 
   const unFollowUser = (): void => {
-    if (authUser) {
+    if (authUser && firebase) {
       firebase
-        ?.follower(userProfile.uid, authUser.uid)
+        .follower(userProfile.uid, followerKey)
         .remove()
         .then(() => setIsFollowingUser(false));
 
-      firebase?.following(authUser.uid, userProfile.uid).remove();
+      firebase.following(authUser.uid, followingKey).remove();
     }
   };
 

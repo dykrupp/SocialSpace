@@ -13,12 +13,10 @@ export interface UserUID extends User {
 }
 
 interface Following {
-  fullName: string;
   userUID: string;
 }
 
 interface Follower {
-  fullName: string;
   userUID: string;
 }
 
@@ -26,12 +24,11 @@ export interface Comment {
   comment: string;
   dateTime: string;
   userUID: string;
-  fullName: string;
 }
 
 export interface Like {
   userUID: string;
-  fullName: string;
+  key: string;
 }
 
 export interface Post {
@@ -41,7 +38,6 @@ export interface Post {
   likes: Like[];
   dateTime: string;
   createdByUID: string;
-  createdByName: string;
 }
 
 export interface UserProfile extends User {
