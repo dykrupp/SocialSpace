@@ -38,6 +38,9 @@ const useStyles = makeStyles(() => ({
   radioGroup: {
     flexDirection: 'row',
   },
+  error: {
+    color: 'red',
+  },
 }));
 
 const SignUpFormStyle: React.FC<FormStyleProps> = ({
@@ -153,7 +156,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
       >
         Sign Up
       </Button>
-      <p style={{ color: 'red' }}>{error}</p>
+      <p className={classes.error}>{error}</p>
     </form>
   );
 };

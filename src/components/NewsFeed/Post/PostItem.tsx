@@ -67,7 +67,7 @@ interface PostStyleProps {
   media: string;
 }
 
-export const PostStyle: React.FC<PostStyleProps> = ({
+export const PostItem: React.FC<PostStyleProps> = ({
   post,
   userProfile,
   dateTime,
@@ -177,7 +177,7 @@ export const PostStyle: React.FC<PostStyleProps> = ({
   );
 };
 
-PostStyle.propTypes = {
+PostItem.propTypes = {
   post: PropTypes.string.isRequired,
   userProfile: PropTypes.any.isRequired,
   dateTime: PropTypes.string.isRequired,

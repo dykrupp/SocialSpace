@@ -13,6 +13,22 @@ const useStyles = makeStyles(() => ({
   gridContainer: {
     padding: '20px',
   },
+  accountIcon: {
+    fontSize: '100px',
+  },
+  image: {
+    height: '100px',
+  },
+  button: {
+    width: '150px',
+  },
+  buttonGrid: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  buttonInput: {
+    display: 'none',
+  },
 }));
 
 export const EditProfilePage: React.FC = () => {
@@ -71,11 +87,13 @@ export const EditProfilePage: React.FC = () => {
             <hr />
           </Grid>
           <Grid item>
-            {fileURL === '' && <AccountCircle style={{ fontSize: '100px' }} />}
+            {fileURL === '' && (
+              <AccountCircle className={classes.accountIcon} />
+            )}
             {fileURL !== '' && (
               <img
                 src={fileURL}
-                style={{ height: '100px' }}
+                className={classes.image}
                 alt="Clickable Media"
               />
             )}
@@ -91,19 +109,16 @@ export const EditProfilePage: React.FC = () => {
               <input
                 accept="image/*"
                 type="file"
-                style={{ display: 'none' }}
+                className={classes.buttonInput}
                 onChange={onPictureChange}
               />
             </Button>
           </Grid>
-          <Grid
-            item
-            style={{ display: 'flex', justifyContent: 'space-evenly' }}
-          >
+          <Grid item className={classes.buttonGrid}>
             <Button
               color="primary"
               variant="contained"
-              style={{ width: '150px' }}
+              className={classes.button}
               onClick={(): void => history.goBack()}
             >
               Cancel
@@ -111,7 +126,7 @@ export const EditProfilePage: React.FC = () => {
             <Button
               color="primary"
               variant="contained"
-              style={{ width: '150px' }}
+              className={classes.button}
               disabled={profilePicture === null}
               onClick={onSaveClick}
             >

@@ -13,6 +13,9 @@ const useStyles = makeStyles(() => ({
   title: {
     textAlign: 'center',
   },
+  hr: {
+    width: '500px',
+  },
 }));
 
 const ForgotPassword: React.FC = () => {
@@ -22,7 +25,7 @@ const ForgotPassword: React.FC = () => {
       <Typography className={classes.title} variant="h4">
         Forgot Your Password?
       </Typography>
-      <hr style={{ width: '500px' }} />
+      <hr className={classes.hr} />
       <ForgotPasswordForm />
     </div>
   );

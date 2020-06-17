@@ -54,6 +54,10 @@ const useStyles = makeStyles(() => ({
   postButton: {
     width: '40%',
   },
+  image: {
+    height: 'auto',
+    width: '100%',
+  },
 }));
 
 interface CreatePostProps {
@@ -177,7 +181,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
               >
                 <img
                   src={fileURL}
-                  style={{ height: 'auto', width: '100%' }}
+                  className={classes.image}
                   onClick={handleClick}
                   alt="Selected Media"
                 />

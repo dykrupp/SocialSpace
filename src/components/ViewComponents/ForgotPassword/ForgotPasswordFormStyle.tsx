@@ -2,6 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() => ({
+  error: {
+    color: 'red',
+  },
+  inputDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+}));
 
 interface FormStyleProps {
   email: string;
@@ -16,6 +28,8 @@ const ForgotPasswordFormStyle: React.FC<FormStyleProps> = ({
   onChange,
   onSubmit,
 }) => {
+  const classes = useStyles();
+
   const isInvalid = email === '';
   return (
     <form onSubmit={onSubmit} noValidate>
@@ -23,13 +37,7 @@ const ForgotPasswordFormStyle: React.FC<FormStyleProps> = ({
         Please enter the email associated with your account. You will receive an
         email shortly.
       </p>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
+      <div className={classes.inputDiv}>
         <TextField
           name="email"
           label="Email Address"
@@ -47,7 +55,7 @@ const ForgotPasswordFormStyle: React.FC<FormStyleProps> = ({
           Reset Password
         </Button>
       </div>
-      <p style={{ color: 'red' }}>{error}</p>
+      <p className={classes.error}>{error}</p>
     </form>
   );
 };

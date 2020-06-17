@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
-import { PostStyle } from './PostStyle';
+import { PostItem } from './PostItem';
 import {
   Comment,
   Like,
@@ -161,7 +161,7 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
 
   if (!postUserProfile) return null;
   return (
-    <PostStyle
+    <PostItem
       post={post}
       dateTime={dateTime}
       media={media}
