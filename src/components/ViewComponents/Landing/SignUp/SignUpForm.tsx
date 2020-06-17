@@ -44,6 +44,7 @@ const SignUpForm: React.FC = () => {
               followings: [],
               followers: [],
               profilePicURL: '',
+              aboutMe: '',
             };
             return firebase.user(authUser.user.uid).set(user);
           }

@@ -8,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory } from 'react-router';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import TextField from '@material-ui/core/TextField';
+import { getFirstName } from '../../../utils/helperFunctions';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
@@ -29,12 +31,16 @@ const useStyles = makeStyles(() => ({
   buttonInput: {
     display: 'none',
   },
+  aboutMeInput: {
+    width: '75%',
+  },
 }));
 
 export const EditProfilePage: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [aboutMe, setAboutMe] = useState(authUser?.aboutMe);
   const classes = useStyles();
   const history = useHistory();
 
@@ -46,8 +52,11 @@ export const EditProfilePage: React.FC = () => {
     }
   };
 
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setAboutMe(event.target.value);
+  };
+
   const onSaveClick = (): void => {
-    //save profile picture in storage and update database with download url for profile pic
     if (firebase && authUser) {
       if (profilePicture) {
         firebase.storage
@@ -55,12 +64,15 @@ export const EditProfilePage: React.FC = () => {
           .put(profilePicture)
           .then((taskSnapShot) => {
             taskSnapShot.ref.getDownloadURL().then((url) => {
-              history.goBack();
               firebase.user(authUser.uid).update({ profilePicURL: url });
-              setProfilePicture(null);
             });
           });
       }
+
+      if (aboutMe !== '')
+        firebase.user(authUser.uid).update({ aboutMe: aboutMe });
+
+      history.goBack();
     }
   };
 
@@ -69,6 +81,7 @@ export const EditProfilePage: React.FC = () => {
       ? URL.createObjectURL(profilePicture)
       : authUser?.profilePicURL;
 
+  if (!authUser) return null;
   return (
     <div className="mainRoot">
       <Paper
@@ -114,6 +127,22 @@ export const EditProfilePage: React.FC = () => {
               />
             </Button>
           </Grid>
+          <Grid item>
+            <TextField
+              id="outlined-multiline-static"
+              label="About Me"
+              multiline
+              rows={2}
+              className={classes.aboutMeInput}
+              value={aboutMe}
+              onChange={onChange}
+              inputProps={{ maxLength: 200 }}
+              placeholder={`Tell us more about yourself, ${getFirstName(
+                authUser.fullName
+              )}!`}
+              variant="outlined"
+            />
+          </Grid>
           <Grid item className={classes.buttonGrid}>
             <Button
               color="primary"
@@ -127,7 +156,7 @@ export const EditProfilePage: React.FC = () => {
               color="primary"
               variant="contained"
               className={classes.button}
-              disabled={profilePicture === null}
+              disabled={profilePicture === null && aboutMe === ''}
               onClick={onSaveClick}
             >
               Save Changes

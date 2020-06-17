@@ -6,6 +6,7 @@ export interface User {
   followings: Following[];
   followers: Follower[];
   profilePicURL: string;
+  aboutMe: string;
 }
 
 export interface UserUID extends User {

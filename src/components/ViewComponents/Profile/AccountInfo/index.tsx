@@ -17,6 +17,10 @@ const useStyles = makeStyles(() => ({
   flexDiv: {
     display: 'flex',
   },
+  aboutMe: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   profileImage: {
     width: '125px',
     height: '125px',
@@ -101,72 +105,83 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
 
   return (
-    <div className={classes.flexDiv}>
-      {userProfile.profilePicURL === '' && (
-        <AccountCircle className={classes.profileImage} />
-      )}
-      {userProfile.profilePicURL !== '' && (
-        <img
-          src={userProfile.profilePicURL}
-          className={classes.profileImage}
-          alt="Profile"
-        />
-      )}
-      <div className={classes.accountInfoColumn}>
-        <div className={classes.flexDiv}>
-          <div className={classes.accountInfoRow}>
-            <h3>
-              Full Name: <br /> {userProfile.fullName}
-            </h3>
+    <div>
+      <div className={classes.flexDiv}>
+        {userProfile.profilePicURL === '' && (
+          <AccountCircle className={classes.profileImage} />
+        )}
+        {userProfile.profilePicURL !== '' && (
+          <img
+            src={userProfile.profilePicURL}
+            className={classes.profileImage}
+            alt="Profile"
+          />
+        )}
+        <div className={classes.accountInfoColumn}>
+          <div className={classes.flexDiv}>
+            <div className={classes.accountInfoRow}>
+              <h3>
+                Full Name: <br /> {userProfile.fullName}
+              </h3>
+            </div>
+            <div className={classes.accountInfoRow}>
+              <h3>
+                Email: <br /> {userProfile.email}
+              </h3>
+            </div>
           </div>
-          <div className={classes.accountInfoRow}>
-            <h3>
-              Email: <br /> {userProfile.email}
-            </h3>
+          <div className={classes.flexDiv}>
+            <div className={classes.accountInfoRow}>
+              <h3>
+                Birthday: <br /> {userProfile.birthday}
+              </h3>
+            </div>
+            <div className={classes.accountInfoRow}>
+              <h3>
+                Gender: <br /> {userProfile.gender}
+              </h3>
+            </div>
           </div>
         </div>
-        <div className={classes.flexDiv}>
-          <div className={classes.accountInfoRow}>
-            <h3>
-              Birthday: <br /> {userProfile.birthday}
-            </h3>
-          </div>
-          <div className={classes.accountInfoRow}>
-            <h3>
-              Gender: <br /> {userProfile.gender}
-            </h3>
-          </div>
+        <div className={classes.accountButtonColumn}>
+          {isUsersProfile && (
+            <Tooltip title="Edit Profile">
+              <IconButton
+                component="label"
+                onClick={(): void => history.push(ROUTES.EDIT_PROFILE)}
+              >
+                <EditIcon color="primary" className={classes.editImage} />
+              </IconButton>
+            </Tooltip>
+          )}
+          {!isUsersProfile && !isFollowingUser && (
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={(): void => followUser()}
+            >
+              {`Follow ${getFirstName(userProfile.fullName)}`}
+            </Button>
+          )}
+          {!isUsersProfile && isFollowingUser && (
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={(): void => unFollowUser()}
+            >
+              {`Unfollow ${getFirstName(userProfile.fullName)}`}
+            </Button>
+          )}
         </div>
       </div>
-      <div className={classes.accountButtonColumn}>
-        {isUsersProfile && (
-          <Tooltip title="Edit Profile">
-            <IconButton
-              component="label"
-              onClick={(): void => history.push(ROUTES.EDIT_PROFILE)}
-            >
-              <EditIcon color="primary" className={classes.editImage} />
-            </IconButton>
-          </Tooltip>
-        )}
-        {!isUsersProfile && !isFollowingUser && (
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={(): void => followUser()}
-          >
-            {`Follow ${getFirstName(userProfile.fullName)}`}
-          </Button>
-        )}
-        {!isUsersProfile && isFollowingUser && (
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={(): void => unFollowUser()}
-          >
-            {`Unfollow ${getFirstName(userProfile.fullName)}`}
-          </Button>
-        )}
+      <div className={classes.aboutMe}>
+        <h3>{`About: ${
+          userProfile.aboutMe === ''
+            ? `We don't know anything about ${getFirstName(
+                userProfile.fullName
+              )}....`
+            : userProfile.aboutMe
+        }`}</h3>
       </div>
     </div>
   );
