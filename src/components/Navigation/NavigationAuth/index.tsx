@@ -20,6 +20,7 @@ import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { UserProfileUID } from '../../../constants/interfaces';
+import { Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   mainDiv: {
@@ -279,26 +280,32 @@ const NavigationAuth: React.FC = () => {
             </div>
           </div>
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            <Tooltip title="Messages">
+              <IconButton color="inherit">
+                <Badge badgeContent={4} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Notifications">
+              <IconButton color="inherit">
+                <Badge badgeContent={17} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="User">
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </Tooltip>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

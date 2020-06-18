@@ -37,7 +37,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({ userUID, setTabIndex }) => {
   const [userProfile, setUserProfile] = useState<UserProfileUID>();
 
   useEffect(() => {
-    firebase?.user(userUID).on('value', (snapShot) => {
+    firebase?.user(userUID).once('value', (snapShot) => {
       setUserProfile(convertToUserProfile(snapShot, userUID));
     });
   }, [userUID, firebase]);
