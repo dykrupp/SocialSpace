@@ -42,12 +42,13 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
   };
 
   const containsUniquePost = (
-    snapShot: firebase.database.DataSnapshot
+    snapShot: firebase.database.DataSnapshot,
+    feedUID: string
   ): boolean => {
     if (previousPosts.current) {
       const postStrArr = previousPosts.current.map((post) => post.post);
       return (
-        convertToPosts(snapShot).filter((element) => {
+        convertToPosts(snapShot, feedUID).filter((element) => {
           return postStrArr.indexOf(element.post) === -1;
         }).length !== 0
       );
@@ -133,13 +134,14 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
           // eslint-disable-next-line
           .on('value', async (snapShot) => {
             if (snapShot.val() !== null) {
-              const currentUserPosts = convertToPosts(snapShot);
+              const currentUserPosts = convertToPosts(snapShot, feedUID);
+
               const previousUserPosts = previousPosts.current?.filter(
                 (post) => post.createdByUID === feedUID
               );
 
               if (
-                !containsUniquePost(snapShot) &&
+                !containsUniquePost(snapShot, feedUID) &&
                 previousUserPosts.length !== 0 &&
                 currentUserPosts.length === previousUserPosts.length
               ) {
@@ -152,25 +154,19 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
               } else {
                 await addNewsFeedPost(feedUID, currentUserPosts);
               }
-            } else if (previousPosts.current.length >= 1) {
+            } else if (previousPosts.current.length > 1) {
               //handle case where last post from feedUID is removed
               previousPosts.current = previousPosts.current.filter(
                 (post) => post.createdByUID !== feedUID
               );
 
               setPosts(() => previousPosts.current);
+            } else if (previousPosts.current.length === 1) {
+              resetPosts();
             }
 
-            if (
-              postsCounter === feedUIDS.length &&
-              previousPosts.current.length !== 0
-            ) {
+            if (postsCounter === feedUIDS.length) {
               setIsLoading(false);
-            } else if (
-              postsCounter >= feedUIDS.length &&
-              previousPosts.current.length === 0
-            ) {
-              resetPosts();
             }
 
             postsCounter++;
@@ -185,13 +181,13 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
     if (firebase) {
       if (snapShot.val() === null) resetPosts();
       else if (
-        containsUniquePost(snapShot) ||
+        containsUniquePost(snapShot, feedUID) ||
         Object.keys(snapShot.val()).length !== previousPosts.current?.length
       ) {
         const postsWithMediaURL = await addMediaUrl(
           firebase,
           feedUID,
-          getSortedPosts(convertToPosts(snapShot))
+          getSortedPosts(convertToPosts(snapShot, feedUID))
         );
 
         if (postsWithMediaURL) {
@@ -263,6 +259,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
             dateTime={post.dateTime}
             media={post.media}
             createdByUID={post.createdByUID}
+            parentKey={post.parentKey}
           />
         </Grid>
       ))}

@@ -16,11 +16,11 @@ import AppBar from '@material-ui/core/AppBar';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
 import NewsFeed from '../../NewsFeed';
+import { UserList } from './UserList';
 import {
   convertToUserProfile,
   getFirstName,
 } from '../../../utils/helperFunctions';
-import { UserList } from './UserList';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {

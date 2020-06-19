@@ -12,12 +12,19 @@ import {
 
 export interface PostProps {
   post: string;
+  parentKey: string;
   createdByUID: string;
   dateTime: string;
   media: string;
 }
 
-const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
+const Post: React.FC<PostProps> = ({
+  post,
+  parentKey,
+  createdByUID,
+  dateTime,
+  media,
+}) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [comment, setComment] = useState('');
@@ -37,7 +44,7 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
   const onCommentButtonClick = (): void => {
     if (firebase && authUser) {
       const utcDateTime = new Date().toUTCString();
-      firebase.comment(createdByUID, dateTime, utcDateTime).set({
+      firebase.comment(parentKey, dateTime, utcDateTime).set({
         comment,
         userUID: authUser.uid,
       });
@@ -51,14 +58,14 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
 
   const addLike = (): void => {
     if (firebase && authUser) {
-      firebase.likes(createdByUID, dateTime).push({ userUID: authUser.uid });
+      firebase.likes(parentKey, dateTime).push({ userUID: authUser.uid });
     }
   };
 
   const removeLike = (): void => {
     if (firebase && authUser) {
       const key = likes.filter((x) => x.userUID === authUser.uid)[0].key;
-      firebase.like(createdByUID, dateTime, key).remove();
+      firebase.like(parentKey, dateTime, key).remove();
     }
   };
 
@@ -66,16 +73,16 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
     if (firebase) {
       if (media !== '') {
         firebase.storage
-          .ref(`users/${createdByUID}/posts/${dateTime}/media`)
+          .ref(`users/${parentKey}/posts/${dateTime}/media`)
           .delete()
-          .then(() => firebase.post(createdByUID, dateTime).remove());
-      } else firebase.post(createdByUID, dateTime).remove();
+          .then(() => firebase.post(parentKey, dateTime).remove());
+      } else firebase.post(parentKey, dateTime).remove();
     }
   };
 
   const deleteComment = (commentDateTime: string): void => {
     if (firebase)
-      firebase.comment(createdByUID, dateTime, commentDateTime).remove();
+      firebase.comment(parentKey, dateTime, commentDateTime).remove();
   };
 
   useEffect(() => {
@@ -93,7 +100,7 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
 
   useEffect(() => {
     if (firebase) {
-      firebase.comments(createdByUID, dateTime).on('value', (snapShot) => {
+      firebase.comments(parentKey, dateTime).on('value', (snapShot) => {
         const commentsObject = snapShot.val();
 
         if (commentsObject === null) {
@@ -126,13 +133,13 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
     }
 
     return function cleanup(): void {
-      firebase?.comments(createdByUID, dateTime).off();
+      firebase?.comments(parentKey, dateTime).off();
     };
-  }, [firebase, dateTime, createdByUID]);
+  }, [firebase, dateTime, parentKey]);
 
   useEffect(() => {
     if (firebase) {
-      firebase.likes(createdByUID, dateTime).on('value', (snapShot) => {
+      firebase.likes(parentKey, dateTime).on('value', (snapShot) => {
         const likesObject = snapShot.val();
 
         if (likesObject === null) {
@@ -155,9 +162,9 @@ const Post: React.FC<PostProps> = ({ post, createdByUID, dateTime, media }) => {
     }
 
     return function cleanup(): void {
-      firebase?.likes(createdByUID, dateTime).off();
+      firebase?.likes(parentKey, dateTime).off();
     };
-  }, [firebase, dateTime, createdByUID]);
+  }, [firebase, dateTime, parentKey]);
 
   if (!postUserProfile) return null;
   return (
@@ -186,6 +193,7 @@ Post.propTypes = {
   createdByUID: PropTypes.string.isRequired,
   dateTime: PropTypes.string.isRequired,
   media: PropTypes.string.isRequired,
+  parentKey: PropTypes.string.isRequired,
 };
 
 export default Post;

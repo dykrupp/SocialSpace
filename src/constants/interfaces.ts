@@ -39,6 +39,7 @@ export interface Post {
   likes: Like[];
   dateTime: string;
   createdByUID: string;
+  parentKey: string;
 }
 
 export interface UserProfile extends User {
