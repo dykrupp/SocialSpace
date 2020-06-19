@@ -16,25 +16,15 @@ import AppBar from '@material-ui/core/AppBar';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
 import NewsFeed from '../../NewsFeed';
-import { convertToUserProfile } from '../../../utils/helperFunctions';
-import { UserInfo } from './UserInfo';
+import {
+  convertToUserProfile,
+  getFirstName,
+} from '../../../utils/helperFunctions';
+import { UserList } from './UserList';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
     padding: '20px',
-  },
-  centerTextAlign: {
-    textAlign: 'center',
-  },
-  centerContent: {
-    justifyContent: 'center',
-    marginTop: '20px',
-    height: '55px',
-  },
-  link: {
-    textDecoration: 'none',
-    fontSize: '25px',
-    marginTop: '20px',
   },
 }));
 
@@ -91,37 +81,27 @@ export const ProfilePage: React.FC = () => {
               </Tabs>
             </AppBar>
           </Grid>
-          <Grid container item className={classes.centerTextAlign}>
-            {tabIndex === 0 && <NewsFeed userProfile={userProfile} />}
-            {tabIndex === 1 && (
-              <Grid container item className={classes.centerContent}>
-                {!userProfile.followings && (
-                  <h1>Discover your friends by using SocialSpace Search</h1>
-                )}
-                {userProfile.followings &&
-                  userProfile.followings.map((following) => (
-                    <UserInfo
-                      key={following.userUID}
-                      userUID={following.userUID}
-                      setTabIndex={setTabIndex}
-                    />
-                  ))}
-              </Grid>
-            )}
-            {tabIndex === 2 && (
-              <Grid container item className={classes.centerContent}>
-                {!userProfile.followers && <h1>You have no followers :(</h1>}
-                {userProfile.followers &&
-                  userProfile.followers.map((follower) => (
-                    <UserInfo
-                      key={follower.userUID}
-                      userUID={follower.userUID}
-                      setTabIndex={setTabIndex}
-                    />
-                  ))}
-              </Grid>
-            )}
-          </Grid>
+          {tabIndex === 0 && <NewsFeed userProfile={userProfile} />}
+          {tabIndex === 1 && (
+            <UserList
+              userUIDS={userProfile.followings.map(
+                (following) => following.userUID
+              )}
+              setTabIndex={setTabIndex}
+              emptyListString="Discover new friends with SocialSpace Search!"
+            />
+          )}
+          {tabIndex === 2 && (
+            <UserList
+              userUIDS={userProfile.followers.map(
+                (follower) => follower.userUID
+              )}
+              setTabIndex={setTabIndex}
+              emptyListString={`${getFirstName(
+                userProfile.fullName
+              )} could use some friends...`}
+            />
+          )}
         </Grid>
       </Paper>
     </div>

@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../../constants/routes';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { convertToUserProfile } from '../../../../utils/helperFunctions';
-import { FirebaseContext } from '../../../Firebase/context';
-import { UserProfileUID } from '../../../../constants/interfaces';
+import { convertToUserProfile } from '../../../../../utils/helperFunctions';
+import { FirebaseContext } from '../../../../Firebase/context';
+import { UserProfileUID } from '../../../../../constants/interfaces';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles(() => ({
@@ -19,10 +19,11 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   accountIcon: {
-    fontSize: '55px',
+    fontSize: '75px',
+    width: '85px',
   },
   profilePic: {
-    height: '55px',
+    width: '85px',
   },
 }));
 
