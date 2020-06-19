@@ -125,6 +125,14 @@ const NavigationAuth: React.FC = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  //TODO -> Just added as a proof in concept for Cloud Functions
+  const onMessageClick = (): void => {
+    if (firebase) {
+      const helloWorld = firebase.functions.httpsCallable('helloWorld');
+      helloWorld().then((result) => console.log(result));
+    }
+  };
+
   const handleMobileMenuClose = (): void => {
     setMobileMoreAnchorEl(null);
   };
@@ -281,7 +289,7 @@ const NavigationAuth: React.FC = () => {
           </div>
           <div className={classes.sectionDesktop}>
             <Tooltip title="Messages">
-              <IconButton color="inherit">
+              <IconButton color="inherit" onClick={onMessageClick}>
                 <Badge badgeContent={4} color="secondary">
                   <MailIcon />
                 </Badge>

@@ -3,6 +3,7 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
+import 'firebase/functions';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -19,6 +20,7 @@ class Firebase {
   auth: app.auth.Auth;
   db: app.database.Database;
   storage: app.storage.Storage;
+  functions: app.functions.Functions;
 
   constructor() {
     app.initializeApp(firebaseConfig);
@@ -26,6 +28,7 @@ class Firebase {
     this.auth = app.auth();
     this.db = app.database();
     this.storage = app.storage();
+    this.functions = app.functions();
   }
 
   createUser = (
