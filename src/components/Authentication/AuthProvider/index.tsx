@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { AuthUserContext, AuthUser } from './context';
 import PropTypes from 'prop-types';
@@ -7,6 +6,7 @@ import { useHistory } from 'react-router';
 import { User } from '../../../constants/interfaces';
 import { IsLoading } from '../../IsLoading';
 import { makeStyles } from '@material-ui/core';
+import * as ROUTES from '../../../constants/routes';
 
 const useStyles = makeStyles(() => ({
   loadingDiv: {
@@ -61,6 +61,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               };
             });
           });
+
+        history.push(ROUTES.HOME);
       } else {
         setAuthUser(null);
         setIsLoading(false);

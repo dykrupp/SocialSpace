@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../Firebase/context';
 import { makeStyles } from '@material-ui/core/styles';

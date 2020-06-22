@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Firebase from '../components/Firebase/index';
 import * as Collections from 'typescript-collections';
 import { Post, UserProfileUID } from '../constants/interfaces';
