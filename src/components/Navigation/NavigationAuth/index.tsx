@@ -177,16 +177,6 @@ const NavigationAuth: React.FC = () => {
       {firebase && (
         <MenuItem
           onClick={(): void => {
-            handleMenuClose();
-            history.push(ROUTES.SETTINGS);
-          }}
-        >
-          Settings
-        </MenuItem>
-      )}
-      {firebase && (
-        <MenuItem
-          onClick={(): void => {
             firebase.signOut();
             handleMenuClose();
           }}

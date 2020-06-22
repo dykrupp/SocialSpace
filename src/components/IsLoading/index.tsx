@@ -1,13 +1,17 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '100%',
-    justifyContent: 'center',
+    width: '25%',
+    margin: '0 auto',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
-  textAlign: {
-    textAlign: 'center',
+  circularProgress: {
+    marginLeft: '10px',
   },
 }));
 
@@ -15,8 +19,13 @@ export const IsLoading = (): JSX.Element => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <h1 className={classes.textAlign}>Loading Please Wait</h1>
-    </div>
+    <Grid container className={classes.root}>
+      <Grid item>
+        <h1>Loading</h1>
+      </Grid>
+      <Grid item>
+        <CircularProgress color="primary" />
+      </Grid>
+    </Grid>
   );
 };

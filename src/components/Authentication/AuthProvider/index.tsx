@@ -6,12 +6,21 @@ import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
 import { User } from '../../../constants/interfaces';
 import { IsLoading } from '../../IsLoading';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(() => ({
+  loadingDiv: {
+    width: '50%',
+    margin: '0 auto',
+  },
+}));
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const classes = useStyles();
   const firebase = useContext(FirebaseContext);
   const [authUser, setAuthUser] = useState<AuthUser>(null);
   const [isLoading, setIsLoading] = useState(true); //used to prevent loading views until we get feedback from firebase
@@ -67,7 +76,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, [firebase, history]);
 
-  if (isLoading) return <IsLoading />;
+  if (isLoading)
+    return (
+      <div className={classes.loadingDiv}>
+        <IsLoading />
+      </div>
+    );
   else
     return (
       <AuthUserContext.Provider value={authUser}>
