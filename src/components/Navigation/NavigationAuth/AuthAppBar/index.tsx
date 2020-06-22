@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none',
     outline: 0,
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
 }));
 
 interface AuthAppBarProps {
@@ -57,7 +60,7 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   const classes = useStyles();
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" className={classes.appBar}>
       <Toolbar variant="dense">
         <Typography className={classes.title} variant="h6" noWrap>
           <Link
