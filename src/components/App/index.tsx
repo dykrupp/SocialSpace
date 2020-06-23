@@ -66,12 +66,12 @@ const App: React.FC = () => {
           <AuthProtectedRoute
             exact
             path={ROUTES.EDIT_PROFILE}
-            component={EditProfile}
+            render={(): JSX.Element => <EditProfile />}
           />
           <AuthProtectedRoute
             exact
             path={ROUTES.SETTINGS}
-            component={Settings}
+            render={(): JSX.Element => <Settings />}
           />
         </div>
       </AuthProvider>

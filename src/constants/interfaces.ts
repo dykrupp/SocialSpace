@@ -49,3 +49,14 @@ export interface UserProfile extends User {
 export interface UserProfileUID extends UserProfile {
   uid: string;
 }
+
+export interface ChatUID {
+  userUIDS: string[];
+  uid: string;
+}
+
+export interface Message {
+  userUID: string;
+  text: string;
+  dateTime: string;
+}

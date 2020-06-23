@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Divider from '@material-ui/core/Divider';
@@ -11,6 +11,8 @@ import List from '@material-ui/core/List';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { UserProfileUID } from '../../../../constants/interfaces';
+import { ChatList } from './ChatList';
 
 const drawerWidth = '240px';
 
@@ -36,13 +38,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface MessageDrawerProps {
   isDrawerOpen: boolean;
   setIsDrawerOpen: (state: boolean) => void;
+  users: UserProfileUID[];
 }
 
 export const MessageDrawer: React.FC<MessageDrawerProps> = ({
   isDrawerOpen,
   setIsDrawerOpen,
+  users,
 }) => {
   const classes = useStyles();
+  const [selectedChatUID, setSelectedChatUID] = useState('');
+
+  const onChatClick = async (chatUID: string): Promise<void> => {
+    setSelectedChatUID(chatUID);
+  };
+
+  console.log(selectedChatUID);
+
   return (
     <Drawer
       className={classes.drawer}
@@ -59,16 +71,7 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
         </IconButton>
       </div>
       <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <ChatList users={users} onChatClick={onChatClick} />
       <Divider />
       <List>
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
@@ -87,4 +90,5 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
 MessageDrawer.propTypes = {
   isDrawerOpen: PropTypes.bool.isRequired,
   setIsDrawerOpen: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
 };

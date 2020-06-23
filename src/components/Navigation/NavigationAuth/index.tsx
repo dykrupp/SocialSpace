@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserMenu } from './UserMenu';
 import { MobileMenu } from './MobileMenu';
@@ -6,6 +6,7 @@ import { MessageDrawer } from './MessageDrawer';
 import { AuthAppBar } from './AuthAppBar';
 import { UserProfileUID } from '../../../constants/interfaces';
 import PropTypes from 'prop-types';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 
 const useStyles = makeStyles(() => ({
   mainDiv: {
@@ -22,6 +23,7 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
   users,
 }) => {
   const classes = useStyles();
+  const authUser = useContext(AuthUserContext);
 
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
@@ -57,6 +59,7 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
       <MessageDrawer
         isDrawerOpen={isMessageDrawerOpen}
         setIsDrawerOpen={setIsMessageDrawerOpen}
+        users={users.filter((x) => x.uid !== authUser?.uid)}
       />
       <MobileMenu
         mobileMenuAnchor={mobileAnchor}

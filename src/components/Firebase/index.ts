@@ -101,6 +101,11 @@ class Firebase {
     postDateTime: string
   ): app.database.Reference =>
     this.db.ref(`posts/${postUserID}/${postDateTime}/comments`);
+
+  chatUIDS = (): app.database.Reference => this.db.ref(`chatUIDS`);
+
+  messages = (chatUID: string): app.database.Reference =>
+    this.db.ref(`chats/${chatUID}/messages`);
 }
 
 export default Firebase;

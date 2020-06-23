@@ -23,7 +23,7 @@ export const DesktopButtonNav: React.FC<DesktopButtonNavProps> = ({
           color="inherit"
           onClick={(): void => setIsMessageDrawerOpen((isOpen) => !isOpen)}
         >
-          <Badge badgeContent={4} color="secondary">
+          <Badge color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
