@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Paper } from '@material-ui/core';
 import { FirebaseContext } from '../../Firebase/context';
 import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -10,8 +10,10 @@ import { useHistory } from 'react-router';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import TextField from '@material-ui/core/TextField';
 import { getFirstName } from '../../../utils/helperFunctions';
+import Backdrop from '@material-ui/core/Backdrop';
+import { IsLoading } from '../../IsLoading';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   gridContainer: {
     padding: '20px',
   },
@@ -34,13 +36,18 @@ const useStyles = makeStyles(() => ({
   aboutMeInput: {
     width: '75%',
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
-export const EditProfilePage: React.FC = () => {
+export const EditProfile: React.FC = () => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [aboutMe, setAboutMe] = useState(authUser?.aboutMe);
+  const [isSaving, setIsSaving] = useState(false);
   const classes = useStyles();
   const history = useHistory();
 
@@ -56,23 +63,46 @@ export const EditProfilePage: React.FC = () => {
     setAboutMe(event.target.value);
   };
 
+  const updateProfilePic = async (): Promise<void> => {
+    if (firebase && authUser && profilePicture) {
+      await firebase.storage
+        .ref(`users/${authUser.uid}/profilePicture`)
+        .put(profilePicture)
+        .then(async (taskSnapShot) => {
+          await taskSnapShot.ref.getDownloadURL().then((url) => {
+            firebase.user(authUser.uid).update({ profilePicURL: url });
+          });
+        });
+    }
+  };
+
   const onSaveClick = (): void => {
     if (firebase && authUser) {
-      if (profilePicture) {
-        firebase.storage
-          .ref(`users/${authUser.uid}/profilePicture`)
-          .put(profilePicture)
-          .then((taskSnapShot) => {
-            taskSnapShot.ref.getDownloadURL().then((url) => {
-              firebase.user(authUser.uid).update({ profilePicURL: url });
-            });
+      setIsSaving(true);
+
+      const isAboutEmpty = aboutMe === '';
+
+      if (profilePicture && isAboutEmpty) {
+        updateProfilePic().then(() => {
+          setIsSaving(false);
+          history.goBack();
+        });
+      } else if (profilePicture && !isAboutEmpty) {
+        updateProfilePic()
+          .then(() => firebase.user(authUser.uid).update({ aboutMe: aboutMe }))
+          .then(() => {
+            setIsSaving(false);
+            history.goBack();
+          });
+      } else if (!profilePicture && !isAboutEmpty) {
+        firebase
+          .user(authUser.uid)
+          .update({ aboutMe: aboutMe })
+          .then(() => {
+            setIsSaving(false);
+            history.goBack();
           });
       }
-
-      if (aboutMe !== '')
-        firebase.user(authUser.uid).update({ aboutMe: aboutMe });
-
-      history.goBack();
     }
   };
 
@@ -164,6 +194,9 @@ export const EditProfilePage: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
+      <Backdrop className={classes.backdrop} open={isSaving}>
+        <IsLoading text="Saving" />
+      </Backdrop>
     </div>
   );
 };

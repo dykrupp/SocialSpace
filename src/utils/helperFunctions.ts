@@ -1,4 +1,5 @@
-import Firebase from '../components/Firebase/index';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Firebase from '../components/Firebase';
 import * as Collections from 'typescript-collections';
 import { Post, UserProfileUID } from '../constants/interfaces';
 
@@ -46,10 +47,10 @@ export const convertToPosts = (
 };
 
 export const convertToUserProfile = (
-  snapShot: firebase.database.DataSnapshot,
+  object: any,
   userUID: string
 ): UserProfileUID => {
-  const userProfile: UserProfileUID = { ...snapShot.val(), uid: userUID };
+  const userProfile: UserProfileUID = { ...object, uid: userUID };
 
   if (userProfile.followers) {
     userProfile.followers = Object.keys(userProfile.followers).map((key) => ({

@@ -35,7 +35,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (authUser) {
         userUID.current = authUser.uid;
 
-        firebase?.user(authUser.uid).on('value', (snapShot) => {
+        firebase?.user(authUser.uid).once('value', (snapShot) => {
           user.current = snapShot.val() as User;
           setAuthUser(() => {
             return {
@@ -72,7 +72,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return function cleanup(): void {
       if (listener) listener();
       if (userUID.current) {
-        firebase?.user(userUID.current).off();
         firebase?.db.ref(`users/${userUID.current}/profilePicURL`).off();
       }
     };
@@ -81,7 +80,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   if (isLoading)
     return (
       <div className={classes.loadingDiv}>
-        <IsLoading />
+        <IsLoading text="Loading" />
       </div>
     );
   else

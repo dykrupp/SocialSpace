@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { fade, makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -6,9 +6,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import * as ROUTES from '../../../../../constants/routes';
 import { useHistory } from 'react-router-dom';
-import { FirebaseContext } from '../../../../Firebase/context';
-import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { UserProfileUID } from '../../../../../constants/interfaces';
+import PropTypes from 'prop-types';
+import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -33,13 +33,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  users: UserProfileUID[];
+}
+
+export const SearchBar: React.FC<SearchBarProps> = ({ users }) => {
   const classes = useStyles();
-  const firebase = useContext(FirebaseContext);
-  const authUser = useContext(AuthUserContext);
   const history = useHistory();
-  const [users, setUsers] = useState<UserProfileUID[]>([]);
   const [searchString, setSearchString] = useState('');
+  const authUser = useContext(AuthUserContext);
 
   const handleSearchChange = (
     event: React.ChangeEvent<{}>,
@@ -55,23 +57,6 @@ export const SearchBar: React.FC = () => {
       setSearchString('');
     }
   };
-
-  useEffect(() => {
-    firebase?.users().on('value', (snapshot) => {
-      const usersObject = snapshot.val();
-
-      const usersList = Object.keys(usersObject).map((key) => ({
-        ...usersObject[key],
-        uid: key,
-      })) as UserProfileUID[];
-
-      setUsers(usersList.filter((user) => user.uid !== authUser?.uid));
-    });
-
-    return function cleanup(): void {
-      firebase?.users().off();
-    };
-  }, [firebase, authUser]);
 
   return (
     <div className={classes.searchBar}>
@@ -91,7 +76,9 @@ export const SearchBar: React.FC = () => {
         onKeyPress={(event: React.KeyboardEvent<HTMLDivElement>): void => {
           if (event.key === 'Enter') onSearchSubmit();
         }}
-        options={users.map((option) => option.fullName)}
+        options={users
+          .filter((user) => user.uid !== authUser?.uid)
+          .map((option) => option.fullName)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -105,4 +92,8 @@ export const SearchBar: React.FC = () => {
       />
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  users: PropTypes.array.isRequired,
 };

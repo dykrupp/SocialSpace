@@ -4,6 +4,8 @@ import { UserMenu } from './UserMenu';
 import { MobileMenu } from './MobileMenu';
 import { MessageDrawer } from './MessageDrawer';
 import { AuthAppBar } from './AuthAppBar';
+import { UserProfileUID } from '../../../constants/interfaces';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(() => ({
   mainDiv: {
@@ -12,7 +14,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const NavigationAuthContainer: React.FC = () => {
+interface NavigationAuthProps {
+  users: UserProfileUID[];
+}
+
+export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
+  users,
+}) => {
   const classes = useStyles();
 
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
@@ -41,6 +49,7 @@ const NavigationAuthContainer: React.FC = () => {
   return (
     <div className={classes.mainDiv}>
       <AuthAppBar
+        users={users}
         setIsMessageDrawerOpen={setIsMessageDrawerOpen}
         handleMobileMenuOpen={handleMobileMenuOpen}
         handleUserMenuOpen={handleUserMenuOpen}
@@ -59,4 +68,6 @@ const NavigationAuthContainer: React.FC = () => {
   );
 };
 
-export default NavigationAuthContainer;
+NavigationAuthContainer.propTypes = {
+  users: PropTypes.array.isRequired,
+};

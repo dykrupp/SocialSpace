@@ -19,11 +19,12 @@ import {
 
 interface NewsFeedProps {
   userProfile: UserProfileUID | null;
+  users: UserProfileUID[];
 }
 
 const LimitNewsFeedBy = 10;
 
-const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
+const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
   const firebase = useContext(FirebaseContext);
   const [posts, setPosts] = useState<PostInterface[]>([]);
   const previousPosts = useRef<PostInterface[]>([]);
@@ -236,7 +237,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
 
   const isAuthUsersFeed = authUser?.uid === feedUID;
 
-  if (isLoading) return <IsLoading />;
+  if (isLoading) return <IsLoading text="Loading" />;
   else if (!authUser || !firebase) return null;
   return (
     <Grid container direction="column" spacing={2}>
@@ -253,13 +254,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
       </Grid>
       {posts.map((post: PostInterface) => (
         <Grid item key={post.dateTime}>
-          <Post
-            post={post.post}
-            dateTime={post.dateTime}
-            media={post.media}
-            createdByUID={post.createdByUID}
-            parentKey={post.parentKey}
-          />
+          <Post post={post} users={users} />
         </Grid>
       ))}
     </Grid>
@@ -268,6 +263,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile }) => {
 
 NewsFeed.propTypes = {
   userProfile: PropTypes.any,
+  users: PropTypes.array.isRequired,
 };
 
 export default NewsFeed;

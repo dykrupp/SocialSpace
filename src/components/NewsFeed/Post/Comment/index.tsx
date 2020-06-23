@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -6,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { FirebaseContext } from '../../../Firebase/context';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../../../constants/routes';
@@ -14,14 +13,12 @@ import {
   Comment as CommentInterface,
   UserProfileUID,
 } from '../../../../constants/interfaces';
-import {
-  calcTimeSince,
-  convertToUserProfile,
-} from '../../../../utils/helperFunctions';
+import { calcTimeSince } from '../../../../utils/helperFunctions';
 
 interface CommentProps {
   comment: CommentInterface;
   deleteComment: (commentDateTime: string) => void;
+  userProfile: UserProfileUID | undefined;
 }
 
 const commentStyles = makeStyles(() => ({
@@ -58,19 +55,13 @@ const commentStyles = makeStyles(() => ({
   },
 }));
 
-export const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
+export const Comment: React.FC<CommentProps> = ({
+  comment,
+  deleteComment,
+  userProfile,
+}) => {
   const classes = commentStyles();
   const authUser = useContext(AuthUserContext);
-  const firebase = useContext(FirebaseContext);
-  const [userProfile, setUserProfile] = useState<UserProfileUID>();
-
-  useEffect(() => {
-    if (firebase) {
-      firebase.user(comment.userUID).on('value', (snapShot) => {
-        setUserProfile(convertToUserProfile(snapShot, comment.userUID));
-      });
-    }
-  }, [firebase, comment.userUID]);
 
   if (!userProfile) return null;
   const { profilePicURL, fullName } = userProfile;
@@ -115,4 +106,5 @@ export const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
 Comment.propTypes = {
   comment: PropTypes.any.isRequired,
   deleteComment: PropTypes.func.isRequired,
+  userProfile: PropTypes.any.isRequired,
 };

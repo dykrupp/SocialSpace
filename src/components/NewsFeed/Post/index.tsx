@@ -6,34 +6,26 @@ import { PostItem } from './PostItem';
 import {
   Comment,
   Like,
-  User,
   UserProfileUID,
+  Post as PostInterface,
 } from '../../../constants/interfaces';
 
 export interface PostProps {
-  post: string;
-  parentKey: string;
-  createdByUID: string;
-  dateTime: string;
-  media: string;
+  post: PostInterface;
+  users: UserProfileUID[];
 }
 
-const Post: React.FC<PostProps> = ({
-  post,
-  parentKey,
-  createdByUID,
-  dateTime,
-  media,
-}) => {
+const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [likes, setLikes] = useState<Like[]>([]);
-  const [postUserProfile, setPostUserProfile] = useState<UserProfileUID>();
   const numOfComments = useRef(0);
   const numOfLikes = useRef(0);
+  const postProfile = users.find((x) => x.uid === userPost.createdByUID);
+  const { post, dateTime, media, parentKey } = userPost;
 
   const onCommentChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -84,19 +76,6 @@ const Post: React.FC<PostProps> = ({
     if (firebase)
       firebase.comment(parentKey, dateTime, commentDateTime).remove();
   };
-
-  useEffect(() => {
-    if (firebase) {
-      firebase.user(createdByUID).once('value', (snapShot) => {
-        setPostUserProfile(() => {
-          return {
-            ...(snapShot.val() as User),
-            uid: createdByUID,
-          } as UserProfileUID;
-        });
-      });
-    }
-  }, [firebase, createdByUID]);
 
   useEffect(() => {
     if (firebase) {
@@ -166,7 +145,7 @@ const Post: React.FC<PostProps> = ({
     };
   }, [firebase, dateTime, parentKey]);
 
-  if (!postUserProfile) return null;
+  if (!postProfile) return null;
   return (
     <PostItem
       post={post}
@@ -183,17 +162,15 @@ const Post: React.FC<PostProps> = ({
       comments={comments}
       likes={likes}
       removeLike={removeLike}
-      userProfile={postUserProfile}
+      users={users}
+      userProfile={postProfile}
     />
   );
 };
 
 Post.propTypes = {
-  post: PropTypes.string.isRequired,
-  createdByUID: PropTypes.string.isRequired,
-  dateTime: PropTypes.string.isRequired,
-  media: PropTypes.string.isRequired,
-  parentKey: PropTypes.string.isRequired,
+  post: PropTypes.any.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default Post;

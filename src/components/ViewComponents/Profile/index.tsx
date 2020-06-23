@@ -1,10 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { FirebaseContext } from '../../Firebase/context';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import { UserProfileUID } from '../../../constants/interfaces';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
-import { IsLoading } from '../../IsLoading';
 import { AccountInfo } from './AccountInfo';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -16,10 +14,8 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
 import NewsFeed from '../../NewsFeed';
 import { UserList } from './UserList';
-import {
-  convertToUserProfile,
-  getFirstName,
-} from '../../../utils/helperFunctions';
+import PropTypes from 'prop-types';
+import { getFirstName } from '../../../utils/helperFunctions';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
@@ -27,25 +23,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const ProfilePage: React.FC = () => {
+interface ProfileProps {
+  users: UserProfileUID[];
+}
+
+export const Profile: React.FC<ProfileProps> = ({ users }) => {
   const classes = useStyles();
   const { userUID } = useParams();
-  const firebase = useContext(FirebaseContext);
-  const [userProfile, setUserProfile] = useState<UserProfileUID>();
-  const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
   const [tabIndex, setTabIndex] = useState(0);
-
-  useEffect(() => {
-    firebase?.user(userUID).on('value', (snapShot) => {
-      setUserProfile(convertToUserProfile(snapShot, userUID));
-      setIsLoading(false);
-    });
-
-    return function cleanup(): void {
-      firebase?.user(userUID).off();
-    };
-  }, [firebase, userUID]);
+  const userProfile = users.find((x) => x.uid === userUID);
 
   const handleChange = (
     event: React.ChangeEvent<{}>,
@@ -54,7 +41,7 @@ export const ProfilePage: React.FC = () => {
     setTabIndex(newValue);
   };
 
-  if (isLoading || !userProfile || !authUser) return <IsLoading />;
+  if (!userProfile || !authUser) return null;
   return (
     <div className="mainRoot">
       <Paper elevation={3} className="mainContainer">
@@ -80,12 +67,15 @@ export const ProfilePage: React.FC = () => {
               </Tabs>
             </AppBar>
           </Grid>
-          {tabIndex === 0 && <NewsFeed userProfile={userProfile} />}
+          {tabIndex === 0 && (
+            <NewsFeed userProfile={userProfile} users={users} />
+          )}
           {tabIndex === 1 && (
             <UserList
               userUIDS={userProfile.followings.map(
                 (following) => following.userUID
               )}
+              users={users}
               setTabIndex={setTabIndex}
               emptyListString="Discover new friends with SocialSpace Search!"
             />
@@ -95,6 +85,7 @@ export const ProfilePage: React.FC = () => {
               userUIDS={userProfile.followers.map(
                 (follower) => follower.userUID
               )}
+              users={users}
               setTabIndex={setTabIndex}
               emptyListString={`${getFirstName(
                 userProfile.fullName
@@ -105,4 +96,8 @@ export const ProfilePage: React.FC = () => {
       </Paper>
     </div>
   );
+};
+
+Profile.propTypes = {
+  users: PropTypes.array.isRequired,
 };

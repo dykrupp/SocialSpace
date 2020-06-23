@@ -1,10 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../../../../constants/routes';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { convertToUserProfile } from '../../../../../utils/helperFunctions';
-import { FirebaseContext } from '../../../../Firebase/context';
 import { UserProfileUID } from '../../../../../constants/interfaces';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
@@ -28,23 +26,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface UserInfoProps {
-  userUID: string;
+  userProfile: UserProfileUID | undefined;
   setTabIndex: (index: number) => void;
 }
 
-export const UserInfo: React.FC<UserInfoProps> = ({ userUID, setTabIndex }) => {
+export const UserInfo: React.FC<UserInfoProps> = ({
+  userProfile,
+  setTabIndex,
+}) => {
   const classes = useStyles();
-  const firebase = useContext(FirebaseContext);
-  const [userProfile, setUserProfile] = useState<UserProfileUID>();
-
-  useEffect(() => {
-    firebase?.user(userUID).once('value', (snapShot) => {
-      setUserProfile(convertToUserProfile(snapShot, userUID));
-    });
-  }, [userUID, firebase]);
 
   if (!userProfile) return null;
-  const { fullName, profilePicURL } = userProfile;
+  const { fullName, profilePicURL, uid } = userProfile;
   return (
     <div className={classes.mainDiv}>
       {profilePicURL === '' && (
@@ -55,7 +48,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({ userUID, setTabIndex }) => {
       )}
       <Link
         className={classes.link}
-        to={`${ROUTES.PROFILE}/${userUID}`}
+        to={`${ROUTES.PROFILE}/${uid}`}
         onClick={(): void => setTabIndex(0)}
       >
         {fullName}
@@ -65,6 +58,6 @@ export const UserInfo: React.FC<UserInfoProps> = ({ userUID, setTabIndex }) => {
 };
 
 UserInfo.propTypes = {
-  userUID: PropTypes.string.isRequired,
+  userProfile: PropTypes.any.isRequired,
   setTabIndex: PropTypes.func.isRequired,
 };

@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { SearchBar } from './SearchBar';
 import { DesktopButtonNav } from './DesktopButtonNav';
+import { UserProfileUID } from '../../../../constants/interfaces';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -50,12 +51,14 @@ interface AuthAppBarProps {
   setIsMessageDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
   handleUserMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleMobileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  users: UserProfileUID[];
 }
 
 export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   setIsMessageDrawerOpen,
   handleUserMenuOpen,
   handleMobileMenuOpen,
+  users,
 }) => {
   const classes = useStyles();
 
@@ -72,7 +75,7 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
           </Link>
         </Typography>
         <div className={classes.searchBar}>
-          <SearchBar />
+          <SearchBar users={users} />
         </div>
         <div className={classes.sectionDesktop}>
           <DesktopButtonNav
@@ -94,4 +97,5 @@ AuthAppBar.propTypes = {
   setIsMessageDrawerOpen: PropTypes.func.isRequired,
   handleMobileMenuOpen: PropTypes.func.isRequired,
   handleUserMenuOpen: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
 };

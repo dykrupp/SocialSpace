@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { UserInfo } from './UserInfo';
+import { UserProfileUID } from '../../../../constants/interfaces';
 
 const useStyles = makeStyles(() => ({
   centerTextAlign: {
@@ -21,12 +22,14 @@ interface UserListProps {
   userUIDS: string[];
   setTabIndex: (index: number) => void;
   emptyListString: string;
+  users: UserProfileUID[];
 }
 
 export const UserList: React.FC<UserListProps> = ({
   userUIDS,
   setTabIndex,
   emptyListString,
+  users,
 }) => {
   const classes = useStyles();
   return (
@@ -45,7 +48,10 @@ export const UserList: React.FC<UserListProps> = ({
         {userUIDS.length > 0 &&
           userUIDS.map((userUID) => (
             <Grid item key={userUID}>
-              <UserInfo userUID={userUID} setTabIndex={setTabIndex} />
+              <UserInfo
+                userProfile={users.find((x) => x.uid === userUID)}
+                setTabIndex={setTabIndex}
+              />
             </Grid>
           ))}
       </Grid>
@@ -57,4 +63,5 @@ UserList.propTypes = {
   userUIDS: PropTypes.array.isRequired,
   setTabIndex: PropTypes.func.isRequired,
   emptyListString: PropTypes.string.isRequired,
+  users: PropTypes.array.isRequired,
 };

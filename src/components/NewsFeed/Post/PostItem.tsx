@@ -61,14 +61,16 @@ interface PostStyleProps {
   pendingComment: string;
   likes: Like[];
   comments: CommentInterface[];
-  userProfile: UserProfileUID;
+  users: UserProfileUID[];
   post: string;
   dateTime: string;
   media: string;
+  userProfile: UserProfileUID;
 }
 
 export const PostItem: React.FC<PostStyleProps> = ({
   post,
+  users,
   userProfile,
   dateTime,
   media,
@@ -150,6 +152,7 @@ export const PostItem: React.FC<PostStyleProps> = ({
               key={comment.dateTime}
               comment={comment}
               deleteComment={deleteComment}
+              userProfile={users.find((x) => x.uid === comment.userUID)}
             />
           ))}
         <Grid item xs={12} className={classes.commentInputRow}>
@@ -179,7 +182,7 @@ export const PostItem: React.FC<PostStyleProps> = ({
 
 PostItem.propTypes = {
   post: PropTypes.string.isRequired,
-  userProfile: PropTypes.any.isRequired,
+  users: PropTypes.array.isRequired,
   dateTime: PropTypes.string.isRequired,
   media: PropTypes.string.isRequired,
   pendingComment: PropTypes.string.isRequired,
@@ -193,4 +196,5 @@ PostItem.propTypes = {
   onCommentsOpenClick: PropTypes.func.isRequired,
   likes: PropTypes.arrayOf(PropTypes.any).isRequired,
   comments: PropTypes.arrayOf(PropTypes.any).isRequired,
+  userProfile: PropTypes.any.isRequired,
 };
