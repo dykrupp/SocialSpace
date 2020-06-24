@@ -2,19 +2,14 @@ import React, { useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import List from '@material-ui/core/List';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { UserProfileUID } from '../../../../constants/interfaces';
 import { ChatList } from './ChatList';
+import { Chat } from './Chat';
 
-const drawerWidth = '240px';
+const drawerWidth = '300px';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -53,8 +48,6 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
     setSelectedChatUID(chatUID);
   };
 
-  console.log(selectedChatUID);
-
   return (
     <Drawer
       className={classes.drawer}
@@ -73,16 +66,7 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
       <Divider />
       <ChatList users={users} onChatClick={onChatClick} />
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <Chat chatUID={selectedChatUID} />
     </Drawer>
   );
 };

@@ -13,7 +13,7 @@ import { AuthUserContext } from '../../../../Authentication/AuthProvider/context
 
 const useStyles = makeStyles(() => ({
   chatsList: {
-    height: '200px',
+    minHeight: '200px',
     overflowY: 'auto',
   },
   accountImage: {
