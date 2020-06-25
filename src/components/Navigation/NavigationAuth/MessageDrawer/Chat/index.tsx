@@ -4,6 +4,7 @@ import { Message } from '../../../../../constants/interfaces';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 import {
   Button,
   List,
@@ -20,20 +21,21 @@ const useStyles = makeStyles(() => ({
   inputChatDiv: {
     display: 'flex',
     flexDirection: 'column',
-    flex: '1',
+    height: '100px',
+    margin: '15px',
     justifyContent: 'center',
     alignItems: 'center',
   },
   chatDiv: {
     display: 'flex',
     flexDirection: 'column',
-    flex: '1',
+    height: 'calc(100% - 270px)',
   },
   chat: {
     overflowY: 'auto',
-    height: '550px',
     display: 'flex',
     flexDirection: 'column',
+    flex: '1',
   },
   chatItem: {
     overflowWrap: 'anywhere',
@@ -48,6 +50,9 @@ const useStyles = makeStyles(() => ({
   sendMessage: {
     marginTop: '5px',
     width: '250px',
+  },
+  textAlign: {
+    textAlign: 'center',
   },
 }));
 
@@ -105,7 +110,7 @@ export const Chat: React.FC<ChatProps> = ({ chatUID }) => {
   };
 
   if (chatUID === '')
-    return <h3 style={{ textAlign: 'center' }}>Please select a chat</h3>;
+    return <h3 className={classes.textAlign}>Please select a chat</h3>;
   return (
     <div className={classes.chatDiv}>
       <List className={classes.chat}>
@@ -115,6 +120,7 @@ export const Chat: React.FC<ChatProps> = ({ chatUID }) => {
           </ListItem>
         ))}
       </List>
+      <Divider />
       <div className={classes.inputChatDiv}>
         <TextField
           className={classes.chatInput}

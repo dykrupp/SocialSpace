@@ -18,8 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    height: 'calc(100% - 40px)',
-    marginTop: '40px',
   },
   drawerHeader: {
     display: 'flex',
