@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Divider from '@material-ui/core/Divider';
@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { UserProfileUID } from '../../../../constants/interfaces';
 import { ChatList } from './ChatList';
 import { Chat } from './Chat';
+import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 
 const drawerWidth = '300px';
 
@@ -41,6 +42,7 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
 }) => {
   const classes = useStyles();
   const [selectedChatUID, setSelectedChatUID] = useState('');
+  const authUser = useContext(AuthUserContext);
 
   const onChatClick = async (chatUID: string): Promise<void> => {
     setSelectedChatUID(chatUID);
@@ -62,9 +64,12 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
         </IconButton>
       </div>
       <Divider />
-      <ChatList users={users} onChatClick={onChatClick} />
+      <ChatList
+        users={users.filter((x) => x.uid !== authUser?.uid)}
+        onChatClick={onChatClick}
+      />
       <Divider />
-      <Chat chatUID={selectedChatUID} />
+      <Chat chatUID={selectedChatUID} users={users} />
     </Drawer>
   );
 };

@@ -1,23 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Message } from '../../../../../constants/interfaces';
+import { Message, UserProfileUID } from '../../../../../constants/interfaces';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  TextField,
-} from '@material-ui/core';
+import { Button, List, TextField } from '@material-ui/core';
+import { ChatBubble } from './ChatBubble';
 
 const useStyles = makeStyles(() => ({
-  flexColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
   inputChatDiv: {
     display: 'flex',
     flexDirection: 'column',
@@ -36,12 +27,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     flex: '1',
-  },
-  chatItem: {
-    overflowWrap: 'anywhere',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1',
+    minHeight: '120px',
   },
   chatInput: {
     marginBottom: '5px',
@@ -58,14 +44,24 @@ const useStyles = makeStyles(() => ({
 
 interface ChatProps {
   chatUID: string;
+  users: UserProfileUID[];
 }
 
-export const Chat: React.FC<ChatProps> = ({ chatUID }) => {
+export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
-  const classes = useStyles();
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatText, setChatText] = useState<string>('');
+  const classes = useStyles();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = (): void => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(scrollToBottom, [messages]);
 
   useEffect(() => {
     if (chatUID !== '') {
@@ -114,11 +110,10 @@ export const Chat: React.FC<ChatProps> = ({ chatUID }) => {
   return (
     <div className={classes.chatDiv}>
       <List className={classes.chat}>
-        {messages.map((message) => (
-          <ListItem key={message.dateTime}>
-            <ListItemText className={classes.chatItem} primary={message.text} />
-          </ListItem>
+        {messages.map((message, index) => (
+          <ChatBubble message={message} users={users} key={index} />
         ))}
+        <div ref={messagesEndRef} />
       </List>
       <Divider />
       <div className={classes.inputChatDiv}>
@@ -145,4 +140,5 @@ export const Chat: React.FC<ChatProps> = ({ chatUID }) => {
 
 Chat.propTypes = {
   chatUID: PropTypes.string.isRequired,
+  users: PropTypes.array.isRequired,
 };
