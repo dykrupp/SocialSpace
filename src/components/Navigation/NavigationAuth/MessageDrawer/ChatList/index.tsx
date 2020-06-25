@@ -10,6 +10,9 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import { Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   chatsList: {
@@ -24,9 +27,14 @@ const useStyles = makeStyles(() => ({
 interface ChatListProps {
   users: UserProfileUID[];
   onChatClick: (chatUID: string) => Promise<void>;
+  currentChatUID: string;
 }
 
-export const ChatList: React.FC<ChatListProps> = ({ users, onChatClick }) => {
+export const ChatList: React.FC<ChatListProps> = ({
+  users,
+  onChatClick,
+  currentChatUID,
+}) => {
   const classes = useStyles();
   const [chatUIDS, setChatUIDS] = useState<ChatUID[]>([]);
   const firebase = useContext(FirebaseContext);
@@ -75,6 +83,10 @@ export const ChatList: React.FC<ChatListProps> = ({ users, onChatClick }) => {
     return '';
   };
 
+  const removeMessages = (): void => {
+    firebase?.messages(currentChatUID).remove();
+  };
+
   return (
     <List className={classes.chatsList}>
       {users.map((user) => (
@@ -94,6 +106,11 @@ export const ChatList: React.FC<ChatListProps> = ({ users, onChatClick }) => {
             )}
           </ListItemAvatar>
           <ListItemText primary={user.fullName} />
+          <Tooltip title="Delete Conversation">
+            <IconButton color="primary" onClick={(): void => removeMessages()}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </ListItem>
       ))}
     </List>
@@ -103,4 +120,5 @@ export const ChatList: React.FC<ChatListProps> = ({ users, onChatClick }) => {
 ChatList.propTypes = {
   users: PropTypes.array.isRequired,
   onChatClick: PropTypes.func.isRequired,
+  currentChatUID: PropTypes.string.isRequired,
 };

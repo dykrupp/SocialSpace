@@ -67,6 +67,7 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
       <ChatList
         users={users.filter((x) => x.uid !== authUser?.uid)}
         onChatClick={onChatClick}
+        currentChatUID={selectedChatUID}
       />
       <Divider />
       <Chat chatUID={selectedChatUID} users={users} />
