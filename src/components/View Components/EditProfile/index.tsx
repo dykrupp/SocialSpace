@@ -8,10 +8,10 @@ import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory } from 'react-router';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
-import TextField from '@material-ui/core/TextField';
 import { getFirstName } from '../../../utils/helperFunctions';
 import Backdrop from '@material-ui/core/Backdrop';
-import { IsLoading } from '../../IsLoading';
+import { IsLoading } from '../../Resuable Components/IsLoading';
+import { BlueOutlinedTextField } from '../../Resuable Components/OutlinedTextField/index';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gridContainer: {
@@ -158,8 +158,7 @@ export const EditProfile: React.FC = () => {
             </Button>
           </Grid>
           <Grid item>
-            <TextField
-              id="outlined-multiline-static"
+            <BlueOutlinedTextField
               label="About Me"
               multiline
               rows={2}

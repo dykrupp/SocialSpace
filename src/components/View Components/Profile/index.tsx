@@ -12,7 +12,7 @@ import { Grid } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
-import NewsFeed from '../../NewsFeed';
+import NewsFeed from '../../Resuable Components/NewsFeed';
 import { UserList } from './UserList';
 import PropTypes from 'prop-types';
 import { getFirstName } from '../../../utils/helperFunctions';
@@ -72,9 +72,11 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
           )}
           {tabIndex === 1 && (
             <UserList
-              userUIDS={userProfile.followings.map(
-                (following) => following.userUID
-              )}
+              userUIDS={
+                userProfile.followings
+                  ? userProfile.followings.map((following) => following.userUID)
+                  : []
+              }
               users={users}
               setTabIndex={setTabIndex}
               emptyListString="Discover new friends with SocialSpace Search!"
@@ -82,9 +84,11 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
           )}
           {tabIndex === 2 && (
             <UserList
-              userUIDS={userProfile.followers.map(
-                (follower) => follower.userUID
-              )}
+              userUIDS={
+                userProfile.followers
+                  ? userProfile.followers.map((follower) => follower.userUID)
+                  : []
+              }
               users={users}
               setTabIndex={setTabIndex}
               emptyListString={`${getFirstName(

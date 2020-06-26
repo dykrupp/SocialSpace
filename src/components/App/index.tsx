@@ -2,18 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import Navigation from '../Navigation';
-import { Home } from '../ViewComponents/Home';
+import { Home } from '../View Components/Home';
 import AuthProvider from '../Authentication/AuthProvider';
 import AuthProtectedRoute from '../Authentication/AuthProtectedRoute';
-import { Profile } from '../ViewComponents/Profile';
-import { EditProfile } from '../ViewComponents/EditProfile';
+import { Profile } from '../View Components/Profile';
+import { EditProfile } from '../View Components/EditProfile';
 import { UserProfileUID } from '../../constants/interfaces';
 import { FirebaseContext } from '../Firebase/context';
 import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import { convertToUserProfile } from '../../utils/helperFunctions';
-import Landing from '../ViewComponents/Landing';
-import ForgotPassword from '../ViewComponents/ForgotPassword';
-import Settings from '../ViewComponents/Settings';
+import Landing from '../View Components/Landing';
+import ForgotPassword from '../View Components/ForgotPassword';
+import Settings from '../View Components/Settings';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<UserProfileUID[]>([]);

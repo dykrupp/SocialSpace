@@ -5,11 +5,11 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { calcTimeSince } from '../../../../utils/helperFunctions';
-import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
+import { calcTimeSince } from '../../../../../utils/helperFunctions';
+import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { Link } from 'react-router-dom';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../../constants/routes';
 
 const headerStyles = makeStyles(() => ({
   link: {

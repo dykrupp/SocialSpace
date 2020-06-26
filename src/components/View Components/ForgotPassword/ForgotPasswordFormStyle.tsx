@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { OutlinedTextField } from '../../Resuable Components/OutlinedTextField/index';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -12,6 +12,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+  },
+  resetPassButton: {
+    marginTop: '20px',
   },
 }));
 
@@ -38,17 +41,16 @@ const ForgotPasswordFormStyle: React.FC<FormStyleProps> = ({
         email shortly.
       </p>
       <div className={classes.inputDiv}>
-        <TextField
-          name="email"
+        <OutlinedTextField
           label="Email Address"
           value={email}
-          onChange={onChange}
-          type="text"
+          onChangeHandler={onChange}
           placeholder="Email Address"
         />
         <Button
           color="primary"
           variant="contained"
+          className={classes.resetPassButton}
           disabled={isInvalid}
           type="submit"
         >

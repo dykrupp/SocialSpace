@@ -17,10 +17,15 @@ import { Tooltip } from '@material-ui/core';
 const useStyles = makeStyles(() => ({
   chatsList: {
     overflowY: 'auto',
-    height: '200px',
+    minHeight: '256px',
+    paddingTop: '0px',
+    paddingBottom: '0px',
   },
   accountImage: {
     fontSize: '40px',
+  },
+  selectedItem: {
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
 }));
 
@@ -37,6 +42,7 @@ export const ChatList: React.FC<ChatListProps> = ({
 }) => {
   const classes = useStyles();
   const [chatUIDS, setChatUIDS] = useState<ChatUID[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
 
@@ -89,11 +95,13 @@ export const ChatList: React.FC<ChatListProps> = ({
 
   return (
     <List className={classes.chatsList}>
-      {users.map((user) => (
+      {users.map((user, index) => (
         <ListItem
           button
           key={user.uid}
+          className={`${selectedIndex === index ? classes.selectedItem : ''}`}
           onClick={async (): Promise<void> => {
+            setSelectedIndex(index);
             const selectedChatUID = await getChatUID(user.uid);
             onChatClick(selectedChatUID);
           }}

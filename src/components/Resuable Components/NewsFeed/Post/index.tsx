@@ -1,14 +1,14 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { FirebaseContext } from '../../Firebase/context';
-import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import { FirebaseContext } from '../../../Firebase/context';
+import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { PostItem } from './PostItem';
 import {
   Comment,
   Like,
   UserProfileUID,
   Post as PostInterface,
-} from '../../../constants/interfaces';
+} from '../../../../constants/interfaces';
 
 export interface PostProps {
   post: PostInterface;

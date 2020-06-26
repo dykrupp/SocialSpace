@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import NewsFeed from '../../NewsFeed';
+import NewsFeed from '../../Resuable Components/NewsFeed';
 import { Grid } from '@material-ui/core';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import PropTypes from 'prop-types';

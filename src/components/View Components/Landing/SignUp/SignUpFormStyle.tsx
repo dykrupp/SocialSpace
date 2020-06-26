@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
@@ -8,6 +7,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { BlueOutlinedTextField } from '../../../Resuable Components/OutlinedTextField/index';
 
 interface FormStyleProps {
   fullName: string;
@@ -67,7 +67,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
   return (
     <form onSubmit={onSubmit} noValidate>
       <div className={classes.flexRow}>
-        <TextField
+        <BlueOutlinedTextField
           name="fullName"
           value={fullName}
           onChange={onChange}
@@ -76,7 +76,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
           variant="outlined"
           className={classes.textField}
         />
-        <TextField
+        <BlueOutlinedTextField
           name="email"
           value={email}
           onChange={onChange}
@@ -87,7 +87,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
         />
       </div>
       <div className={classes.flexRow}>
-        <TextField
+        <BlueOutlinedTextField
           name="passwordOne"
           value={passwordOne}
           onChange={onChange}
@@ -96,7 +96,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
           variant="outlined"
           className={classes.textField}
         />
-        <TextField
+        <BlueOutlinedTextField
           name="passwordTwo"
           value={passwordTwo}
           onChange={onChange}
@@ -107,7 +107,7 @@ const SignUpFormStyle: React.FC<FormStyleProps> = ({
         />
       </div>
       <div className={classes.flexRow}>
-        <TextField
+        <BlueOutlinedTextField
           id="date"
           name="birthday"
           label="Birthday"

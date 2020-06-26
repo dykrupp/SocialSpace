@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
 import { User } from '../../../constants/interfaces';
-import { IsLoading } from '../../IsLoading';
 import { makeStyles } from '@material-ui/core';
 import * as ROUTES from '../../../constants/routes';
+import { IsLoading } from '../../Resuable Components/IsLoading';
 
 const useStyles = makeStyles(() => ({
   loadingDiv: {

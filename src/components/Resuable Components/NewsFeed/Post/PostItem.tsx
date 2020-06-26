@@ -8,17 +8,17 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { Comment } from './Comment';
 import { Header } from './Header';
 import {
   Like,
   Comment as CommentInterface,
   UserProfileUID,
-} from '../../../constants/interfaces';
+} from '../../../../constants/interfaces';
+import { OutlinedTextField } from '../../OutlinedTextField';
 
 const postStyles = makeStyles(() => ({
   paper: {
@@ -34,12 +34,10 @@ const postStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-  commentInput: {
-    width: '60%',
-  },
   commentButton: {
     maxHeight: '50px',
     minHeight: '50px',
+    marginLeft: '20px',
   },
   marginLeft: {
     marginLeft: '20px',
@@ -156,14 +154,11 @@ export const PostItem: React.FC<PostStyleProps> = ({
             />
           ))}
         <Grid item xs={12} className={classes.commentInputRow}>
-          <TextField
-            id="standard-textarea"
+          <OutlinedTextField
             label="Add Comment"
             placeholder=""
-            multiline
-            onChange={onCommentChange}
+            onChangeHandler={onCommentChange}
             value={pendingComment}
-            className={classes.commentInput}
           />
           <Button
             color="primary"

@@ -4,9 +4,10 @@ import { Message, UserProfileUID } from '../../../../../constants/interfaces';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import { Button, List, TextField } from '@material-ui/core';
+import { Button, List } from '@material-ui/core';
 import { ChatBubble } from './ChatBubble';
+import { OutlinedTextField } from '../../../../Resuable Components/OutlinedTextField';
+import { CustomDivider } from '../CustomDivider';
 
 const useStyles = makeStyles(() => ({
   inputChatDiv: {
@@ -29,12 +30,8 @@ const useStyles = makeStyles(() => ({
     flex: '1',
     minHeight: '120px',
   },
-  chatInput: {
-    marginBottom: '5px',
-    width: '250px',
-  },
   sendMessage: {
-    marginTop: '5px',
+    marginTop: '10px',
     width: '250px',
   },
   textAlign: {
@@ -115,13 +112,12 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
         ))}
         <div ref={messagesEndRef} />
       </List>
-      <Divider />
+      <CustomDivider />
       <div className={classes.inputChatDiv}>
-        <TextField
-          className={classes.chatInput}
+        <OutlinedTextField
+          label="Message"
           placeholder="Insert Message Here"
-          multiline
-          onChange={onChatTextChange}
+          onChangeHandler={onChatTextChange}
           value={chatText}
         />
         <Button

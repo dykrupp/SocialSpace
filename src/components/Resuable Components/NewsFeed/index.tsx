@@ -1,21 +1,21 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import CreatePost from './CreatePost';
-import { FirebaseContext } from '../Firebase/context';
+import { FirebaseContext } from '../../Firebase/context';
 import { Grid } from '@material-ui/core';
 import { IsLoading } from '../IsLoading';
 import PropTypes from 'prop-types';
-import { AuthUserContext } from '../Authentication/AuthProvider/context';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import Post from './Post';
-import { Following } from '../../constants/interfaces';
+import { Following } from '../../../constants/interfaces';
 import {
   Post as PostInterface,
   UserProfileUID,
-} from '../../constants/interfaces';
+} from '../../../constants/interfaces';
 import {
   addMediaUrl,
   getSortedPosts,
   convertToPosts,
-} from '../../utils/helperFunctions';
+} from '../../../utils/helperFunctions';
 
 interface NewsFeedProps {
   userProfile: UserProfileUID | null;

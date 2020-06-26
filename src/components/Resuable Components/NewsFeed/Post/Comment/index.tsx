@@ -4,16 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
+import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../../constants/routes';
 import {
   Comment as CommentInterface,
   UserProfileUID,
-} from '../../../../constants/interfaces';
-import { calcTimeSince } from '../../../../utils/helperFunctions';
+} from '../../../../../constants/interfaces';
+import { calcTimeSince } from '../../../../../utils/helperFunctions';
 
 interface CommentProps {
   comment: CommentInterface;

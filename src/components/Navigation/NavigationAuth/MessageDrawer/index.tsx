@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -9,6 +8,7 @@ import { UserProfileUID } from '../../../../constants/interfaces';
 import { ChatList } from './ChatList';
 import { Chat } from './Chat';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
+import { CustomDivider } from './CustomDivider/index';
 
 const drawerWidth = '300px';
 
@@ -60,16 +60,16 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
     >
       <div className={classes.drawerHeader}>
         <IconButton onClick={(): void => setIsDrawerOpen(false)}>
-          <ChevronRightIcon />
+          <ChevronRightIcon color="primary" />
         </IconButton>
       </div>
-      <Divider />
+      <CustomDivider />
       <ChatList
         users={users.filter((x) => x.uid !== authUser?.uid)}
         onChatClick={onChatClick}
         currentChatUID={selectedChatUID}
       />
-      <Divider />
+      <CustomDivider />
       <Chat chatUID={selectedChatUID} users={users} />
     </Drawer>
   );
