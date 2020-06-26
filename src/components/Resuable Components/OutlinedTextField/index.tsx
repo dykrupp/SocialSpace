@@ -9,10 +9,10 @@ export const BlueOutlinedTextField = withStyles({
       border: '2px solid rgba(0, 54, 189, 0.6)',
     },
     '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-      border: '3px solid rgba(0, 54, 189, 0.9)',
+      border: '2.2px solid rgba(0, 54, 189, 0.9)',
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      border: '3px solid rgba(0, 54, 189, 0.9)',
+      border: '2.5px solid rgba(0, 54, 189, 0.9)',
     },
   },
 })(TextField);
