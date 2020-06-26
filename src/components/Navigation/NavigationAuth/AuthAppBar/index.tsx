@@ -63,7 +63,7 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   const classes = useStyles();
 
   return (
-    <AppBar position="static" className={classes.appBar}>
+    <AppBar position="relative" className={classes.appBar}>
       <Toolbar variant="dense">
         <Typography className={classes.title} variant="h6" noWrap>
           <Link

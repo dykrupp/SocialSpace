@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   autoComplete: {
     width: '100%',
   },
+  searchButton: {
+    alignSelf: 'center',
+  },
 }));
 
 interface SearchBarProps {
@@ -60,7 +63,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({ users }) => {
 
   return (
     <div className={classes.searchBar}>
-      <IconButton color="inherit" onClick={(): void => onSearchSubmit()}>
+      <IconButton
+        className={classes.searchButton}
+        color="inherit"
+        onClick={(): void => onSearchSubmit()}
+      >
         <SearchIcon />
       </IconButton>
       <Autocomplete
