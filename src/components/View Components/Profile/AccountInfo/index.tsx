@@ -12,14 +12,27 @@ import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { useHistory } from 'react-router';
 import * as ROUTES from '../../../../constants/routes';
+import { Typography } from '@material-ui/core';
+
+//TODO -> Deal w/ long overflow for both email and full name fields
 
 const useStyles = makeStyles(() => ({
+  rowContainer: {
+    display: 'flex',
+    height: '225px',
+  },
   flexDiv: {
     display: 'flex',
+    flex: '1',
   },
   aboutMe: {
     display: 'flex',
     justifyContent: 'center',
+    overflowWrap: 'break-word',
+    textAlign: 'center',
+    justifySelf: 'center',
+    margin: '0 auto',
+    flexDirection: 'column',
   },
   profileImage: {
     width: '125px',
@@ -31,23 +44,36 @@ const useStyles = makeStyles(() => ({
     width: '50px',
     height: '50px',
   },
-  accountInfoColumn: {
+  flexColumn: {
     display: 'flex',
     flexDirection: 'column',
     flex: '1',
   },
-  accountInfoRow: {
+  rowItemInfo: {
     display: 'flex',
-    width: '50%',
+    flex: '1',
     textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
   },
-  accountButtonColumn: {
+  accountImageColumn: {
     display: 'flex',
-    width: '200px',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+  },
+  root: {
+    display: 'flex',
+    marginBottom: '10px;',
+    marginTop: '-30px',
+  },
+  subHeading: {
+    marginBottom: '-1px',
+  },
+  overflowSubheader: {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   },
 }));
 
@@ -105,8 +131,8 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
 
   return (
-    <div>
-      <div className={classes.flexDiv}>
+    <div className={classes.root}>
+      <div className={classes.accountImageColumn}>
         {userProfile.profilePicURL === '' && (
           <AccountCircle className={classes.profileImage} />
         )}
@@ -117,71 +143,74 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
             alt="Profile"
           />
         )}
-        <div className={classes.accountInfoColumn}>
-          <div className={classes.flexDiv}>
-            <div className={classes.accountInfoRow}>
-              <h3>
-                Full Name: <br /> {userProfile.fullName}
-              </h3>
-            </div>
-            <div className={classes.accountInfoRow}>
-              <h3>
-                Email: <br /> {userProfile.email}
-              </h3>
-            </div>
-          </div>
-          <div className={classes.flexDiv}>
-            <div className={classes.accountInfoRow}>
-              <h3>
-                Birthday: <br /> {userProfile.birthday}
-              </h3>
-            </div>
-            <div className={classes.accountInfoRow}>
-              <h3>
-                Gender: <br /> {userProfile.gender}
-              </h3>
-            </div>
-          </div>
-        </div>
-        <div className={classes.accountButtonColumn}>
-          {isUsersProfile && (
-            <Tooltip title="Edit Profile">
-              <IconButton
-                component="label"
-                onClick={(): void => history.push(ROUTES.EDIT_PROFILE)}
-              >
-                <EditIcon color="primary" className={classes.editImage} />
-              </IconButton>
-            </Tooltip>
-          )}
-          {!isUsersProfile && !isFollowingUser && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={(): void => followUser()}
+        {isUsersProfile && (
+          <Tooltip title="Edit Profile">
+            <IconButton
+              component="label"
+              onClick={(): void => history.push(ROUTES.EDIT_PROFILE)}
             >
-              {`Follow ${getFirstName(userProfile.fullName)}`}
-            </Button>
-          )}
-          {!isUsersProfile && isFollowingUser && (
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={(): void => unFollowUser()}
-            >
-              {`Unfollow ${getFirstName(userProfile.fullName)}`}
-            </Button>
-          )}
-        </div>
+              <EditIcon color="primary" className={classes.editImage} />
+            </IconButton>
+          </Tooltip>
+        )}
+        {!isUsersProfile && !isFollowingUser && (
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={(): void => followUser()}
+          >
+            Follow
+          </Button>
+        )}
+        {!isUsersProfile && isFollowingUser && (
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={(): void => unFollowUser()}
+          >
+            Unfollow
+          </Button>
+        )}
       </div>
-      <div className={classes.aboutMe}>
-        <h3>{`About: ${
-          userProfile.aboutMe === ''
-            ? `We don't know anything about ${getFirstName(
-                userProfile.fullName
-              )}....`
-            : userProfile.aboutMe
-        }`}</h3>
+      <div className={classes.flexColumn}>
+        <div className={classes.rowContainer}>
+          <div className={classes.flexDiv}>
+            <div className={classes.flexColumn}>
+              <div className={classes.flexDiv}>
+                <div className={classes.rowItemInfo}>
+                  <h2 className={classes.subHeading}>Full Name:</h2>
+                  <Typography variant="h6">{userProfile.fullName}</Typography>
+                </div>
+                <div className={classes.rowItemInfo}>
+                  <h2 className={classes.subHeading}>Email:</h2>
+                  <Typography variant="h6">{userProfile.email}</Typography>
+                </div>
+              </div>
+              <div className={classes.flexDiv}>
+                <div className={classes.rowItemInfo}>
+                  <h2 className={classes.subHeading}>Birthday:</h2>
+                  <Typography variant="h6">{userProfile.birthday}</Typography>
+                </div>
+                <div className={classes.rowItemInfo}>
+                  <h2 className={classes.subHeading}>Gender:</h2>
+                  <Typography variant="h6">{userProfile.gender}</Typography>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={classes.aboutMe}>
+          <h2 className={classes.subHeading}>About Me:</h2>
+          <Typography variant="h6">
+            {`${
+              userProfile.aboutMe === ''
+                ? `We don't know anything about ${getFirstName(
+                    userProfile.fullName
+                  )}....`
+                : userProfile.aboutMe
+            }`}
+          </Typography>
+        </div>
       </div>
     </div>
   );

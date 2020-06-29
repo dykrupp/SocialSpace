@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '100px',
   },
   image: {
-    height: '100px',
+    height: '150px',
   },
   button: {
     width: '150px',

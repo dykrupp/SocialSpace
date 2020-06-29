@@ -4,7 +4,7 @@ import { Message, UserProfileUID } from '../../../../../constants/interfaces';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
-import { List } from '@material-ui/core';
+import { List, Typography } from '@material-ui/core';
 import { ChatBubble } from './ChatBubble';
 import { OutlinedTextField } from '../../../../Resuable Components/OutlinedTextField';
 import { CustomDivider } from '../CustomDivider';
@@ -105,7 +105,11 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
   };
 
   if (chatUID === '')
-    return <h3 className={classes.textAlign}>Please select a chat</h3>;
+    return (
+      <Typography variant="h6" className={classes.textAlign}>
+        Please select a chat
+      </Typography>
+    );
   return (
     <div className={classes.chatDiv}>
       <List className={classes.chat}>

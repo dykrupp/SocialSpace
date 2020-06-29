@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -10,9 +10,13 @@ const useStyles = makeStyles(() => ({
     margin: '0 auto',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginTop: '5px',
   },
   circularProgress: {
     marginLeft: '10px',
+  },
+  text: {
+    fontWeight: 'bold',
   },
 }));
 
@@ -26,7 +30,9 @@ export const IsLoading: React.FC<IsLoadingProps> = ({ text }) => {
   return (
     <Grid container className={classes.root}>
       <Grid item>
-        <h1>{text}</h1>
+        <Typography variant="h4" className={classes.text}>
+          {text}
+        </Typography>
       </Grid>
       <Grid item>
         <CircularProgress color="primary" />
