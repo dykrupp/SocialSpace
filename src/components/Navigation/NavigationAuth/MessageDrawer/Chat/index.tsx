@@ -4,16 +4,18 @@ import { Message, UserProfileUID } from '../../../../../constants/interfaces';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, List } from '@material-ui/core';
+import { List } from '@material-ui/core';
 import { ChatBubble } from './ChatBubble';
 import { OutlinedTextField } from '../../../../Resuable Components/OutlinedTextField';
 import { CustomDivider } from '../CustomDivider';
+import SendIcon from '@material-ui/icons/Send';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(() => ({
   inputChatDiv: {
     display: 'flex',
-    flexDirection: 'column',
-    height: '100px',
+    height: '50px',
     margin: '15px',
     justifyContent: 'center',
     alignItems: 'center',
@@ -120,15 +122,16 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
           onChangeHandler={onChatTextChange}
           value={chatText}
         />
-        <Button
-          className={classes.sendMessage}
-          onClick={(): void => sendMessage(chatText)}
-          color="primary"
-          variant="contained"
-          disabled={chatText === ''}
-        >
-          Send Message
-        </Button>
+        <Tooltip title="Send Message">
+          <IconButton
+            component="label"
+            color="primary"
+            disabled={chatText === ''}
+            onClick={(): void => sendMessage(chatText)}
+          >
+            <SendIcon />
+          </IconButton>
+        </Tooltip>
       </div>
     </div>
   );

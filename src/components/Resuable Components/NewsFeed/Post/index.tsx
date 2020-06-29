@@ -25,6 +25,7 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
   const numOfComments = useRef(0);
   const numOfLikes = useRef(0);
   const postProfile = users.find((x) => x.uid === userPost.createdByUID);
+  const postOwnerProfile = users.find((x) => x.uid === userPost.parentKey);
   const { post, dateTime, media, parentKey } = userPost;
 
   const onCommentChange = (
@@ -145,7 +146,7 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
     };
   }, [firebase, dateTime, parentKey]);
 
-  if (!postProfile) return null;
+  if (!postProfile || !postOwnerProfile) return null;
   return (
     <PostItem
       post={post}
@@ -164,6 +165,7 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
       removeLike={removeLike}
       users={users}
       userProfile={postProfile}
+      postOwnerProfile={postOwnerProfile}
     />
   );
 };

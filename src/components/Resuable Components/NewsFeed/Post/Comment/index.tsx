@@ -21,6 +21,8 @@ interface CommentProps {
   userProfile: UserProfileUID | undefined;
 }
 
+const imageHeight = '48px';
+
 const commentStyles = makeStyles(() => ({
   commentPaper: {
     width: '100%',
@@ -40,10 +42,10 @@ const commentStyles = makeStyles(() => ({
     textAlign: 'center',
   },
   accountCircle: {
-    fontSize: '25px',
+    fontSize: imageHeight,
   },
   profilePic: {
-    height: '48px',
+    height: imageHeight,
     borderRadius: '50%',
   },
   link: {

@@ -8,7 +8,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { Comment } from './Comment';
@@ -19,6 +18,8 @@ import {
   UserProfileUID,
 } from '../../../../constants/interfaces';
 import { OutlinedTextField } from '../../OutlinedTextField';
+import { areFriends } from '../../../../utils/helperFunctions';
+import AddCommentIcon from '@material-ui/icons/AddComment';
 
 const postStyles = makeStyles(() => ({
   paper: {
@@ -64,6 +65,7 @@ interface PostStyleProps {
   dateTime: string;
   media: string;
   userProfile: UserProfileUID;
+  postOwnerProfile: UserProfileUID;
 }
 
 export const PostItem: React.FC<PostStyleProps> = ({
@@ -83,11 +85,13 @@ export const PostItem: React.FC<PostStyleProps> = ({
   deleteComment,
   isCommentsOpen,
   onCommentsOpenClick,
+  postOwnerProfile,
 }) => {
   const classes = postStyles();
   const authUser = useContext(AuthUserContext);
   const isCommentInvalid = pendingComment === '';
   const didCurrentUserLikePost = likes.find((x) => x.userUID === authUser?.uid);
+
   return (
     <Paper elevation={3} className={classes.paper}>
       <Grid container spacing={1}>
@@ -111,23 +115,30 @@ export const PostItem: React.FC<PostStyleProps> = ({
           )}
         </Grid>
         <Grid item xs={12} className={classes.centeredRow}>
-          {!didCurrentUserLikePost && (
-            <Tooltip title="Like Post">
-              <IconButton component="label" onClick={(): void => addLike()}>
-                <Badge badgeContent={likes.length} color="secondary">
-                  <FavoriteBorderIcon color="secondary" />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-          )}
-          {didCurrentUserLikePost && (
-            <Tooltip title="Remove Like">
-              <IconButton component="label" onClick={(): void => removeLike()}>
-                <Badge badgeContent={likes.length} color="secondary">
-                  <FavoriteIcon color="secondary" />
-                </Badge>
-              </IconButton>
-            </Tooltip>
+          {areFriends(authUser, postOwnerProfile) && (
+            <>
+              {!didCurrentUserLikePost && (
+                <Tooltip title="Like Post">
+                  <IconButton component="label" onClick={(): void => addLike()}>
+                    <Badge badgeContent={likes.length} color="secondary">
+                      <FavoriteBorderIcon color="secondary" />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              )}
+              {didCurrentUserLikePost && (
+                <Tooltip title="Remove Like">
+                  <IconButton
+                    component="label"
+                    onClick={(): void => removeLike()}
+                  >
+                    <Badge badgeContent={likes.length} color="secondary">
+                      <FavoriteIcon color="secondary" />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              )}
+            </>
           )}
           {comments.length > 0 && (
             <Tooltip
@@ -153,23 +164,26 @@ export const PostItem: React.FC<PostStyleProps> = ({
               userProfile={users.find((x) => x.uid === comment.userUID)}
             />
           ))}
-        <Grid item xs={12} className={classes.commentInputRow}>
-          <OutlinedTextField
-            label="Add Comment"
-            placeholder=""
-            onChangeHandler={onCommentChange}
-            value={pendingComment}
-          />
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={isCommentInvalid}
-            onClick={onCommentButtonClick}
-            className={classes.commentButton}
-          >
-            Submit Comment
-          </Button>
-        </Grid>
+        {areFriends(authUser, postOwnerProfile) && (
+          <Grid item xs={12} className={classes.commentInputRow}>
+            <OutlinedTextField
+              label="Comment"
+              placeholder=""
+              onChangeHandler={onCommentChange}
+              value={pendingComment}
+            />
+            <Tooltip title="Add Comment">
+              <IconButton
+                component="label"
+                color="primary"
+                disabled={isCommentInvalid}
+                onClick={(): void => onCommentButtonClick()}
+              >
+                <AddCommentIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        )}
       </Grid>
     </Paper>
   );
@@ -192,4 +206,5 @@ PostItem.propTypes = {
   likes: PropTypes.arrayOf(PropTypes.any).isRequired,
   comments: PropTypes.arrayOf(PropTypes.any).isRequired,
   userProfile: PropTypes.any.isRequired,
+  postOwnerProfile: PropTypes.any.isRequired,
 };

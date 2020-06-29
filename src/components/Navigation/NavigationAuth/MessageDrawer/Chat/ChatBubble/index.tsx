@@ -12,6 +12,8 @@ import {
 } from '../../../../../../utils/helperFunctions';
 import { ListItem, ListItemText } from '@material-ui/core';
 
+const borderRadius = '5px';
+
 const useStyles = makeStyles((theme: Theme) => ({
   bubbleContainer: {
     marginTop: '8px',
@@ -20,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'sans-serif',
     fontSize: '14px',
     alignItems: 'center',
-    borderRadius: '5px',
+    borderRadius: borderRadius,
   },
   bubble: {
     boxShadow: '0 0 6px #B2B2B2',
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     verticalAlign: 'top',
     color: 'white',
     overflowWrap: 'anywhere',
+    borderRadius: borderRadius,
   },
   userChat: {
     backgroundColor: theme.palette.primary.main,

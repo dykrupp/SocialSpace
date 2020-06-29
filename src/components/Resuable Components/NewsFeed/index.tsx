@@ -15,6 +15,7 @@ import {
   addMediaUrl,
   getSortedPosts,
   convertToPosts,
+  areFriends,
 } from '../../../utils/helperFunctions';
 
 interface NewsFeedProps {
@@ -31,15 +32,6 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
   const [isLoading, setIsLoading] = useState(true);
   const authUser = useContext(AuthUserContext);
   const feedUID = userProfile ? userProfile.uid : authUser ? authUser.uid : '';
-
-  const areFriends = (userProfile: UserProfileUID): boolean => {
-    return authUser && userProfile.followers && userProfile.followings
-      ? userProfile.followings.filter((x) => x.userUID === authUser.uid)
-          .length !== 0 &&
-          userProfile.followers.filter((x) => x.userUID === authUser.uid)
-            .length !== 0
-      : false;
-  };
 
   const containsUniquePost = (
     snapShot: firebase.database.DataSnapshot,
@@ -248,9 +240,11 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
             postUserUID={authUser.uid}
           />
         )}
-        {!isAuthUsersFeed && userProfile && areFriends(userProfile) && (
-          <CreatePost createdByUserUID={authUser.uid} postUserUID={feedUID} />
-        )}
+        {!isAuthUsersFeed &&
+          userProfile &&
+          areFriends(authUser, userProfile) && (
+            <CreatePost createdByUserUID={authUser.uid} postUserUID={feedUID} />
+          )}
       </Grid>
       {posts.map((post: PostInterface) => (
         <Grid item key={post.dateTime}>

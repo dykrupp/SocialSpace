@@ -2,6 +2,7 @@
 import Firebase from '../components/Firebase';
 import * as Collections from 'typescript-collections';
 import { Post, UserProfileUID } from '../constants/interfaces';
+import { AuthUser } from '../components/Authentication/AuthProvider/context';
 
 export const calcTimeSince = (milliseconds: number): string => {
   const seconds = Math.floor((new Date().valueOf() - milliseconds) / 1000);
@@ -102,6 +103,18 @@ export const addMediaUrl = async (
         } else return post;
       });
     });
+};
+
+export const areFriends = (
+  authUser: AuthUser,
+  userProfile: UserProfileUID
+): boolean => {
+  return authUser && userProfile.followers && userProfile.followings
+    ? userProfile.followings.filter((x) => x.userUID === authUser.uid)
+        .length !== 0 &&
+        userProfile.followers.filter((x) => x.userUID === authUser.uid)
+          .length !== 0
+    : false;
 };
 
 export const getFirstName = (fullName: string): string =>
