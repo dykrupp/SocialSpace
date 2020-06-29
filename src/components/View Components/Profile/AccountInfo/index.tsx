@@ -14,16 +14,9 @@ import { useHistory } from 'react-router';
 import * as ROUTES from '../../../../constants/routes';
 import { Typography } from '@material-ui/core';
 
-//TODO -> Deal w/ long overflow for both email and full name fields
-
 const useStyles = makeStyles(() => ({
-  rowContainer: {
+  flex: {
     display: 'flex',
-    height: '225px',
-  },
-  flexDiv: {
-    display: 'flex',
-    flex: '1',
   },
   aboutMe: {
     display: 'flex',
@@ -50,22 +43,13 @@ const useStyles = makeStyles(() => ({
     flex: '1',
   },
   rowItemInfo: {
-    display: 'flex',
-    flex: '1',
+    width: '292.5px',
     textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
   },
   accountImageColumn: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-  },
-  root: {
-    display: 'flex',
-    marginBottom: '10px;',
-    marginTop: '-30px',
   },
   subHeading: {
     marginBottom: '-1px',
@@ -131,7 +115,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
   const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
 
   return (
-    <div className={classes.root}>
+    <div className={classes.flex}>
       <div className={classes.accountImageColumn}>
         {userProfile.profilePicURL === '' && (
           <AccountCircle className={classes.profileImage} />
@@ -173,28 +157,40 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
         )}
       </div>
       <div className={classes.flexColumn}>
-        <div className={classes.rowContainer}>
-          <div className={classes.flexDiv}>
-            <div className={classes.flexColumn}>
-              <div className={classes.flexDiv}>
-                <div className={classes.rowItemInfo}>
-                  <h2 className={classes.subHeading}>Full Name:</h2>
-                  <Typography variant="h6">{userProfile.fullName}</Typography>
-                </div>
-                <div className={classes.rowItemInfo}>
-                  <h2 className={classes.subHeading}>Email:</h2>
-                  <Typography variant="h6">{userProfile.email}</Typography>
-                </div>
+        <div className={classes.flex}>
+          <div className={classes.flexColumn}>
+            <div className={classes.flex}>
+              <div className={classes.rowItemInfo}>
+                <h2 className={classes.subHeading}>Full Name:</h2>
+                <Tooltip title={userProfile.fullName}>
+                  <Typography
+                    className={classes.overflowSubheader}
+                    variant="h6"
+                  >
+                    {userProfile.fullName}
+                  </Typography>
+                </Tooltip>
               </div>
-              <div className={classes.flexDiv}>
-                <div className={classes.rowItemInfo}>
-                  <h2 className={classes.subHeading}>Birthday:</h2>
-                  <Typography variant="h6">{userProfile.birthday}</Typography>
-                </div>
-                <div className={classes.rowItemInfo}>
-                  <h2 className={classes.subHeading}>Gender:</h2>
-                  <Typography variant="h6">{userProfile.gender}</Typography>
-                </div>
+              <div className={classes.rowItemInfo}>
+                <h2 className={classes.subHeading}>Email:</h2>
+                <Tooltip title={userProfile.email}>
+                  <Typography
+                    className={classes.overflowSubheader}
+                    variant="h6"
+                  >
+                    {userProfile.email}
+                  </Typography>
+                </Tooltip>
+              </div>
+            </div>
+            <div className={classes.flex}>
+              <div className={classes.rowItemInfo}>
+                <h2 className={classes.subHeading}>Birthday:</h2>
+                <Typography variant="h6">{userProfile.birthday}</Typography>
+              </div>
+              <div className={classes.rowItemInfo}>
+                <h2 className={classes.subHeading}>Gender:</h2>
+                <Typography variant="h6">{userProfile.gender}</Typography>
               </div>
             </div>
           </div>

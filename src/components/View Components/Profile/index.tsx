@@ -49,7 +49,7 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
           <Grid item>
             <AccountInfo userProfile={userProfile} />
           </Grid>
-          <Grid item>
+          <Grid style={{ marginTop: '5px' }} item>
             <hr />
           </Grid>
           <Grid item>
