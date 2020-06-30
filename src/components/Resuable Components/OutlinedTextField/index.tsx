@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
@@ -21,6 +21,9 @@ interface OutlinedTextFieldProps {
   label: string;
   placeholder: string;
   value: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  inputRef?: Ref<any>;
+  rows?: number;
   onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -29,9 +32,13 @@ export const OutlinedTextField: React.FC<OutlinedTextFieldProps> = ({
   placeholder,
   value,
   onChangeHandler,
+  inputRef,
+  rows,
 }) => (
   <BlueOutlinedTextField
+    inputRef={inputRef}
     fullWidth
+    rows={rows}
     label={label}
     placeholder={placeholder}
     multiline
@@ -46,4 +53,6 @@ OutlinedTextField.propTypes = {
   placeholder: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
+  inputRef: PropTypes.any,
+  rows: PropTypes.number,
 };

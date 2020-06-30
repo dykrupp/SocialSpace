@@ -12,18 +12,20 @@ import SendIcon from '@material-ui/icons/Send';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
+const inputHeight = '100px';
+
 const useStyles = makeStyles(() => ({
   inputChatDiv: {
-    display: 'flex',
-    height: '50px',
-    margin: '15px',
-    justifyContent: 'center',
+    height: inputHeight,
     alignItems: 'center',
+    margin: '0 auto',
+    display: 'flex',
   },
   chatDiv: {
     display: 'flex',
     flexDirection: 'column',
-    height: 'calc(100% - 270px)',
+    flex: '1',
+    maxHeight: 'calc(100% - 330px)',
   },
   chat: {
     overflowY: 'auto',
@@ -31,6 +33,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     flex: '1',
     minHeight: '120px',
+    maxHeight: `calc(100% - ${inputHeight})`,
   },
   sendMessage: {
     marginTop: '10px',
@@ -53,6 +56,7 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
   const [chatText, setChatText] = useState<string>('');
   const classes = useStyles();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = (): void => {
     if (messagesEndRef.current) {
@@ -95,7 +99,10 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
         text: text,
         dateTime: new Date().toUTCString(),
       })
-      .then(() => setChatText(''));
+      .then(() => {
+        setChatText('');
+        inputRef?.current?.focus();
+      });
   };
 
   const onChatTextChange = (
@@ -121,8 +128,10 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
       <CustomDivider />
       <div className={classes.inputChatDiv}>
         <OutlinedTextField
+          inputRef={inputRef}
           label="Message"
           placeholder="Insert Message Here"
+          rows={1}
           onChangeHandler={onChatTextChange}
           value={chatText}
         />

@@ -17,7 +17,7 @@ import { Tooltip } from '@material-ui/core';
 const useStyles = makeStyles(() => ({
   chatsList: {
     overflowY: 'auto',
-    minHeight: '256px',
+    minHeight: '264px',
     paddingTop: '0px',
     paddingBottom: '0px',
   },
