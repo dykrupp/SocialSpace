@@ -87,7 +87,6 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
         handleUserMenuOpen={handleUserMenuOpen}
       />
       <MessageDrawer
-        chatUIDS={chatUIDS}
         isDrawerOpen={isMessageDrawerOpen}
         setIsDrawerOpen={setIsMessageDrawerOpen}
         users={users}
