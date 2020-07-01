@@ -64,7 +64,18 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
     }
   };
 
-  useEffect(scrollToBottom, [messages]);
+  useEffect(() => {
+    const setLastSeen = (): void => {
+      if (firebase && authUser && chatUID !== '') {
+        firebase
+          .lastSeenChat(chatUID, authUser.uid)
+          .set(new Date().toUTCString());
+      }
+    };
+
+    scrollToBottom();
+    setLastSeen();
+  }, [messages, chatUID, authUser, firebase]);
 
   useEffect(() => {
     if (chatUID !== '') {

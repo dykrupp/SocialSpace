@@ -49,15 +49,23 @@ export const ChatList: React.FC<ChatListProps> = ({
   useEffect(() => {
     if (firebase) {
       firebase.chatUIDS().on('value', (snapShot) => {
-        const chatUIDObject = snapShot.val();
-        if (!chatUIDObject) return;
+        const chatUidObject = snapShot.val();
+        if (!chatUidObject) return;
 
-        const currentChats: ChatUID[] = Object.keys(chatUIDObject).map(
+        const currentChats: ChatUID[] = Object.keys(chatUidObject).map(
           (key) => ({
-            ...chatUIDObject[key],
+            ...chatUidObject[key],
             uid: key,
           })
         );
+
+        currentChats.map((chat) => {
+          chat.userUIDS = Object.keys(chat.userUIDS).map((key) => ({
+            ...(chat.userUIDS as any)[key],
+            uid: key,
+          }));
+          return chat;
+        });
 
         setChatUIDS(currentChats);
       });
@@ -72,23 +80,27 @@ export const ChatList: React.FC<ChatListProps> = ({
     if (authUser && firebase) {
       const chatUID = chatUIDS.find(
         (chat) =>
-          chat.userUIDS.includes(selectedUserUID) &&
-          chat.userUIDS.includes(authUser.uid)
+          chat.userUIDS.filter((x) => x.uid === selectedUserUID).length !== 0 &&
+          chat.userUIDS.filter((x) => x.uid === authUser.uid).length !== 0
       );
 
       if (!chatUID) {
-        const pushedUID = await firebase
-          .chatUIDS()
-          .push({
-            userUIDS: [selectedUserUID, authUser.uid],
-          })
-          .then((snapShot) => snapShot.key);
-        return pushedUID ? pushedUID : '';
+        const dateTime = new Date().toUTCString();
+        const pushedRef = firebase.chatUIDS().push().ref;
+
+        await pushedRef.child(`userUIDS/${selectedUserUID}`).set({
+          lastSeen: dateTime,
+        });
+
+        await pushedRef.child(`userUIDS/${authUser.uid}`).set({
+          lastSeen: dateTime,
+        });
+
+        return pushedRef.key ? pushedRef.key : '';
       } else return chatUID.uid;
     }
     return '';
   };
-
   const removeMessages = (): void => {
     firebase?.messages(currentChatUID).remove();
   };

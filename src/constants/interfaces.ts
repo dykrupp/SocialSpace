@@ -50,9 +50,17 @@ export interface UserProfileUID extends UserProfile {
   uid: string;
 }
 
+export interface UserUID {
+  userUID: string;
+  lastSeen: string;
+}
+
 export interface ChatUID {
-  userUIDS: string[];
+  userUIDS: UserUID[];
   uid: string;
+  lastWriteTime: string;
+  lastWriteUID: string;
+  messageCount: number;
 }
 
 export interface Message {

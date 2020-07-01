@@ -106,6 +106,9 @@ class Firebase {
 
   messages = (chatUID: string): app.database.Reference =>
     this.db.ref(`chats/${chatUID}/messages`);
+
+  lastSeenChat = (chatUID: string, userUID: string): app.database.Reference =>
+    this.db.ref(`chatUIDS/${chatUID}/userUIDS/${userUID}/lastSeen`);
 }
 
 export default Firebase;

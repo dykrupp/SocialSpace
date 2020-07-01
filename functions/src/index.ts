@@ -35,6 +35,10 @@ export const updateMessageCount = functions.database
 
     await chatUIDRef.child('lastWriteUID').transaction(() => context.auth?.uid);
 
+    await chatUIDRef
+      .child('lastWriteTime')
+      .transaction(() => new Date().toUTCString());
+
     return null;
   });
 
