@@ -61,6 +61,7 @@ export const ChatList: React.FC<ChatListProps> = ({
 
         currentChats.map((chat) => {
           chat.userUIDS = Object.keys(chat.userUIDS).map((key) => ({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(chat.userUIDS as any)[key],
             uid: key,
           }));

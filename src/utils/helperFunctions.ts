@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Firebase from '../components/Firebase';
 import * as Collections from 'typescript-collections';
-import { Post, UserProfileUID } from '../constants/interfaces';
+import { Post, UserProfileUID, ChatUID } from '../constants/interfaces';
 import { AuthUser } from '../components/Authentication/AuthProvider/context';
 
 export const calcTimeSince = (milliseconds: number): string => {
@@ -115,6 +115,23 @@ export const areFriends = (
         userProfile.followers.filter((x) => x.userUID === authUser.uid)
           .length !== 0
     : false;
+};
+
+export const containsUnreadMessages = (
+  chatUID: ChatUID,
+  authUserUID: string
+): boolean => {
+  const currentUserUID = chatUID.userUIDS.find(
+    (userUID) => userUID.userUID === authUserUID
+  );
+
+  if (
+    currentUserUID &&
+    chatUID.lastWriteUID !== authUserUID &&
+    new Date(currentUserUID?.lastSeen) < new Date(chatUID.lastWriteTime)
+  ) {
+    return true;
+  } else return false;
 };
 
 export const getFirstName = (fullName: string): string =>
