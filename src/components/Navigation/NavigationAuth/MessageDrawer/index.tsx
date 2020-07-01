@@ -4,7 +4,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { UserProfileUID } from '../../../../constants/interfaces';
+import { UserProfileUID, ChatUID } from '../../../../constants/interfaces';
 import { ChatList } from './ChatList';
 import { Chat } from './Chat';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
@@ -33,12 +33,14 @@ interface MessageDrawerProps {
   isDrawerOpen: boolean;
   setIsDrawerOpen: (state: boolean) => void;
   users: UserProfileUID[];
+  chatUIDS: ChatUID[];
 }
 
 export const MessageDrawer: React.FC<MessageDrawerProps> = ({
   isDrawerOpen,
   setIsDrawerOpen,
   users,
+  chatUIDS,
 }) => {
   const classes = useStyles();
   const [selectedChatUID, setSelectedChatUID] = useState('');
@@ -65,6 +67,7 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
       </div>
       <CustomDivider />
       <ChatList
+        chatUIDS={chatUIDS}
         users={users.filter((x) => x.uid !== authUser?.uid)}
         onChatClick={onChatClick}
         currentChatUID={selectedChatUID}
@@ -79,4 +82,5 @@ MessageDrawer.propTypes = {
   isDrawerOpen: PropTypes.bool.isRequired,
   setIsDrawerOpen: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
+  chatUIDS: PropTypes.array.isRequired,
 };
