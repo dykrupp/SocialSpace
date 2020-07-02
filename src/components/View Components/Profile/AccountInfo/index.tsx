@@ -59,6 +59,9 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
+  aboutMeText: {
+    margin: '10px',
+  },
 }));
 
 interface AccountInfoProps {
@@ -197,7 +200,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
         </div>
         <div className={classes.aboutMe}>
           <h2 className={classes.subHeading}>About Me:</h2>
-          <Typography variant="h6">
+          <Typography className={classes.aboutMeText} variant="h6">
             {`${
               userProfile.aboutMe === ''
                 ? `We don't know anything about ${getFirstName(

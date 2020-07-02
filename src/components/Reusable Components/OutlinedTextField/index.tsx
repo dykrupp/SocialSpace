@@ -1,6 +1,6 @@
 import React, { Ref } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
 
 export const BlueOutlinedTextField = withStyles({
@@ -17,13 +17,18 @@ export const BlueOutlinedTextField = withStyles({
   },
 })(TextField);
 
+const useStyles = makeStyles(() => ({
+  input: {
+    maxHeight: '55px',
+  },
+}));
+
 interface OutlinedTextFieldProps {
   label: string;
   placeholder: string;
   value: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   inputRef?: Ref<any>;
-  rows?: number;
   onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -33,20 +38,23 @@ export const OutlinedTextField: React.FC<OutlinedTextFieldProps> = ({
   value,
   onChangeHandler,
   inputRef,
-  rows,
-}) => (
-  <BlueOutlinedTextField
-    inputRef={inputRef}
-    fullWidth
-    rows={rows}
-    label={label}
-    placeholder={placeholder}
-    multiline
-    variant="outlined"
-    onChange={onChangeHandler}
-    value={value}
-  />
-);
+}) => {
+  const classes = useStyles();
+
+  return (
+    <BlueOutlinedTextField
+      inputRef={inputRef}
+      fullWidth
+      label={label}
+      placeholder={placeholder}
+      multiline
+      variant="outlined"
+      onChange={onChangeHandler}
+      value={value}
+      InputProps={{ classes: { input: classes.input } }}
+    />
+  );
+};
 
 OutlinedTextField.propTypes = {
   label: PropTypes.string.isRequired,
@@ -54,5 +62,4 @@ OutlinedTextField.propTypes = {
   value: PropTypes.string.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   inputRef: PropTypes.any,
-  rows: PropTypes.number,
 };

@@ -20,3 +20,7 @@ body {
   margin: 20px;
 }
 
+.MuiOutlinedInput-input {
+  overflow-y: auto !important;
+}
+

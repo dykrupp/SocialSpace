@@ -6,8 +6,8 @@ import { AuthUserContext } from '../../../../Authentication/AuthProvider/context
 import { makeStyles } from '@material-ui/core/styles';
 import { List, Typography } from '@material-ui/core';
 import { ChatBubble } from './ChatBubble';
-import { OutlinedTextField } from '../../../../Resuable Components/OutlinedTextField';
-import { CustomDivider } from '../CustomDivider';
+import { OutlinedTextField } from '../../../../Reusable Components/OutlinedTextField';
+import { CustomDivider } from '../../../../Reusable Components/CustomDivider';
 import SendIcon from '@material-ui/icons/Send';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   inputChatDiv: {
     height: inputHeight,
     alignItems: 'center',
-    margin: '0 auto',
+    margin: '10px 20px 10px 20px',
     display: 'flex',
   },
   chatDiv: {
@@ -142,7 +142,6 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
           inputRef={inputRef}
           label="Message"
           placeholder="Insert Message Here"
-          rows={1}
           onChangeHandler={onChatTextChange}
           value={chatText}
         />

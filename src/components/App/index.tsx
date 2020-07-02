@@ -26,12 +26,14 @@ const App: React.FC = () => {
         firebase?.users().on('value', (snapshot) => {
           const usersObject = snapshot.val();
 
-          const usersList = Object.keys(usersObject).map((key) =>
-            convertToUserProfile(usersObject[key], key)
-          );
+          const usersList: UserProfileUID[] = Object.keys(
+            usersObject
+          ).map((key) => convertToUserProfile(usersObject[key], key));
 
           setUsers(() => {
-            return usersList;
+            return usersList.sort((a, b) =>
+              a.fullName.localeCompare(b.fullName)
+            );
           });
         });
       }

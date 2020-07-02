@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Paper } from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 import { FirebaseContext } from '../../Firebase/context';
 import { Grid } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -10,10 +10,14 @@ import { useHistory } from 'react-router';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { getFirstName } from '../../../utils/helperFunctions';
 import Backdrop from '@material-ui/core/Backdrop';
-import { IsLoading } from '../../Resuable Components/IsLoading';
-import { BlueOutlinedTextField } from '../../Resuable Components/OutlinedTextField/index';
+import { IsLoading } from '../../Reusable Components/IsLoading';
+import { BlueOutlinedTextField } from '../../Reusable Components/OutlinedTextField/index';
+import { CustomDivider } from '../../Reusable Components/CustomDivider';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  paper: {
+    textAlign: 'center',
+  },
   gridContainer: {
     padding: '20px',
   },
@@ -39,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
+  },
+  heading: {
+    marginBottom: '-2px',
   },
 }));
 
@@ -114,11 +121,7 @@ export const EditProfile: React.FC = () => {
   if (!authUser) return null;
   return (
     <div className="mainRoot">
-      <Paper
-        elevation={3}
-        className="mainContainer"
-        style={{ textAlign: 'center' }}
-      >
+      <Paper elevation={3} className={`mainContainer ${classes.paper}`}>
         <Grid
           container
           direction="column"
@@ -126,8 +129,10 @@ export const EditProfile: React.FC = () => {
           spacing={2}
         >
           <Grid item>
-            <h1>Edit Profile</h1>
-            <hr />
+            <Typography className={classes.heading} variant="h4">
+              Edit Profile
+            </Typography>
+            <CustomDivider />
           </Grid>
           <Grid item>
             {fileURL === '' && (

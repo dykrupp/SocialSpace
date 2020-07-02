@@ -6,7 +6,7 @@ import { useHistory } from 'react-router';
 import { User } from '../../../constants/interfaces';
 import { makeStyles } from '@material-ui/core';
 import * as ROUTES from '../../../constants/routes';
-import { IsLoading } from '../../Resuable Components/IsLoading';
+import { IsLoading } from '../../Reusable Components/IsLoading';
 
 const useStyles = makeStyles(() => ({
   loadingDiv: {

@@ -8,7 +8,7 @@ import { UserProfileUID, ChatUID } from '../../../../constants/interfaces';
 import { ChatList } from './ChatList';
 import { Chat } from './Chat';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
-import { CustomDivider } from './CustomDivider/index';
+import { CustomDivider } from '../../../Reusable Components/CustomDivider/index';
 
 const drawerWidth = '300px';
 

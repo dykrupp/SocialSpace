@@ -30,7 +30,7 @@ interface ChatListProps {
 const useStyles = makeStyles(() => ({
   chatsList: {
     overflowY: 'auto',
-    minHeight: '264px',
+    maxHeight: '264px',
     paddingTop: '0px',
     paddingBottom: '0px',
   },

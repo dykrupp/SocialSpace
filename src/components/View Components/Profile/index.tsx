@@ -12,20 +12,23 @@ import { Grid } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import PeopleIcon from '@material-ui/icons/People';
-import NewsFeed from '../../Resuable Components/NewsFeed';
+import NewsFeed from '../../Reusable Components/NewsFeed';
 import { UserList } from './UserList';
 import PropTypes from 'prop-types';
 import { getFirstName } from '../../../utils/helperFunctions';
+
+interface ProfileProps {
+  users: UserProfileUID[];
+}
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
     padding: '20px',
   },
+  dividerItem: {
+    marginTop: '5px',
+  },
 }));
-
-interface ProfileProps {
-  users: UserProfileUID[];
-}
 
 export const Profile: React.FC<ProfileProps> = ({ users }) => {
   const classes = useStyles();
@@ -49,7 +52,7 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
           <Grid item>
             <AccountInfo userProfile={userProfile} />
           </Grid>
-          <Grid style={{ marginTop: '5px' }} item>
+          <Grid className={classes.dividerItem} item>
             <hr />
           </Grid>
           <Grid item>
