@@ -53,8 +53,25 @@ export const updateChatInfo = functions.database
 
   export const removeCommentNotification = functions.database.ref('/posts/{userUID}/{postUID}/comments/{commentUID}').onDelete((snapShot, context) => {
     const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
+    if (root) return root.ref.child(`/notifications/${context.params.userUID}/${context.params.commentUID}`).remove();
+    else return null;
+  });
+
+  export const createFollowerNotification = functions.database.ref('/users/{userUID}/followers/{followerUID}').onCreate((snapShot, context) => {
+    const root = snapShot.ref.parent?.parent?.parent?.parent;
     if (root) {
-      return root.ref.child(`/notifications/${context.params.userUID}/${context.params.commentUID}`).remove();
+      return root.ref.child(`/notifications/${context.params.userUID}/${context.params.followerUID}`).set({
+        triggerUserUID: snapShot.val().userUID,
+        type: 'follower',
+        read: false,
+      })
     } else return null;
   });
+
+  export const deleteFollowerNotification = functions.database.ref('/users/{userUID}/followers/{followerUID}').onDelete((snapShot, context) => {
+    const root = snapShot.ref.parent?.parent?.parent?.parent;
+    if (root) return root.ref.child(`/notifications/${context.params.userUID}/${context.params.followerUID}`).remove();
+    else return null;
+  });
+
 
