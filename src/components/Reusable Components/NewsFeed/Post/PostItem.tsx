@@ -116,35 +116,32 @@ export const PostItem: React.FC<PostStyleProps> = ({
           )}
         </Grid>
         <Grid item xs={12} className={classes.centeredRow}>
-          {areFriends(authUser, postOwnerProfile) ||
-            (authUser.uid === postOwnerProfile.uid && (
-              <>
-                {!didCurrentUserLikePost && (
-                  <Tooltip title="Like Post">
-                    <IconButton
-                      component="label"
-                      onClick={(): void => addLike()}
-                    >
-                      <Badge badgeContent={likes.length} color="secondary">
-                        <FavoriteBorderIcon color="secondary" />
-                      </Badge>
-                    </IconButton>
-                  </Tooltip>
-                )}
-                {didCurrentUserLikePost && (
-                  <Tooltip title="Remove Like">
-                    <IconButton
-                      component="label"
-                      onClick={(): void => removeLike()}
-                    >
-                      <Badge badgeContent={likes.length} color="secondary">
-                        <FavoriteIcon color="secondary" />
-                      </Badge>
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </>
-            ))}
+          {(areFriends(authUser, postOwnerProfile) ||
+            authUser.uid === postOwnerProfile.uid) && (
+            <>
+              {!didCurrentUserLikePost && (
+                <Tooltip title="Like Post">
+                  <IconButton component="label" onClick={(): void => addLike()}>
+                    <Badge badgeContent={likes.length} color="secondary">
+                      <FavoriteBorderIcon color="secondary" />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              )}
+              {didCurrentUserLikePost && (
+                <Tooltip title="Remove Like">
+                  <IconButton
+                    component="label"
+                    onClick={(): void => removeLike()}
+                  >
+                    <Badge badgeContent={likes.length} color="secondary">
+                      <FavoriteIcon color="secondary" />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              )}
+            </>
+          )}
           {comments.length > 0 && (
             <Tooltip
               title={isCommentsOpen ? 'Close Comments' : 'View Comments'}
@@ -169,27 +166,27 @@ export const PostItem: React.FC<PostStyleProps> = ({
               userProfile={users.find((x) => x.uid === comment.userUID)}
             />
           ))}
-        {areFriends(authUser, postOwnerProfile) ||
-          (authUser.uid === postOwnerProfile.uid && (
-            <Grid item xs={12} className={classes.commentInputRow}>
-              <OutlinedTextField
-                label="Comment"
-                placeholder=""
-                onChangeHandler={onCommentChange}
-                value={pendingComment}
-              />
-              <Tooltip title="Add Comment">
-                <IconButton
-                  component="label"
-                  color="primary"
-                  disabled={isCommentInvalid}
-                  onClick={(): void => onCommentButtonClick()}
-                >
-                  <AddCommentIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-          ))}
+        {(areFriends(authUser, postOwnerProfile) ||
+          authUser.uid === postOwnerProfile.uid) && (
+          <Grid item xs={12} className={classes.commentInputRow}>
+            <OutlinedTextField
+              label="Comment"
+              placeholder=""
+              onChangeHandler={onCommentChange}
+              value={pendingComment}
+            />
+            <Tooltip title="Add Comment">
+              <IconButton
+                component="label"
+                color="primary"
+                disabled={isCommentInvalid}
+                onClick={(): void => onCommentButtonClick()}
+              >
+                <AddCommentIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        )}
       </Grid>
     </Paper>
   );
