@@ -25,8 +25,8 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
   const numOfComments = useRef(0);
   const numOfLikes = useRef(0);
   const postProfile = users.find((x) => x.uid === userPost.createdByUID);
-  const postOwnerProfile = users.find((x) => x.uid === userPost.parentKey);
-  const { post, dateTime, media, parentKey } = userPost;
+  const postOwnerProfile = users.find((x) => x.uid === userPost.userUID);
+  const { post, dateTime, media, userUID, postUID } = userPost;
 
   const onCommentChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -36,10 +36,10 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
 
   const onCommentButtonClick = (): void => {
     if (firebase && authUser) {
-      const utcDateTime = new Date().toUTCString();
-      firebase.comment(parentKey, dateTime, utcDateTime).set({
+      firebase.comments(userUID, postUID).push({
         comment,
         userUID: authUser.uid,
+        dateTime: new Date().toUTCString(),
       });
       setComment('');
     }
@@ -51,36 +51,38 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
 
   const addLike = (): void => {
     if (firebase && authUser) {
-      firebase.likes(parentKey, dateTime).push({ userUID: authUser.uid });
+      firebase.likes(userUID, postUID).push({ userUID: authUser.uid });
     }
   };
 
   const removeLike = (): void => {
     if (firebase && authUser) {
-      const key = likes.filter((x) => x.userUID === authUser.uid)[0].key;
-      firebase.like(parentKey, dateTime, key).remove();
+      const likeUID = likes.filter((x) => x.userUID === authUser.uid)[0]
+        .likeUID;
+      firebase.like(userUID, postUID, likeUID).remove();
     }
   };
 
   const deletePost = (): void => {
     if (firebase) {
+      firebase.post(userUID, postUID).remove();
+
       if (media !== '') {
         firebase.storage
-          .ref(`users/${parentKey}/posts/${dateTime}/media`)
-          .delete()
-          .then(() => firebase.post(parentKey, dateTime).remove());
-      } else firebase.post(parentKey, dateTime).remove();
+          .ref(`users/${userUID}/posts/${postUID}/media`)
+          .delete();
+      }
     }
   };
 
-  const deleteComment = (commentDateTime: string): void => {
+  const deleteComment = (comment: Comment): void => {
     if (firebase)
-      firebase.comment(parentKey, dateTime, commentDateTime).remove();
+      firebase.comment(userUID, postUID, comment.commentUID).remove();
   };
 
   useEffect(() => {
     if (firebase) {
-      firebase.comments(parentKey, dateTime).on('value', (snapShot) => {
+      firebase.comments(userUID, postUID).on('value', (snapShot) => {
         const commentsObject = snapShot.val();
 
         if (commentsObject === null) {
@@ -97,7 +99,7 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
         const currentComments: Comment[] = Object.keys(commentsObject).map(
           (key) => ({
             ...commentsObject[key],
-            dateTime: key,
+            commentUID: key,
           })
         );
 
@@ -113,13 +115,13 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
     }
 
     return function cleanup(): void {
-      firebase?.comments(parentKey, dateTime).off();
+      firebase?.comments(userUID, postUID).off();
     };
-  }, [firebase, dateTime, parentKey]);
+  }, [firebase, postUID, userUID]);
 
   useEffect(() => {
     if (firebase) {
-      firebase.likes(parentKey, dateTime).on('value', (snapShot) => {
+      firebase.likes(userUID, postUID).on('value', (snapShot) => {
         const likesObject = snapShot.val();
 
         if (likesObject === null) {
@@ -133,7 +135,7 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
 
         const currentLikes: Like[] = Object.keys(likesObject).map((key) => ({
           ...likesObject[key],
-          key: key,
+          likeUID: key,
         }));
 
         numOfLikes.current = currentLikes.length;
@@ -142,9 +144,9 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
     }
 
     return function cleanup(): void {
-      firebase?.likes(parentKey, dateTime).off();
+      firebase?.likes(userUID, postUID).off();
     };
-  }, [firebase, dateTime, parentKey]);
+  }, [firebase, postUID, userUID]);
 
   if (!postProfile || !postOwnerProfile) return null;
   return (

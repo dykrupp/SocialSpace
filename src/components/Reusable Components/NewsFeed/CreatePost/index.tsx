@@ -76,33 +76,35 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const [picture, setPicture] = useState<File | null>();
   const [anchorEl, setAnchorEl] = React.useState<HTMLImageElement | null>(null);
 
-  const sendFirebasePost = (utcDateTime: string): void => {
+  const pushFirebasePost = async (): Promise<string> => {
     if (firebase && authUser) {
-      firebase
-        .post(postUserUID, utcDateTime)
-        .set({
+      const postUID = await firebase
+        .posts(postUserUID)
+        .push({
           post,
           createdByUID: createdByUserUID,
+          dateTime: new Date().toUTCString(),
         })
-        .then(() => {
+        .then((value) => {
           setPost('');
+          return value.key;
         });
-    }
+      return postUID ? postUID : '';
+    } else return '';
   };
 
-  const onPostButtonClick = (): void => {
+  const onPostButtonClick = async (): Promise<void> => {
     if (firebase && authUser) {
-      const utcDateTime = new Date().toUTCString();
+      const postUID = await pushFirebasePost();
 
       if (picture) {
         firebase.storage
-          .ref(`users/${postUserUID}/posts/${utcDateTime}/media`)
+          .ref(`users/${postUserUID}/posts/${postUID}/media`)
           .put(picture)
           .then(() => {
-            sendFirebasePost(utcDateTime);
             setPicture(null);
           });
-      } else sendFirebasePost(utcDateTime);
+      }
     }
   };
 

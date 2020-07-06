@@ -71,36 +71,31 @@ class Firebase {
   followings = (userUID: string): app.database.Reference =>
     this.db.ref(`users/${userUID}/followings/`);
 
-  post = (userUID: string, dateTime: string): app.database.Reference =>
-    this.db.ref(`posts/${userUID}/${dateTime}`);
+  post = (userUID: string, postUID: string): app.database.Reference =>
+    this.db.ref(`posts/${userUID}/${postUID}`);
 
   posts = (userUID: string): app.database.Reference =>
     this.db.ref(`posts/${userUID}`);
 
   like = (
-    postUserID: string,
-    postDateTime: string,
-    key: string
+    userUID: string,
+    postUID: string,
+    likesUID: string
   ): app.database.Reference =>
-    this.db.ref(`posts/${postUserID}/${postDateTime}/likes/${key}`);
+    this.db.ref(`posts/${userUID}/${postUID}/likes/${likesUID}`);
 
-  likes = (postUserID: string, postDateTime: string): app.database.Reference =>
-    this.db.ref(`posts/${postUserID}/${postDateTime}/likes`);
+  likes = (userUID: string, postUID: string): app.database.Reference =>
+    this.db.ref(`posts/${userUID}/${postUID}/likes`);
 
   comment = (
-    postUserID: string,
-    postDateTime: string,
-    commentDateTime: string
+    userUID: string,
+    postUID: string,
+    commentUID: string
   ): app.database.Reference =>
-    this.db.ref(
-      `posts/${postUserID}/${postDateTime}/comments/${commentDateTime}`
-    );
+    this.db.ref(`posts/${userUID}/${postUID}/comments/${commentUID}`);
 
-  comments = (
-    postUserID: string,
-    postDateTime: string
-  ): app.database.Reference =>
-    this.db.ref(`posts/${postUserID}/${postDateTime}/comments`);
+  comments = (userUID: string, postUID: string): app.database.Reference =>
+    this.db.ref(`posts/${userUID}/${postUID}/comments`);
 
   chatUIDS = (): app.database.Reference => this.db.ref(`chatUIDS`);
 

@@ -35,14 +35,14 @@ export const getSortedPosts = (posts: Post[]): Post[] => {
 
 export const convertToPosts = (
   snapShot: firebase.database.DataSnapshot,
-  parentKey: string
+  parentUID: string
 ): Post[] => {
   const postsObject = snapShot.val();
   const currentPosts: Post[] = Object.keys(postsObject).map((key) => ({
     ...postsObject[key],
-    dateTime: key,
     media: '',
-    parentKey: parentKey,
+    userUID: parentUID,
+    postUID: key,
   }));
   return currentPosts;
 };

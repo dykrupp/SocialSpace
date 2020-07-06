@@ -54,7 +54,7 @@ interface PostStyleProps {
   removeLike: () => void;
   onCommentButtonClick: () => void;
   onCommentChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  deleteComment: (commentDateTime: string) => void;
+  deleteComment: (comment: CommentInterface) => void;
   onCommentsOpenClick: () => void;
   isCommentsOpen: boolean;
   pendingComment: string;
@@ -165,7 +165,7 @@ export const PostItem: React.FC<PostStyleProps> = ({
             <Comment
               key={comment.dateTime}
               comment={comment}
-              deleteComment={deleteComment}
+              deleteComment={(): void => deleteComment(comment)}
               userProfile={users.find((x) => x.uid === comment.userUID)}
             />
           ))}

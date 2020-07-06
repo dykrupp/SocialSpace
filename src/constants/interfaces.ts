@@ -25,11 +25,12 @@ export interface Comment {
   comment: string;
   dateTime: string;
   userUID: string;
+  commentUID: string;
 }
 
 export interface Like {
   userUID: string;
-  key: string;
+  likeUID: string;
 }
 
 export interface Post {
@@ -39,7 +40,8 @@ export interface Post {
   likes: Like[];
   dateTime: string;
   createdByUID: string;
-  parentKey: string;
+  userUID: string;
+  postUID: string;
 }
 
 export interface UserProfile extends User {
