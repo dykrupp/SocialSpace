@@ -23,3 +23,19 @@ export const updateChatInfo = functions.database
 
     return null;
   });
+
+  export const createNotificationOnLike = functions.database.ref('/posts/{userUID}/{postUID}/likes/{likeUID}').onCreate((snapShot, context) => {
+    const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
+    if (root) {
+      return root.ref.child(`/notifications/${context.params.userUID}/${context.params.likeUID}`).set({
+        triggerUserUID: snapShot.val().userUID,
+        type: 'like',
+        read: false,
+      })
+    } else return null;
+  });
+
+  export const removeNotificationOnUnlike = functions.database.ref('/posts/{userUID}/{postUID}/likes/{likeUID}').onDelete((snapShot, context) => {
+    const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
+    return root ? root.ref.child(`/notifications/${context.params.userUID}/${context.params.likeUID}`).remove() : null;
+  });
