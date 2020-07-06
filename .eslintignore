@@ -1,2 +1,3 @@
 src/ServiceWorker.ts
 src/**/__tests__/**
+/functions

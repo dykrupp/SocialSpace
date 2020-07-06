@@ -60,7 +60,6 @@ export interface ChatUID {
   uid: string;
   lastWriteTime: string;
   lastWriteUID: string;
-  messageCount: number;
 }
 
 export interface Message {
