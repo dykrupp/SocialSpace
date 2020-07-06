@@ -24,7 +24,7 @@ export const updateChatInfo = functions.database
     return null;
   });
 
-  export const createNotificationOnLike = functions.database.ref('/posts/{userUID}/{postUID}/likes/{likeUID}').onCreate((snapShot, context) => {
+  export const createLikeNotification = functions.database.ref('/posts/{userUID}/{postUID}/likes/{likeUID}').onCreate((snapShot, context) => {
     const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
     if (root) {
       return root.ref.child(`/notifications/${context.params.userUID}/${context.params.likeUID}`).set({
@@ -35,7 +35,26 @@ export const updateChatInfo = functions.database
     } else return null;
   });
 
-  export const removeNotificationOnUnlike = functions.database.ref('/posts/{userUID}/{postUID}/likes/{likeUID}').onDelete((snapShot, context) => {
+  export const removeLikeNotification = functions.database.ref('/posts/{userUID}/{postUID}/likes/{likeUID}').onDelete((snapShot, context) => {
     const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
     return root ? root.ref.child(`/notifications/${context.params.userUID}/${context.params.likeUID}`).remove() : null;
   });
+
+  export const createCommentNotification = functions.database.ref('/posts/{userUID}/{postUID}/comments/{commentUID}').onCreate((snapShot, context) => {
+    const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
+    if (root) {
+      return root.ref.child(`/notifications/${context.params.userUID}/${context.params.commentUID}`).set({
+        triggerUserUID: snapShot.val().userUID,
+        type: 'comment',
+        read: false,
+      })
+    } else return null;
+  });
+
+  export const removeCommentNotification = functions.database.ref('/posts/{userUID}/{postUID}/comments/{commentUID}').onDelete((snapShot, context) => {
+    const root = snapShot.ref.parent?.parent?.parent?.parent?.parent;
+    if (root) {
+      return root.ref.child(`/notifications/${context.params.userUID}/${context.params.commentUID}`).remove();
+    } else return null;
+  });
+
