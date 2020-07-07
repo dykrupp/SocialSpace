@@ -11,6 +11,8 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: '5px',
+    display: 'flex',
+    flexDirection: 'column',
   },
   circularProgress: {
     marginLeft: '10px',
@@ -28,7 +30,7 @@ export const IsLoading: React.FC<IsLoadingProps> = ({ text }) => {
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.root}>
+    <Grid spacing={2} container className={classes.root}>
       <Grid item>
         <Typography variant="h4" className={classes.text}>
           {text}

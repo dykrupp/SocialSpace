@@ -163,9 +163,9 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
   };
 
   const notificationText = {
-    comment: `${triggerUser.fullName} commented on your post ${timeSince}`,
-    follower: `${triggerUser.fullName} followed you ${timeSince}`,
-    like: `${triggerUser.fullName} liked your post ${timeSince}`,
+    comment: `${triggerUser.fullName} commented on your post`,
+    follower: `${triggerUser.fullName} followed you`,
+    like: `${triggerUser.fullName} liked your post`,
   };
 
   //only recalculate timeSince when the drawer is reopened
@@ -184,7 +184,10 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
       }}
     >
       <ListItemAvatar>{notificationIcon[notification.type]}</ListItemAvatar>
-      <ListItemText primary={notificationText[notification.type]} />
+      <ListItemText
+        primary={notificationText[notification.type]}
+        secondary={timeSince}
+      />
       <div className={classes.unreadIconDiv}>
         {!notification.read && (
           <Tooltip title="Unread Notification">

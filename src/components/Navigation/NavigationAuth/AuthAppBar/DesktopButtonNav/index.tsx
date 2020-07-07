@@ -46,7 +46,7 @@ export const DesktopButtonNav: React.FC<DesktopButtonNavProps> = ({
 
   return (
     <>
-      <Tooltip title="Notifications">
+      <Tooltip title="Toggle Notifications">
         <IconButton
           color="inherit"
           onClick={(): void => setIsNotificationDrawerOpen((isOpen) => !isOpen)}
