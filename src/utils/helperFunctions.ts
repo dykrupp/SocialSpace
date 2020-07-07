@@ -98,8 +98,8 @@ export const addMediaUrl = async (
     })
     .then((dict) => {
       return posts.map((post) => {
-        if (dict.keys().includes(post.dateTime)) {
-          return { ...post, media: dict.getValue(post.dateTime) };
+        if (dict.keys().includes(post.postUID)) {
+          return { ...post, media: dict.getValue(post.postUID) };
         } else return post;
       });
     });

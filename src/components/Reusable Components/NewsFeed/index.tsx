@@ -130,22 +130,22 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
       currentUserPosts: PostInterface[]
     ): Promise<void> => {
       if (firebase) {
-        const sortedPosts = await addMediaUrl(
+        const postsWithMedia = await addMediaUrl(
           firebase,
           feedUID,
-          getSortedObjects(currentUserPosts) as PostInterface[]
+          currentUserPosts
         );
 
-        if (sortedPosts) {
+        if (postsWithMedia) {
           setPosts((posts) => {
             const uniqueArr: PostInterface[] = getSortedObjects(
               posts
-                .concat(sortedPosts)
+                .concat(postsWithMedia)
                 .filter(
                   (item, index, array) =>
                     index ===
                     array.findIndex(
-                      (element) => element.dateTime === item.dateTime
+                      (element) => element.postUID === item.postUID
                     )
                 )
             );
