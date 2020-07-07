@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { getFirstName } from '../../../../utils/helperFunctions';
 import PropTypes from 'prop-types';
 import { OutlinedTextField } from '../../OutlinedTextField';
+import { v1 as timestampGUID } from 'uuid';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -76,26 +77,25 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const [picture, setPicture] = useState<File | null>();
   const [anchorEl, setAnchorEl] = React.useState<HTMLImageElement | null>(null);
 
-  const pushFirebasePost = async (): Promise<string> => {
+  const setFirebasePost = (postUID: string): void => {
     if (firebase && authUser) {
-      const postUID = await firebase
-        .posts(postUserUID)
-        .push({
+      firebase
+        .post(postUserUID, postUID)
+        .set({
           post,
           createdByUID: createdByUserUID,
           dateTime: new Date().toUTCString(),
         })
-        .then((value) => {
+        .then(() => {
           setPost('');
-          return value.key;
         });
-      return postUID ? postUID : '';
-    } else return '';
+    }
   };
 
   const onPostButtonClick = async (): Promise<void> => {
     if (firebase && authUser) {
-      const postUID = await pushFirebasePost();
+      //Generating GUID so that we can guarantee our storage media exists for applicable posts when retriggering
+      const postUID = timestampGUID();
 
       if (picture) {
         firebase.storage
@@ -103,8 +103,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
           .put(picture)
           .then(() => {
             setPicture(null);
+            setFirebasePost(postUID);
           });
-      }
+      } else setFirebasePost(postUID);
     }
   };
 
