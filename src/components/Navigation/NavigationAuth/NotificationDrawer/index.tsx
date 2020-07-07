@@ -12,6 +12,11 @@ import { Button } from '@material-ui/core';
 import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 
+//Mobile Menu?
+//TODO -> Test
+//TODO -> Convert to using Redux
+//TODO -> Any refactor/optimizations
+
 const drawerWidth = '350px';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -80,7 +85,11 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
         </IconButton>
       </div>
       <CustomDivider />
-      <NotificationList notifications={notifications} users={users} />
+      <NotificationList
+        notifications={notifications}
+        users={users}
+        isDrawerOpen={isDrawerOpen}
+      />
       <CustomDivider />
       <div className={classes.bottomDiv}>
         <Button

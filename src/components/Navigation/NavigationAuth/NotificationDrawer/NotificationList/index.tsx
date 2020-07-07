@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
@@ -12,14 +12,19 @@ import {
 } from '../../../../../constants/interfaces';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { FirebaseContext } from '../../../../Firebase/context';
+import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import {
   calcTimeSince,
   getSortedObjects,
 } from '../../../../../utils/helperFunctions';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import { Tooltip } from '@material-ui/core';
 
 interface NotificationListProps {
   notifications: Notification[];
   users: UserProfileUID[];
+  isDrawerOpen: boolean;
 }
 
 const useStyles = makeStyles(() => ({
@@ -38,11 +43,15 @@ const useStyles = makeStyles(() => ({
   selectedItem: {
     backgroundColor: 'rgba(0,0,0,0.1)',
   },
+  unreadIconDiv: {
+    width: '25px',
+  },
 }));
 
 export const NotificationList: React.FC<NotificationListProps> = ({
   notifications,
   users,
+  isDrawerOpen,
 }) => {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -76,6 +85,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
               selectedIndex={selectedIndex}
               setSelectedIndex={setSelectedIndex}
               triggerUser={triggerUser}
+              isDrawerOpen={isDrawerOpen}
             />
           );
         }
@@ -87,6 +97,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
 NotificationList.propTypes = {
   notifications: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired,
+  isDrawerOpen: PropTypes.any.isRequired,
 };
 
 interface NotificationListItemProps {
@@ -95,6 +106,7 @@ interface NotificationListItemProps {
   index: number;
   selectedIndex?: number | null;
   triggerUser: UserProfileUID;
+  isDrawerOpen: boolean;
 }
 
 const NotificationListItem: React.FC<NotificationListItemProps> = ({
@@ -103,9 +115,22 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
   selectedIndex,
   setSelectedIndex,
   triggerUser,
+  isDrawerOpen,
 }) => {
   const classes = useStyles();
-  const timeSince = calcTimeSince(Date.parse(notification.dateTime));
+  const firebase = useContext(FirebaseContext);
+  const authUser = useContext(AuthUserContext);
+  const [timeSince, setTimeSince] = useState(
+    calcTimeSince(Date.parse(notification.dateTime))
+  );
+
+  const markNotificationRead = (): void => {
+    if (firebase && authUser && !notification.read) {
+      firebase
+        .notification(authUser.uid, notification.notificationUID)
+        .update({ read: true });
+    }
+  };
 
   const notificationIcon = {
     comment: (
@@ -131,16 +156,30 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
     like: `${triggerUser.fullName} liked your post ${timeSince}`,
   };
 
+  //only recalculate timeSince when the drawer is reopened
+  useEffect(() => {
+    if (isDrawerOpen)
+      setTimeSince(calcTimeSince(Date.parse(notification.dateTime)));
+  }, [isDrawerOpen, notification]);
+
   return (
     <ListItem
       button
       className={`${selectedIndex === index ? classes.selectedItem : ''}`}
       onClick={(): void => {
         setSelectedIndex(index);
+        markNotificationRead();
       }}
     >
       <ListItemAvatar>{notificationIcon[notification.type]}</ListItemAvatar>
       <ListItemText primary={notificationText[notification.type]} />
+      <div className={classes.unreadIconDiv}>
+        {!notification.read && (
+          <Tooltip title="Unread Notification">
+            <PriorityHighIcon color="secondary" />
+          </Tooltip>
+        )}
+      </div>
     </ListItem>
   );
 };
@@ -151,4 +190,5 @@ NotificationListItem.propTypes = {
   selectedIndex: PropTypes.any,
   setSelectedIndex: PropTypes.func.isRequired,
   triggerUser: PropTypes.any.isRequired,
+  isDrawerOpen: PropTypes.any.isRequired,
 };

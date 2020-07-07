@@ -112,16 +112,6 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
     };
   }, [firebase, authUser]);
 
-  useEffect(() => {
-    if (firebase && authUser && isNotificationDrawerOpen) {
-      notifications.forEach((notification) => {
-        firebase
-          .notification(authUser.uid, notification.notificationUID)
-          .update({ read: true });
-      });
-    }
-  }, [notifications, firebase, authUser, isNotificationDrawerOpen]);
-
   return (
     <div className={classes.mainDiv}>
       <AuthAppBar
