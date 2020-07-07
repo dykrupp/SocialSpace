@@ -9,6 +9,7 @@ import { ChatList } from './ChatList';
 import { Chat } from './Chat';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { CustomDivider } from '../../../Reusable Components/CustomDivider/index';
+import { Tooltip } from '@material-ui/core';
 
 const drawerWidth = '350px';
 
@@ -61,9 +62,11 @@ export const MessageDrawer: React.FC<MessageDrawerProps> = ({
       }}
     >
       <div className={classes.drawerHeader}>
-        <IconButton onClick={(): void => setIsDrawerOpen(false)}>
-          <ChevronRightIcon color="primary" />
-        </IconButton>
+        <Tooltip title="Close Messages">
+          <IconButton onClick={(): void => setIsDrawerOpen(false)}>
+            <ChevronRightIcon color="primary" />
+          </IconButton>
+        </Tooltip>
       </div>
       <CustomDivider />
       <ChatList

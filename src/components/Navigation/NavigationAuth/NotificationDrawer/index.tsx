@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { Notification, UserProfileUID } from '../../../../constants/interfaces';
 import { CustomDivider } from '../../../Reusable Components/CustomDivider/index';
 import { NotificationList } from './NotificationList';
-import { Button } from '@material-ui/core';
+import { Button, Tooltip } from '@material-ui/core';
 import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 
@@ -80,9 +80,11 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
       }}
     >
       <div className={classes.drawerHeader}>
-        <IconButton onClick={(): void => setIsDrawerOpen(false)}>
-          <ChevronLeftIcon color="primary" />
-        </IconButton>
+        <Tooltip title="Close Notifications">
+          <IconButton onClick={(): void => setIsDrawerOpen(false)}>
+            <ChevronLeftIcon color="primary" />
+          </IconButton>
+        </Tooltip>
       </div>
       <CustomDivider />
       <NotificationList

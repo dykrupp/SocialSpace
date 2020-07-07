@@ -19,7 +19,7 @@ import {
   getSortedObjects,
 } from '../../../../../utils/helperFunctions';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 
 interface NotificationListProps {
   notifications: Notification[];
@@ -28,7 +28,7 @@ interface NotificationListProps {
 }
 
 const useStyles = makeStyles(() => ({
-  list: {
+  root: {
     display: 'flex',
     flex: '1',
     flexDirection: 'column',
@@ -45,6 +45,9 @@ const useStyles = makeStyles(() => ({
   },
   unreadIconDiv: {
     width: '25px',
+  },
+  emptyOverlay: {
+    textAlign: 'center',
   },
 }));
 
@@ -67,8 +70,17 @@ export const NotificationList: React.FC<NotificationListProps> = ({
     scrollToTop();
   }, [notificationsStartRef]);
 
+  if (notifications.length === 0)
+    return (
+      <Typography
+        className={`${classes.root} ${classes.emptyOverlay}`}
+        variant="h6"
+      >
+        Explore SocialSpace for more interactions
+      </Typography>
+    );
   return (
-    <List className={classes.list}>
+    <List className={classes.root}>
       <div ref={notificationsStartRef} />
       {getSortedObjects(notifications).map(
         (notification: Notification, index) => {
