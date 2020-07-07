@@ -69,3 +69,15 @@ export interface Message {
   text: string;
   dateTime: string;
 }
+
+export interface Notification {
+  read: boolean;
+  triggerUserUID: string;
+  type: NotificationType;
+}
+
+enum NotificationType {
+  follower = 'follower',
+  like = 'like',
+  comment = 'comment',
+}

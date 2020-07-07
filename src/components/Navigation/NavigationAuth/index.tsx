@@ -4,9 +4,15 @@ import { UserMenu } from './UserMenu';
 import { MobileMenu } from './MobileMenu';
 import { MessageDrawer } from './MessageDrawer';
 import { AuthAppBar } from './AuthAppBar';
-import { UserProfileUID, ChatUID } from '../../../constants/interfaces';
+import {
+  UserProfileUID,
+  ChatUID,
+  Notification,
+} from '../../../constants/interfaces';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import { NotificationDrawer } from './NotificationDrawer/index';
 
 const useStyles = makeStyles(() => ({
   mainDiv: {
@@ -24,12 +30,15 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
 }) => {
   const classes = useStyles();
   const firebase = useContext(FirebaseContext);
+  const authUser = useContext(AuthUserContext);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [chatUIDS, setChatUIDS] = useState<ChatUID[]>([]);
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
-  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
-  const [mobileAnchor, setMobileAnchor] = React.useState<null | HTMLElement>(
-    null
+  const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(
+    false
   );
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [mobileAnchor, setMobileAnchor] = useState<null | HTMLElement>(null);
 
   const handleMobileMenuClose = (): void => {
     setMobileAnchor(null);
@@ -77,6 +86,29 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
     };
   }, [firebase]);
 
+  useEffect(() => {
+    if (firebase && authUser) {
+      firebase.notifications(authUser.uid).on('value', (snapShot) => {
+        const notificationObject = snapShot.val();
+
+        if (!notificationObject) return;
+
+        const currentNotifications: Notification[] = Object.keys(
+          notificationObject
+        ).map((key) => ({
+          ...notificationObject[key],
+        }));
+
+        if (currentNotifications.length > 0)
+          setNotifications(currentNotifications);
+      });
+    }
+
+    return function cleanup(): void {
+      if (authUser) firebase?.notifications(authUser.uid);
+    };
+  }, [firebase, authUser]);
+
   return (
     <div className={classes.mainDiv}>
       <AuthAppBar
@@ -85,12 +117,19 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
         setIsMessageDrawerOpen={setIsMessageDrawerOpen}
         handleMobileMenuOpen={handleMobileMenuOpen}
         handleUserMenuOpen={handleUserMenuOpen}
+        notifications={notifications}
+        setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
       />
       <MessageDrawer
         chatUIDS={chatUIDS}
         isDrawerOpen={isMessageDrawerOpen}
         setIsDrawerOpen={setIsMessageDrawerOpen}
         users={users}
+      />
+      <NotificationDrawer
+        isDrawerOpen={isNotificationDrawerOpen}
+        notifications={notifications}
+        setIsDrawerOpen={setIsNotificationDrawerOpen}
       />
       <MobileMenu
         mobileMenuAnchor={mobileAnchor}

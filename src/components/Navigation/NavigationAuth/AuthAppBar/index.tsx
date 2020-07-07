@@ -10,7 +10,11 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { SearchBar } from './SearchBar';
 import { DesktopButtonNav } from './DesktopButtonNav';
-import { UserProfileUID, ChatUID } from '../../../../constants/interfaces';
+import {
+  UserProfileUID,
+  ChatUID,
+  Notification,
+} from '../../../../constants/interfaces';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -51,6 +55,8 @@ interface AuthAppBarProps {
   setIsMessageDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
   handleUserMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleMobileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  setIsNotificationDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
+  notifications: Notification[];
   users: UserProfileUID[];
   chatUIDS: ChatUID[];
 }
@@ -61,6 +67,8 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   handleMobileMenuOpen,
   users,
   chatUIDS,
+  setIsNotificationDrawerOpen,
+  notifications,
 }) => {
   const classes = useStyles();
 
@@ -84,6 +92,8 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
             setIsMessageDrawerOpen={setIsMessageDrawerOpen}
             handleUserMenuOpen={handleUserMenuOpen}
             chatUIDS={chatUIDS}
+            notifications={notifications}
+            setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
           />
         </div>
         <div className={classes.sectionMobile}>
@@ -100,6 +110,8 @@ AuthAppBar.propTypes = {
   setIsMessageDrawerOpen: PropTypes.func.isRequired,
   handleMobileMenuOpen: PropTypes.func.isRequired,
   handleUserMenuOpen: PropTypes.func.isRequired,
+  setIsNotificationDrawerOpen: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
   chatUIDS: PropTypes.array.isRequired,
+  notifications: PropTypes.array.isRequired,
 };
