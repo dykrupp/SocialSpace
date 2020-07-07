@@ -62,6 +62,12 @@ class Firebase {
   notifications = (userUID: string): app.database.Reference =>
     this.db.ref(`notifications/${userUID}`);
 
+  notification = (
+    userUID: string,
+    notificationUID: string
+  ): app.database.Reference =>
+    this.db.ref(`notifications/${userUID}/${notificationUID}`);
+
   followers = (userUID: string): app.database.Reference =>
     this.db.ref(`users/${userUID}/followers`);
 

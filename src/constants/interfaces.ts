@@ -74,6 +74,8 @@ export interface Notification {
   read: boolean;
   triggerUserUID: string;
   type: NotificationType;
+  dateTime: string;
+  notificationUID: string;
 }
 
 enum NotificationType {

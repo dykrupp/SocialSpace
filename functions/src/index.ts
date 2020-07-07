@@ -31,6 +31,7 @@ export const updateChatInfo = functions.database
         triggerUserUID: snapShot.val().userUID,
         type: 'like',
         read: false,
+        dateTime: new Date().toUTCString(),
       })
     } else return null;
   });
@@ -47,6 +48,7 @@ export const updateChatInfo = functions.database
         triggerUserUID: snapShot.val().userUID,
         type: 'comment',
         read: false,
+        dateTime: new Date().toUTCString(),
       })
     } else return null;
   });
@@ -64,6 +66,7 @@ export const updateChatInfo = functions.database
         triggerUserUID: snapShot.val().userUID,
         type: 'follower',
         read: false,
+        dateTime: new Date().toUTCString(),
       })
     } else return null;
   });

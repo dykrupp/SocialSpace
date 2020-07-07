@@ -25,8 +25,8 @@ export const calcTimeSince = (milliseconds: number): string => {
   return `${Math.floor(seconds)} seconds ago`;
 };
 
-export const getSortedPosts = (posts: Post[]): Post[] => {
-  return posts.sort((a, b) => {
+export const getSortedObjects = (objects: any[]): any[] => {
+  return objects.sort((a, b) => {
     const secondDate = new Date(b.dateTime).valueOf();
     const firstDate = new Date(a.dateTime).valueOf();
     return secondDate - firstDate;

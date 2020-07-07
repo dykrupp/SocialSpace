@@ -13,7 +13,7 @@ import {
 } from '../../../constants/interfaces';
 import {
   addMediaUrl,
-  getSortedPosts,
+  getSortedObjects,
   convertToPosts,
   areFriends,
 } from '../../../utils/helperFunctions';
@@ -79,7 +79,9 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
           const postsWithMediaURL = await addMediaUrl(
             firebase,
             feedUID,
-            getSortedPosts(convertToPosts(snapShot, feedUID))
+            getSortedObjects(
+              convertToPosts(snapShot, feedUID)
+            ) as PostInterface[]
           );
 
           if (postsWithMediaURL) {
@@ -131,12 +133,12 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
         const sortedPosts = await addMediaUrl(
           firebase,
           feedUID,
-          getSortedPosts(currentUserPosts)
+          getSortedObjects(currentUserPosts) as PostInterface[]
         );
 
         if (sortedPosts) {
           setPosts((posts) => {
-            const uniqueArr = getSortedPosts(
+            const uniqueArr: PostInterface[] = getSortedObjects(
               posts
                 .concat(sortedPosts)
                 .filter(

@@ -91,16 +91,19 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
       firebase.notifications(authUser.uid).on('value', (snapShot) => {
         const notificationObject = snapShot.val();
 
-        if (!notificationObject) return;
+        if (!notificationObject) {
+          setNotifications([]);
+          return;
+        }
 
         const currentNotifications: Notification[] = Object.keys(
           notificationObject
         ).map((key) => ({
           ...notificationObject[key],
+          notificationUID: key,
         }));
 
-        if (currentNotifications.length > 0)
-          setNotifications(currentNotifications);
+        setNotifications(currentNotifications);
       });
     }
 
@@ -108,6 +111,16 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
       if (authUser) firebase?.notifications(authUser.uid);
     };
   }, [firebase, authUser]);
+
+  useEffect(() => {
+    if (firebase && authUser && isNotificationDrawerOpen) {
+      notifications.forEach((notification) => {
+        firebase
+          .notification(authUser.uid, notification.notificationUID)
+          .update({ read: true });
+      });
+    }
+  }, [notifications, firebase, authUser, isNotificationDrawerOpen]);
 
   return (
     <div className={classes.mainDiv}>
@@ -130,6 +143,7 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
         isDrawerOpen={isNotificationDrawerOpen}
         notifications={notifications}
         setIsDrawerOpen={setIsNotificationDrawerOpen}
+        users={users}
       />
       <MobileMenu
         mobileMenuAnchor={mobileAnchor}

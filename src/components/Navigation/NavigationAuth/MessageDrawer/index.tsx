@@ -10,7 +10,7 @@ import { Chat } from './Chat';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { CustomDivider } from '../../../Reusable Components/CustomDivider/index';
 
-const drawerWidth = '300px';
+const drawerWidth = '350px';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
