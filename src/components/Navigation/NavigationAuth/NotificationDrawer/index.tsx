@@ -12,10 +12,11 @@ import { Button, Tooltip } from '@material-ui/core';
 import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 
-//TODO -> Test
-//TODO -> Mobile Menu?
-//TODO -> Convert to using Redux
-//TODO -> Any refactor/optimizations
+//TODO -> Test application on various clients
+//TODO -> Implement Navigation behavior when clicking notification
+//TODO -> Mobile Menu Fix
+//TODO -> Convert to using Redux State Management instead of using Context
+//TODO -> Any additional refactor/optimizations
 
 const drawerWidth = '350px';
 
