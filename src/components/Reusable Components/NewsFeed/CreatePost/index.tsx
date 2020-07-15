@@ -14,6 +14,7 @@ import { getFirstName } from '../../../../utils/helperFunctions';
 import PropTypes from 'prop-types';
 import { OutlinedTextField } from '../../OutlinedTextField';
 import { v1 as timestampGUID } from 'uuid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles(() => ({
   mediaRow: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   clickableImage: {
     maxHeight: '100px',
@@ -46,7 +48,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: '55px',
   },
   buttonRow: {
     display: 'flex',
@@ -58,6 +59,10 @@ const useStyles = makeStyles(() => ({
   image: {
     height: 'auto',
     width: '100%',
+  },
+  progressIcon: {
+    marginLeft: '-20px',
+    marginRight: '20px',
   },
 }));
 
@@ -75,11 +80,12 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const classes = useStyles();
   const [post, setPost] = useState('');
   const [picture, setPicture] = useState<File | null>();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLImageElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const setFirebasePost = (postUID: string): void => {
+  const setFirebasePost = async (postUID: string): Promise<void> => {
     if (firebase && authUser) {
-      firebase
+      await firebase
         .post(postUserUID, postUID)
         .set({
           post,
@@ -94,18 +100,22 @@ const CreatePost: React.FC<CreatePostProps> = ({
 
   const onPostButtonClick = async (): Promise<void> => {
     if (firebase && authUser) {
+      setIsLoading(true);
+
       //Generating GUID so that we can guarantee our storage media exists for applicable posts when retriggering
       const postUID = timestampGUID();
 
       if (picture) {
-        firebase.storage
+        await firebase.storage
           .ref(`users/${postUserUID}/posts/${postUID}/media`)
           .put(picture)
-          .then(() => {
+          .then(async () => {
             setPicture(null);
-            setFirebasePost(postUID);
+            await setFirebasePost(postUID);
           });
-      } else setFirebasePost(postUID);
+      } else await setFirebasePost(postUID);
+
+      setIsLoading(false);
     }
   };
 
@@ -151,6 +161,11 @@ const CreatePost: React.FC<CreatePostProps> = ({
           />
         </Grid>
         <Grid item xs={12} className={classes.mediaRow}>
+          <CircularProgress
+            style={{ visibility: isLoading ? 'visible' : 'hidden' }}
+            color="primary"
+            className={classes.progressIcon}
+          />
           {!picture && (
             <div className={classes.borderDiv}>
               <AddIcon color="primary" fontSize="large" />
