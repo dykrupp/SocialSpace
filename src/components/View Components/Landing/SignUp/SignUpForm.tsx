@@ -1,96 +1,176 @@
-import React, { useState, useContext } from 'react';
-import { FirebaseError } from 'firebase';
-import { FirebaseContext } from '../../../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
-import SignUpFormStyle from './SignUpFormStyle';
-import { User } from '../../../../constants/interfaces';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import { BlueOutlinedTextField } from '../../../Reusable Components/OutlinedTextField/index';
 
-interface FormState {
+interface SignUpFormProps {
   fullName: string;
   email: string;
+  error: string;
   passwordOne: string;
   passwordTwo: string;
-  error: string;
   birthday: string;
   gender: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const initialFormState: FormState = {
-  fullName: '',
-  email: '',
-  passwordOne: '',
-  passwordTwo: '',
-  error: '',
-  birthday: '1995-05-21',
-  gender: '',
+const useStyles = makeStyles(() => ({
+  flexRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '15px',
+  },
+  buttonBase: {
+    marginTop: '25px',
+    width: '45%',
+    height: '50px',
+  },
+  textField: {
+    background: 'white',
+  },
+  radioGroup: {
+    flexDirection: 'row',
+  },
+  error: {
+    color: 'red',
+  },
+}));
+
+const SignUpForm: React.FC<SignUpFormProps> = ({
+  fullName,
+  email,
+  error,
+  passwordOne,
+  passwordTwo,
+  birthday,
+  onChange,
+  onSubmit,
+  gender,
+}) => {
+  const classes = useStyles();
+
+  const isInvalid =
+    passwordOne !== passwordTwo ||
+    passwordOne === '' ||
+    email === '' ||
+    fullName === '' ||
+    birthday === '' ||
+    gender === '';
+
+  return (
+    <form onSubmit={onSubmit} noValidate>
+      <div className={classes.flexRow}>
+        <BlueOutlinedTextField
+          name="fullName"
+          value={fullName}
+          onChange={onChange}
+          type="text"
+          placeholder="Full Name"
+          variant="outlined"
+          className={classes.textField}
+        />
+        <BlueOutlinedTextField
+          name="email"
+          value={email}
+          onChange={onChange}
+          type="text"
+          placeholder="Email"
+          variant="outlined"
+          className={classes.textField}
+        />
+      </div>
+      <div className={classes.flexRow}>
+        <BlueOutlinedTextField
+          name="passwordOne"
+          value={passwordOne}
+          onChange={onChange}
+          type="password"
+          placeholder="Password"
+          variant="outlined"
+          className={classes.textField}
+        />
+        <BlueOutlinedTextField
+          name="passwordTwo"
+          value={passwordTwo}
+          onChange={onChange}
+          type="password"
+          placeholder="Confirm Password"
+          variant="outlined"
+          className={classes.textField}
+        />
+      </div>
+      <div className={classes.flexRow}>
+        <BlueOutlinedTextField
+          id="date"
+          name="birthday"
+          label="Birthday"
+          type="date"
+          value={birthday}
+          onChange={onChange}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      </div>
+      <div className={classes.flexRow}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Gender</FormLabel>
+          <RadioGroup
+            aria-label="gender"
+            name="gender"
+            value={gender}
+            onChange={onChange}
+            className={classes.radioGroup}
+          >
+            <FormControlLabel
+              value="female"
+              control={<Radio color="primary" />}
+              label="Female"
+            />
+            <FormControlLabel
+              value="male"
+              control={<Radio color="primary" />}
+              label="Male"
+            />
+            <FormControlLabel
+              value="other"
+              control={<Radio color="primary" />}
+              label="Other"
+            />
+          </RadioGroup>
+        </FormControl>
+      </div>
+      <Button
+        className={classes.buttonBase}
+        type="submit"
+        disabled={isInvalid}
+        color="primary"
+        variant="contained"
+      >
+        Sign Up
+      </Button>
+      <p className={classes.error}>{error}</p>
+    </form>
+  );
 };
 
-const SignUpForm: React.FC = () => {
-  const [formState, setFormState] = useState<FormState>(initialFormState);
-  const firebase = useContext(FirebaseContext);
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    const { fullName, email, passwordOne, birthday, gender } = formState;
-    if (firebase) {
-      firebase
-        .createUser(email, passwordOne)
-        .then((authUser) => {
-          if (authUser.user) {
-            const user: User = {
-              fullName: fullName,
-              email: email,
-              birthday: birthday,
-              gender: gender,
-              followings: [],
-              followers: [],
-              profilePicURL: '',
-              aboutMe: '',
-            };
-            return firebase.user(authUser.user.uid).set(user);
-          }
-        })
-        .catch((error: FirebaseError) => {
-          setFormState((previousState) => {
-            return { ...previousState, error: error.message };
-          });
-        });
-    }
-
-    event.preventDefault();
-  };
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    event.persist(); //needed to be used withing 'setState()'
-
-    setFormState((previousState) => {
-      return { ...previousState, [event.target.name]: event.target.value };
-    });
-  };
-
-  const {
-    fullName,
-    email,
-    passwordOne,
-    passwordTwo,
-    error,
-    birthday,
-    gender,
-  } = formState;
-
-  if (!firebase) return <h1>{FIREBASE_NOT_ACCESSIBLE}</h1>;
-  return (
-    <SignUpFormStyle
-      fullName={fullName}
-      email={email}
-      passwordOne={passwordOne}
-      passwordTwo={passwordTwo}
-      birthday={birthday}
-      onChange={onChange}
-      onSubmit={onSubmit}
-      gender={gender}
-      error={error}
-    />
-  );
+SignUpForm.propTypes = {
+  fullName: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  error: PropTypes.string.isRequired,
+  passwordOne: PropTypes.string.isRequired,
+  passwordTwo: PropTypes.string.isRequired,
+  birthday: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  gender: PropTypes.string.isRequired,
 };
 
 export default SignUpForm;

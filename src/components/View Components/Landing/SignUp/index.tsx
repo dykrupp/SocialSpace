@@ -1,5 +1,5 @@
 import React from 'react';
-import SignUpForm from './SignUpForm';
+import SignUpFormContainer from './SignUpFormContainer';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -22,7 +22,7 @@ const SignUpPage: React.FC = () => {
         Create an Account
       </Typography>
       <Typography variant="h6">It&apos;s quick and easy.</Typography>
-      <SignUpForm />
+      <SignUpFormContainer />
     </div>
   );
 };

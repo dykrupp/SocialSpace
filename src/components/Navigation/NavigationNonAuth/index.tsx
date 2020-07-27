@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import SignInForm from '../NavigationNonAuth/SignInForm';
+import SignInFormContainer from './SignInFormContainer';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../../constants/routes';
 import { makeStyles } from '@material-ui/core';
@@ -47,7 +47,7 @@ const NavigationNonAuth: React.FC = () => {
               SocialSpace
             </Link>
           </Typography>
-          <SignInForm />
+          <SignInFormContainer />
         </Toolbar>
       </AppBar>
     </div>

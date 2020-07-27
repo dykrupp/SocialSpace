@@ -1,5 +1,5 @@
 import React from 'react';
-import ForgotPasswordForm from './ForgotPasswordForm';
+import ForgotPasswordFormContainer from './ForgotPasswordFormContainer';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { CustomDivider } from '../../Reusable Components/CustomDivider/index';
@@ -29,7 +29,7 @@ const ForgotPassword: React.FC = () => {
       <div className={classes.dividerDiv}>
         <CustomDivider />
       </div>
-      <ForgotPasswordForm />
+      <ForgotPasswordFormContainer />
     </div>
   );
 };

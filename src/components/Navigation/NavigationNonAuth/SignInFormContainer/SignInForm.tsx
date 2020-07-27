@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ForgotPasswordLink from './ForgotPasswordLink';
 
-interface FormStyleProps {
+interface SignInFormProps {
   email: string;
   password: string;
   error: string;
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const SignInFormStyle: React.FC<FormStyleProps> = ({
+const SignInForm: React.FC<SignInFormProps> = ({
   email,
   password,
   error,
@@ -95,7 +95,7 @@ const SignInFormStyle: React.FC<FormStyleProps> = ({
   );
 };
 
-SignInFormStyle.propTypes = {
+SignInForm.propTypes = {
   email: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   error: PropTypes.string.isRequired,
@@ -103,4 +103,4 @@ SignInFormStyle.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default SignInFormStyle;
+export default SignInForm;

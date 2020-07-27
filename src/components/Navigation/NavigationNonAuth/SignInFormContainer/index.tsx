@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { FirebaseError } from 'firebase';
 import { FirebaseContext } from '../../../Firebase/context';
 import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
-import SignInFormStyle from './SignInFormStyle';
+import SignInForm from './SignInForm';
 
 interface FormState {
   email: string;
@@ -16,7 +16,7 @@ const initialFormState: FormState = {
   error: '',
 };
 
-const SignInForm: React.FC = () => {
+const SignInFormContainer: React.FC = () => {
   const [formState, setFormState] = useState<FormState>(initialFormState);
   const firebase = useContext(FirebaseContext);
 
@@ -46,7 +46,7 @@ const SignInForm: React.FC = () => {
 
   if (!firebase) return <h1>{FIREBASE_NOT_ACCESSIBLE}</h1>;
   return (
-    <SignInFormStyle
+    <SignInForm
       email={email}
       password={password}
       error={error}
@@ -56,4 +56,4 @@ const SignInForm: React.FC = () => {
   );
 };
 
-export default SignInForm;
+export default SignInFormContainer;
