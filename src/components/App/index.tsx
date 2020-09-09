@@ -50,7 +50,7 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <div id="App">
-          <ScrollToTop smooth />
+          <ScrollToTop smooth color="#3f51b5" />
           <Navigation users={users} />
           <Route exact path={ROUTES.LANDING} component={Landing} />
           <Route
