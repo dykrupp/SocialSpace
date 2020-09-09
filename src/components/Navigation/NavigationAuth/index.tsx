@@ -15,10 +15,14 @@ import {
   Notification,
 } from '../../../constants/interfaces';
 
+export const headerHeight = '48px';
+
 const useStyles = makeStyles(() => ({
   mainDiv: {
     flexGrow: 1,
     minWidth: '760px',
+    display: 'flex',
+    minHeight: headerHeight,
   },
 }));
 

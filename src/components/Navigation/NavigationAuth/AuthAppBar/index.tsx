@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { SearchBar } from './SearchBar';
 import { DesktopButtonNav } from './DesktopButtonNav';
 import { UserProfileUID } from '../../../../constants/interfaces';
+import { headerHeight } from '../index';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -44,6 +45,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    height: headerHeight,
+  },
+  toolBar: {
+    minHeight: headerHeight,
   },
 }));
 
@@ -69,8 +74,8 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   const classes = useStyles();
 
   return (
-    <AppBar position="relative" className={classes.appBar}>
-      <Toolbar variant="dense">
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar className={classes.toolBar}>
         <Typography className={classes.title} variant="h6" noWrap>
           <Link
             className={classes.link}
