@@ -12,12 +12,20 @@ interface MobileMenuProps {
   mobileMenuAnchor: null | HTMLElement;
   handleMobileMenuClose: () => void;
   handleUserMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  setIsNotificationDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
+  setIsMessageDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
+  unreadNotificationCount: number;
+  unreadMessageCount: number;
 }
 
 export const MobileMenu: React.FC<MobileMenuProps> = ({
   mobileMenuAnchor,
   handleMobileMenuClose,
   handleUserMenuOpen,
+  setIsNotificationDrawerOpen,
+  setIsMessageDrawerOpen,
+  unreadNotificationCount,
+  unreadMessageCount,
 }) => {
   const isMobileMenuOpen = Boolean(mobileMenuAnchor);
   return (
@@ -29,21 +37,25 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem
+        onClick={(): void => setIsNotificationDrawerOpen((isOpen) => !isOpen)}
+      >
         <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton color="inherit">
-          <Badge badgeContent={11} color="secondary">
+          <Badge badgeContent={unreadNotificationCount} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
         <p>Notifications</p>
+      </MenuItem>
+      <MenuItem
+        onClick={(): void => setIsMessageDrawerOpen((isOpen) => !isOpen)}
+      >
+        <IconButton color="inherit">
+          <Badge badgeContent={unreadMessageCount} color="secondary">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <p>Messages</p>
       </MenuItem>
       <MenuItem onClick={handleUserMenuOpen}>
         <IconButton color="inherit">
@@ -59,4 +71,8 @@ MobileMenu.propTypes = {
   mobileMenuAnchor: PropTypes.any,
   handleMobileMenuClose: PropTypes.func.isRequired,
   handleUserMenuOpen: PropTypes.func.isRequired,
+  setIsMessageDrawerOpen: PropTypes.func.isRequired,
+  setIsNotificationDrawerOpen: PropTypes.func.isRequired,
+  unreadNotificationCount: PropTypes.number.isRequired,
+  unreadMessageCount: PropTypes.number.isRequired,
 };

@@ -10,11 +10,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { SearchBar } from './SearchBar';
 import { DesktopButtonNav } from './DesktopButtonNav';
-import {
-  UserProfileUID,
-  ChatUID,
-  Notification,
-} from '../../../../constants/interfaces';
+import { UserProfileUID } from '../../../../constants/interfaces';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -56,9 +52,9 @@ interface AuthAppBarProps {
   handleUserMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleMobileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   setIsNotificationDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
-  notifications: Notification[];
+  unreadNotificationCount: number;
+  unreadMessageCount: number;
   users: UserProfileUID[];
-  chatUIDS: ChatUID[];
 }
 
 export const AuthAppBar: React.FC<AuthAppBarProps> = ({
@@ -66,9 +62,9 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   handleUserMenuOpen,
   handleMobileMenuOpen,
   users,
-  chatUIDS,
+  unreadMessageCount,
   setIsNotificationDrawerOpen,
-  notifications,
+  unreadNotificationCount,
 }) => {
   const classes = useStyles();
 
@@ -91,8 +87,8 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
           <DesktopButtonNav
             setIsMessageDrawerOpen={setIsMessageDrawerOpen}
             handleUserMenuOpen={handleUserMenuOpen}
-            chatUIDS={chatUIDS}
-            notifications={notifications}
+            unreadMessageCount={unreadMessageCount}
+            unreadNotificationCount={unreadNotificationCount}
             setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
           />
         </div>
@@ -112,6 +108,6 @@ AuthAppBar.propTypes = {
   handleUserMenuOpen: PropTypes.func.isRequired,
   setIsNotificationDrawerOpen: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
-  chatUIDS: PropTypes.array.isRequired,
-  notifications: PropTypes.array.isRequired,
+  unreadNotificationCount: PropTypes.number.isRequired,
+  unreadMessageCount: PropTypes.number.isRequired,
 };

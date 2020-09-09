@@ -4,15 +4,16 @@ import { UserMenu } from './UserMenu';
 import { MobileMenu } from './MobileMenu';
 import { MessageDrawer } from './MessageDrawer';
 import { AuthAppBar } from './AuthAppBar';
+import PropTypes from 'prop-types';
+import { FirebaseContext } from '../../Firebase/context';
+import { AuthUserContext } from '../../Authentication/AuthProvider/context';
+import { NotificationDrawer } from './NotificationDrawer/index';
+import { containsUnreadMessages } from '../../../utils/helperFunctions';
 import {
   UserProfileUID,
   ChatUID,
   Notification,
 } from '../../../constants/interfaces';
-import PropTypes from 'prop-types';
-import { FirebaseContext } from '../../Firebase/context';
-import { AuthUserContext } from '../../Authentication/AuthProvider/context';
-import { NotificationDrawer } from './NotificationDrawer/index';
 
 const useStyles = makeStyles(() => ({
   mainDiv: {
@@ -34,11 +35,13 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [chatUIDS, setChatUIDS] = useState<ChatUID[]>([]);
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [mobileAnchor, setMobileAnchor] = useState<null | HTMLElement>(null);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(
     false
   );
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-  const [mobileAnchor, setMobileAnchor] = useState<null | HTMLElement>(null);
 
   const handleMobileMenuClose = (): void => {
     setMobileAnchor(null);
@@ -56,6 +59,21 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
     setMenuAnchor(null);
     handleMobileMenuClose();
   };
+
+  useEffect(() => {
+    if (!authUser) return;
+    setUnreadMessageCount(() => {
+      let count = 0;
+      chatUIDS.forEach((chatUID) => {
+        if (containsUnreadMessages(chatUID, authUser.uid)) count++;
+      });
+      return count;
+    });
+  }, [chatUIDS, authUser]);
+
+  useEffect(() => {
+    setUnreadNotificationCount(notifications.filter((x) => !x.read).length);
+  }, [notifications]);
 
   useEffect(() => {
     if (firebase) {
@@ -115,12 +133,12 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
   return (
     <div className={classes.mainDiv}>
       <AuthAppBar
-        chatUIDS={chatUIDS}
+        unreadMessageCount={unreadMessageCount}
         users={users}
         setIsMessageDrawerOpen={setIsMessageDrawerOpen}
         handleMobileMenuOpen={handleMobileMenuOpen}
         handleUserMenuOpen={handleUserMenuOpen}
-        notifications={notifications}
+        unreadNotificationCount={unreadNotificationCount}
         setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
       />
       <MessageDrawer
@@ -136,9 +154,13 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
         users={users}
       />
       <MobileMenu
+        unreadMessageCount={unreadMessageCount}
         mobileMenuAnchor={mobileAnchor}
         handleUserMenuOpen={handleUserMenuOpen}
         handleMobileMenuClose={handleMobileMenuClose}
+        unreadNotificationCount={unreadNotificationCount}
+        setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
+        setIsMessageDrawerOpen={setIsMessageDrawerOpen}
       />
       <UserMenu menuAnchor={menuAnchor} handleMenuClose={handleUserMenuClose} />
     </div>
