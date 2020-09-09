@@ -14,6 +14,7 @@ import { convertToUserProfile } from '../../utils/helperFunctions';
 import Landing from '../View Components/Landing';
 import ForgotPassword from '../View Components/ForgotPassword';
 import Settings from '../View Components/Settings';
+import ScrollToTop from 'react-scroll-to-top';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<UserProfileUID[]>([]);
@@ -49,6 +50,7 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <div id="App">
+          <ScrollToTop smooth />
           <Navigation users={users} />
           <Route exact path={ROUTES.LANDING} component={Landing} />
           <Route
