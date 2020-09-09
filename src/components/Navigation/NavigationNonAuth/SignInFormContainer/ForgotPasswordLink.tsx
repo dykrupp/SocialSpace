@@ -9,6 +9,7 @@ const useStyles = makeStyles(() =>
       color: 'white',
       opacity: '.8',
       outline: 0,
+      textDecoration: 'none',
     },
   })
 );

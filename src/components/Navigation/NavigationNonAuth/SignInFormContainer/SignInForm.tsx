@@ -83,7 +83,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
       />
       <Button
         className={classes.buttonBase}
-        color="primary"
+        color="secondary"
         variant="contained"
         disabled={isInvalid}
         type="submit"
