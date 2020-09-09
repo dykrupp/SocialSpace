@@ -80,7 +80,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   if (isLoading)
     return (
       <div className={classes.loadingDiv}>
-        <IsLoading text="Loading" />
+        <IsLoading text="Authenticating" />
       </div>
     );
   else

@@ -6,13 +6,11 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '200px',
     margin: '0 auto',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: '5px',
     display: 'flex',
-    flexDirection: 'column',
   },
   circularProgress: {
     marginLeft: '10px',

@@ -2,10 +2,10 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import CreatePost from './CreatePost';
 import { FirebaseContext } from '../../Firebase/context';
 import { Grid } from '@material-ui/core';
-import { IsLoading } from '../IsLoading';
 import PropTypes from 'prop-types';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import Post from './Post';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { Following } from '../../../constants/interfaces';
 import {
   Post as PostInterface,
@@ -231,8 +231,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
 
   const isAuthUsersFeed = authUser?.uid === feedUID;
 
-  if (isLoading) return <IsLoading text="Loading" />;
-  else if (!authUser || !firebase) return null;
+  if (!authUser || !firebase) return null;
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
@@ -248,11 +247,17 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ userProfile, users }) => {
             <CreatePost createdByUserUID={authUser.uid} postUserUID={feedUID} />
           )}
       </Grid>
-      {posts.map((post: PostInterface) => (
-        <Grid item key={post.dateTime}>
-          <Post post={post} users={users} />
-        </Grid>
-      ))}
+      {isLoading ? (
+        <Skeleton
+          style={{ height: '500px', margin: '5px', transform: 'none' }}
+        />
+      ) : (
+        posts.map((post: PostInterface) => (
+          <Grid item key={post.dateTime}>
+            <Post post={post} users={users} />
+          </Grid>
+        ))
+      )}
     </Grid>
   );
 };
