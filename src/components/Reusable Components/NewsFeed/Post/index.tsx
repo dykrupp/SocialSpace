@@ -106,7 +106,7 @@ const Post: React.FC<PostProps> = ({ post: userPost, users }) => {
         currentComments.sort((a, b) => {
           const secondDate = new Date(b.dateTime).valueOf();
           const firstDate = new Date(a.dateTime).valueOf();
-          return secondDate - firstDate;
+          return firstDate - secondDate;
         });
 
         numOfComments.current = currentComments.length;
