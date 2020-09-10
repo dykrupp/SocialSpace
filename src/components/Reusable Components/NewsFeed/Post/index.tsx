@@ -10,7 +10,7 @@ import {
   Post as PostInterface,
 } from '../../../../constants/interfaces';
 
-export interface PostProps {
+interface PostProps {
   post: PostInterface;
   users: UserProfileUID[];
 }

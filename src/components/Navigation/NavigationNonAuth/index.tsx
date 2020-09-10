@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../../constants/routes';
 import { makeStyles } from '@material-ui/core';
 
+export const nonAuthHeaderHeight = '82px';
+
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
@@ -15,14 +17,14 @@ const useStyles = makeStyles(() => ({
     flexGrow: 1,
   },
   appBar: {
-    height: '82px',
+    height: nonAuthHeaderHeight,
     justifyContent: 'space-evenly',
     flexDirection: 'row',
-    minWidth: '1200px',
+    minWidth: '900px',
   },
   toolBar: {
-    height: '82px',
-    width: '80%',
+    height: nonAuthHeaderHeight,
+    width: '95%',
   },
   link: {
     color: 'white',

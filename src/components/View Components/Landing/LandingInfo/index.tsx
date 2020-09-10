@@ -13,7 +13,7 @@ import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 
 const useStyles = makeStyles(() => ({
   root: {
-    marginTop: '50px',
+    marginTop: '30px',
   },
   title: {
     fontWeight: 'bold',

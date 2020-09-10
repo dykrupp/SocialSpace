@@ -22,6 +22,7 @@ const ForgotPassword: React.FC = () => {
       <Typography className={classes.title} variant="h4">
         Forgot Your Password?
       </Typography>
+      <hr style={{ width: '85%' }} />
       <ForgotPasswordFormContainer />
     </div>
   );

@@ -5,6 +5,9 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() =>
   createStyles({
+    container: {
+      width: '120px',
+    },
     link: {
       color: 'white',
       opacity: '.8',
@@ -17,7 +20,7 @@ const useStyles = makeStyles(() =>
 const ForgotPasswordLink: React.FC = () => {
   const classes = useStyles();
   return (
-    <p>
+    <p className={classes.container}>
       <Link className={classes.link} to={ROUTES.FORGOT_PASSWORD}>
         Forgot Password?
       </Link>

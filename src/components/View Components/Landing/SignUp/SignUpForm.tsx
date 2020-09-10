@@ -24,16 +24,20 @@ interface SignUpFormProps {
 const useStyles = makeStyles(() => ({
   flexRow: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: '15px',
   },
   buttonBase: {
-    marginTop: '25px',
-    width: '45%',
+    width: '200px',
     height: '50px',
   },
-  textField: {
+  leftTextField: {
     background: 'white',
+    marginRight: '5px',
+  },
+  rightTextField: {
+    background: 'white',
+    marginLeft: '5px',
   },
   radioGroup: {
     flexDirection: 'row',
@@ -74,7 +78,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           type="text"
           placeholder="Full Name"
           variant="outlined"
-          className={classes.textField}
+          className={classes.leftTextField}
         />
         <BlueOutlinedTextField
           name="email"
@@ -83,7 +87,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           type="text"
           placeholder="Email"
           variant="outlined"
-          className={classes.textField}
+          className={classes.rightTextField}
         />
       </div>
       <div className={classes.flexRow}>
@@ -94,7 +98,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           type="password"
           placeholder="Password"
           variant="outlined"
-          className={classes.textField}
+          className={classes.leftTextField}
         />
         <BlueOutlinedTextField
           name="passwordTwo"
@@ -103,7 +107,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           type="password"
           placeholder="Confirm Password"
           variant="outlined"
-          className={classes.textField}
+          className={classes.rightTextField}
         />
       </div>
       <div className={classes.flexRow}>
@@ -147,16 +151,20 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           </RadioGroup>
         </FormControl>
       </div>
-      <Button
-        className={classes.buttonBase}
-        type="submit"
-        disabled={isInvalid}
-        color="primary"
-        variant="contained"
-      >
-        Sign Up
-      </Button>
-      <p className={classes.error}>{error}</p>
+      <div className={classes.flexRow}>
+        <Button
+          className={classes.buttonBase}
+          type="submit"
+          disabled={isInvalid}
+          color="primary"
+          variant="contained"
+        >
+          Sign Up
+        </Button>
+      </div>
+      <div className={classes.flexRow}>
+        <p className={classes.error}>{error}</p>
+      </div>
     </form>
   );
 };

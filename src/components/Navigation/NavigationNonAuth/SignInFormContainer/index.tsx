@@ -3,21 +3,16 @@ import { FirebaseError } from 'firebase';
 import { FirebaseContext } from '../../../Firebase/context';
 import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
 import SignInForm from './SignInForm';
+import { SignInFormState } from '../../../../constants/interfaces';
 
-interface FormState {
-  email: string;
-  password: string;
-  error: string;
-}
-
-const initialFormState: FormState = {
+const initialFormState: SignInFormState = {
   email: '',
   password: '',
   error: '',
 };
 
 const SignInFormContainer: React.FC = () => {
-  const [formState, setFormState] = useState<FormState>(initialFormState);
+  const [formState, setFormState] = useState<SignInFormState>(initialFormState);
   const firebase = useContext(FirebaseContext);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {

@@ -15,6 +15,7 @@ import Landing from '../View Components/Landing';
 import ForgotPassword from '../View Components/ForgotPassword';
 import Settings from '../View Components/Settings';
 import ScrollToTop from 'react-scroll-to-top';
+import SignUpPage from '../View Components/Landing/SignUp';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<UserProfileUID[]>([]);
@@ -58,6 +59,7 @@ const App: React.FC = () => {
             path={ROUTES.FORGOT_PASSWORD}
             component={ForgotPassword}
           />
+          <Route exact path={ROUTES.SIGNUP} component={SignUpPage} />
           <AuthProtectedRoute
             exact
             path={ROUTES.HOME}

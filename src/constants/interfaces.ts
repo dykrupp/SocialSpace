@@ -78,6 +78,12 @@ export interface Notification {
   notificationUID: string;
 }
 
+export interface SignInFormState {
+  email: string;
+  password: string;
+  error: string;
+}
+
 enum NotificationType {
   follower = 'follower',
   like = 'like',

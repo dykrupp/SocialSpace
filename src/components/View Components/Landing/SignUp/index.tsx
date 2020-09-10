@@ -11,6 +11,7 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 }));
 
@@ -21,7 +22,9 @@ const SignUpPage: React.FC = () => {
       <Typography className={classes.title} variant="h4">
         Create an Account
       </Typography>
-      <Typography variant="h6">It&apos;s quick and easy.</Typography>
+      <Typography variant="h6" style={{ textAlign: 'center' }}>
+        It&apos;s quick and easy.
+      </Typography>
       <SignUpFormContainer />
     </div>
   );

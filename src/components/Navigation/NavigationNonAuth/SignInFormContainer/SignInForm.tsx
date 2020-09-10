@@ -19,11 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     '& > *': {
       margin: theme.spacing(1),
-      width: '22ch',
     },
   },
   buttonBase: {
-    verticalAlign: 'bottom',
+    width: '175px',
   },
   textField: {
     marginTop: '-10px',
