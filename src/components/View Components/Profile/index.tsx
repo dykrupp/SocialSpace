@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
@@ -21,6 +22,10 @@ interface ProfileProps {
   users: UserProfileUID[];
 }
 
+interface ParamTypes {
+  userUID: string;
+}
+
 const useStyles = makeStyles(() => ({
   gridContainer: {
     padding: '20px',
@@ -32,7 +37,7 @@ const useStyles = makeStyles(() => ({
 
 export const Profile: React.FC<ProfileProps> = ({ users }) => {
   const classes = useStyles();
-  const { userUID } = useParams();
+  const { userUID } = useParams<ParamTypes>();
   const authUser = useContext(AuthUserContext);
   const [tabIndex, setTabIndex] = useState(0);
   const userProfile = users.find((x) => x.uid === userUID);

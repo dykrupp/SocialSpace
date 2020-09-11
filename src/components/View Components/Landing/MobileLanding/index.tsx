@@ -52,6 +52,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     marginTop: '15px',
+    marginBottom: '15px',
   },
 }));
 
