@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -146,7 +147,7 @@ export const MobileLanding: React.FC = () => {
           className={classes.createAccountButton}
           color="primary"
           variant="contained"
-          onClick={(e): void => history.push(ROUTES.SIGNUP)}
+          onClick={(): void => history.push(ROUTES.SIGNUP)}
         >
           Create Account
         </Button>

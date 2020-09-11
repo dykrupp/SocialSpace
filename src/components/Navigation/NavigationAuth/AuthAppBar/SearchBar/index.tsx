@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useState, useContext } from 'react';
 import { fade, makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -46,10 +47,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ users }) => {
   const [searchString, setSearchString] = useState('');
   const authUser = useContext(AuthUserContext);
 
-  const handleSearchChange = (
-    event: React.ChangeEvent<{}>,
-    value: string
-  ): void => {
+  const handleSearchChange = (value: string): void => {
     setSearchString(value);
   };
 
@@ -79,7 +77,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ users }) => {
         }}
         autoComplete={true}
         inputValue={searchString}
-        onInputChange={handleSearchChange}
+        onInputChange={(_event, value) => handleSearchChange(value)}
         onKeyPress={(event: React.KeyboardEvent<HTMLDivElement>): void => {
           if (event.key === 'Enter') onSearchSubmit();
         }}

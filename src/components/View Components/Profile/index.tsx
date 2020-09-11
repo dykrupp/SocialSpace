@@ -42,10 +42,7 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const userProfile = users.find((x) => x.uid === userUID);
 
-  const handleChange = (
-    event: React.ChangeEvent<{}>,
-    newValue: number
-  ): void => {
+  const handleChange = (newValue: number): void => {
     setTabIndex(newValue);
   };
 
@@ -64,7 +61,7 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
             <AppBar position="static" color="default">
               <Tabs
                 value={tabIndex}
-                onChange={handleChange}
+                onChange={(_event, value: number) => handleChange(value)}
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"

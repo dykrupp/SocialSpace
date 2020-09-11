@@ -48,6 +48,7 @@ export const convertToPosts = (
 };
 
 export const convertToUserProfile = (
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   object: any,
   userUID: string
 ): UserProfileUID => {
