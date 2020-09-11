@@ -163,7 +163,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         </Button>
       </div>
       <div className={classes.flexRow}>
-        <p className={classes.error}>{error}</p>
+        <p className={classes.error}>
+          {error ? error.concat(' Please try again!') : ''}
+        </p>
       </div>
     </form>
   );

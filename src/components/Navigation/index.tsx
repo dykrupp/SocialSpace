@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
   mobileLink: {
     textDecoration: 'none',
     outline: 0,
-    color: 'black',
+    color: 'rgb(48, 63, 159)',
   },
 }));
 
@@ -26,13 +26,13 @@ interface NavigationProps {
 }
 
 const Navigation: React.FC<NavigationProps> = ({ users }) => {
-  const isMobile = useMobileComponents();
+  const renderMobileComponents = useMobileComponents();
 
   return (
     <div>
       {useContext(AuthUserContext) ? (
         <NavigationAuthContainer users={users} />
-      ) : isMobile ? (
+      ) : renderMobileComponents ? (
         <MobileNonAuth />
       ) : (
         <NavigationNonAuth />

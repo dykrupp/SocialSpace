@@ -7,14 +7,26 @@ import { OutlinedTextField } from '../../Reusable Components/OutlinedTextField/i
 const useStyles = makeStyles(() => ({
   error: {
     color: 'red',
+    textAlign: 'center',
+  },
+  metaInfo: {
+    textAlign: 'center',
   },
   inputDiv: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    maxWidth: '75%',
+    margin: '0 auto',
+    alignItems: 'center',
+  },
+  input: {
+    width: '65%',
   },
   resetPassButton: {
     marginTop: '20px',
+    height: '50px',
+    width: '200px',
   },
 }));
 
@@ -36,7 +48,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const isInvalid = email === '';
   return (
     <form onSubmit={onSubmit} noValidate>
-      <p>
+      <p className={classes.metaInfo}>
         Please enter the email associated with your account. You will receive an
         email shortly.
       </p>

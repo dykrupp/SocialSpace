@@ -49,7 +49,9 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   return (
     <form className={classes.root} onSubmit={onSubmit} noValidate>
-      <p className={classes.textAlign}>{error}</p>
+      <p className={classes.textAlign}>
+        {error ? error.concat(' Please try again!') : ''}
+      </p>
       <TextField
         name="email"
         className={classes.textField}

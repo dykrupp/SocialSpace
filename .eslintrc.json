@@ -15,8 +15,7 @@
     },
     "rules": {
       "prettier/prettier": ["error", { "singleQuote": true }],
-      "no-use-before-define": ["off"],
-      "@typescript-eslint/no-use-before-define" : [1]
+      "no-use-before-define": "off"
     },
     "settings": {
       "react": {
