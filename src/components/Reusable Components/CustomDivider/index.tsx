@@ -1,14 +1,21 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
-const useStyles = makeStyles({
-  root: {
-    borderColor: 'rgba(0, 54, 189, 0.7)',
-    width: '100%',
-  },
-});
+interface CustomDividerProps {
+  dividerWidth?: string;
+}
 
-export const CustomDivider = (): JSX.Element => {
-  const classes = useStyles();
-  return <hr className={classes.root} />;
+export const CustomDivider: React.FC<CustomDividerProps> = ({
+  dividerWidth,
+}) => (
+  <hr
+    style={{
+      borderColor: 'rgba(0, 54, 189, 0.7)',
+      width: dividerWidth ? dividerWidth : '100%',
+    }}
+  />
+);
+
+CustomDivider.propTypes = {
+  dividerWidth: PropTypes.string,
 };

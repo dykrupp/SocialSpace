@@ -10,6 +10,7 @@ import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
 import { BlueOutlinedTextField } from '../../../Reusable Components/OutlinedTextField';
 import { FirebaseError } from 'firebase';
 import { useHistory } from 'react-router-dom';
+import { CustomDivider } from '../../../Reusable Components/CustomDivider';
 
 const useStyles = makeStyles(() => ({
   mobileLink: {
@@ -37,12 +38,6 @@ const useStyles = makeStyles(() => ({
   errorText: {
     textAlign: 'center',
     color: 'red',
-  },
-  divider: {
-    width: '45%',
-    height: '1px',
-    color: '#3f51b5',
-    opacity: 0.8,
   },
   createAccountButton: {
     height: '50px',
@@ -142,9 +137,9 @@ export const MobileLanding: React.FC = () => {
           </p>
         </Grid>
         <Grid item className={classes.gridItem} style={{ marginTop: '-15px' }}>
-          <hr className={classes.divider} />
+          <CustomDivider dividerWidth="45%" />
           <p>or</p>
-          <hr className={classes.divider} />
+          <CustomDivider dividerWidth="45%" />
         </Grid>
         <Grid item className={classes.gridItem}>
           <Button
