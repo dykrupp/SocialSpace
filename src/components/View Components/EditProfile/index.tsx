@@ -28,7 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '150px',
   },
   button: {
-    width: '150px',
+    maxWidth: '150px',
+    width: '100%',
+    margin: '5px',
+    height: '45px',
   },
   buttonGrid: {
     display: 'flex',
@@ -193,7 +196,7 @@ export const EditProfile: React.FC = () => {
               disabled={profilePicture === null && aboutMe === ''}
               onClick={onSaveClick}
             >
-              Save Changes
+              Save
             </Button>
           </Grid>
         </Grid>
