@@ -76,7 +76,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ users }) => {
         }}
         autoComplete={true}
         inputValue={searchString}
-        onInputChange={(_event, value) => handleSearchChange(value)}
+        onInputChange={(_event, value): void => handleSearchChange(value)}
         onKeyPress={(event: React.KeyboardEvent<HTMLDivElement>): void => {
           if (event.key === 'Enter') onSearchSubmit();
         }}

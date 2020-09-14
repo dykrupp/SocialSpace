@@ -60,7 +60,7 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
             <AppBar position="static" color="default">
               <Tabs
                 value={tabIndex}
-                onChange={(_event, value: number) => handleChange(value)}
+                onChange={(_event, value: number): void => handleChange(value)}
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"

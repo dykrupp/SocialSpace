@@ -48,6 +48,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: '19px',
   },
   buttonRow: {
     display: 'flex',

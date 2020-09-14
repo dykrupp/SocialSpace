@@ -131,9 +131,15 @@ export const Chat: React.FC<ChatProps> = ({ chatUID, users }) => {
   return (
     <div className={classes.chatDiv}>
       <List className={classes.chat}>
-        {messages.map((message, index) => (
-          <ChatBubble message={message} users={users} key={index} />
-        ))}
+        {messages.length === 0 ? (
+          <Typography variant="h6" className={classes.textAlign}>
+            Start a conversation by sending a message below
+          </Typography>
+        ) : (
+          messages.map((message, index) => (
+            <ChatBubble message={message} users={users} key={index} />
+          ))
+        )}
         <div ref={messagesEndRef} />
       </List>
       <CustomDivider />

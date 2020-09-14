@@ -11,6 +11,8 @@ import {
   calcTimeSince,
 } from '../../../../../../utils/helperFunctions';
 import { ListItem, ListItemText } from '@material-ui/core';
+import * as ROUTES from '../../../../../../constants/routes';
+import { useHistory } from 'react-router-dom';
 
 const borderRadius = '5px';
 
@@ -51,6 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   messageInfo: {
     marginBottom: '-5px',
+    color: 'rgb(0, 0, 238)',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
 }));
 
@@ -63,6 +69,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, users }) => {
   const authUser = useContext(AuthUserContext);
   const isCurrentUser = authUser?.uid === message.userUID;
   const classes = useStyles();
+  const history = useHistory();
 
   const getName = (userUID: string): string => {
     const user = users.find((x) => x.uid === userUID);
@@ -79,6 +86,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, users }) => {
         className={classes.messageInfo}
         primary={getName(message.userUID)}
         secondary={calcTimeSince(Date.parse(message.dateTime))}
+        onClick={(): void =>
+          history.push(`${ROUTES.PROFILE}/${message.userUID}`)
+        }
       />
       <div
         className={`${classes.bubbleContainer} ${
