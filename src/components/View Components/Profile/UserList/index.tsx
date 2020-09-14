@@ -12,6 +12,7 @@ const useStyles = makeStyles(() => ({
   userInfoContainer: {
     alignContent: 'center',
     margin: '10px',
+    width: '100%',
   },
   paper: {
     marginTop: '25px',

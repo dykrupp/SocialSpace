@@ -5,11 +5,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { UserProfileUID } from '../../../../../constants/interfaces';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { useMobileComponents } from '../../../../../utils/hooks/useMobileComponents';
 
 const useStyles = makeStyles(() => ({
   link: {
     textDecoration: 'none',
-    fontSize: '25px',
     marginLeft: '10px',
   },
   mainDiv: {
@@ -35,6 +35,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   setTabIndex,
 }) => {
   const classes = useStyles();
+  const isMobile = useMobileComponents();
 
   if (!userProfile) return null;
   const { fullName, profilePicURL, uid } = userProfile;
@@ -48,6 +49,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       )}
       <Link
         className={classes.link}
+        style={{ fontSize: isMobile ? '20px' : '25px' }}
         to={`${ROUTES.PROFILE}/${uid}`}
         onClick={(): void => setTabIndex(0)}
       >

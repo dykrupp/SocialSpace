@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import { UserProfileUID } from '../../../constants/interfaces';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
-import { AccountInfo } from './AccountInfo';
+import { AccountInfoContainer } from './AccountInfoContainer';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -16,6 +16,7 @@ import NewsFeed from '../../Reusable Components/NewsFeed';
 import { UserList } from './UserList';
 import PropTypes from 'prop-types';
 import { getFirstName } from '../../../utils/helperFunctions';
+import useResizeObserver from 'use-resize-observer';
 
 interface ProfileProps {
   users: UserProfileUID[];
@@ -40,6 +41,7 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
   const authUser = useContext(AuthUserContext);
   const [tabIndex, setTabIndex] = useState(0);
   const userProfile = users.find((x) => x.uid === userUID);
+  const { ref, width: rootWidth } = useResizeObserver();
 
   const handleChange = (newValue: number): void => {
     setTabIndex(newValue);
@@ -48,59 +50,68 @@ export const Profile: React.FC<ProfileProps> = ({ users }) => {
   if (!userProfile || !authUser) return null;
   return (
     <div className="mainRoot">
-      <Paper elevation={3} className="mainContainer">
-        <Grid container direction="column" className={classes.gridContainer}>
-          <Grid item>
-            <AccountInfo userProfile={userProfile} />
+      <Paper elevation={3} className="mainContainer" ref={ref}>
+        {rootWidth && (
+          <Grid container direction="column" className={classes.gridContainer}>
+            <Grid item>
+              <AccountInfoContainer
+                userProfile={userProfile}
+                rootWidth={rootWidth}
+              />
+            </Grid>
+            <Grid className={classes.dividerItem} item>
+              <hr />
+            </Grid>
+            <Grid item>
+              <AppBar position="static" color="default">
+                <Tabs
+                  value={tabIndex}
+                  onChange={(_event, value: number): void =>
+                    handleChange(value)
+                  }
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="fullWidth"
+                >
+                  <Tab icon={<ReceiptIcon />} label="Posts" />
+                  <Tab icon={<PeopleIcon />} label="Following" />
+                  <Tab icon={<PersonPinIcon />} label="Followers" />
+                </Tabs>
+              </AppBar>
+            </Grid>
+            {tabIndex === 0 && (
+              <NewsFeed userProfile={userProfile} users={users} />
+            )}
+            {tabIndex === 1 && (
+              <UserList
+                userUIDS={
+                  userProfile.followings
+                    ? userProfile.followings.map(
+                        (following) => following.userUID
+                      )
+                    : []
+                }
+                users={users}
+                setTabIndex={setTabIndex}
+                emptyListString="Discover new friends with SocialSpace Search!"
+              />
+            )}
+            {tabIndex === 2 && (
+              <UserList
+                userUIDS={
+                  userProfile.followers
+                    ? userProfile.followers.map((follower) => follower.userUID)
+                    : []
+                }
+                users={users}
+                setTabIndex={setTabIndex}
+                emptyListString={`${getFirstName(
+                  userProfile.fullName
+                )} could use some friends...`}
+              />
+            )}
           </Grid>
-          <Grid className={classes.dividerItem} item>
-            <hr />
-          </Grid>
-          <Grid item>
-            <AppBar position="static" color="default">
-              <Tabs
-                value={tabIndex}
-                onChange={(_event, value: number): void => handleChange(value)}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-              >
-                <Tab icon={<ReceiptIcon />} label="Posts" />
-                <Tab icon={<PeopleIcon />} label="Following" />
-                <Tab icon={<PersonPinIcon />} label="Followers" />
-              </Tabs>
-            </AppBar>
-          </Grid>
-          {tabIndex === 0 && (
-            <NewsFeed userProfile={userProfile} users={users} />
-          )}
-          {tabIndex === 1 && (
-            <UserList
-              userUIDS={
-                userProfile.followings
-                  ? userProfile.followings.map((following) => following.userUID)
-                  : []
-              }
-              users={users}
-              setTabIndex={setTabIndex}
-              emptyListString="Discover new friends with SocialSpace Search!"
-            />
-          )}
-          {tabIndex === 2 && (
-            <UserList
-              userUIDS={
-                userProfile.followers
-                  ? userProfile.followers.map((follower) => follower.userUID)
-                  : []
-              }
-              users={users}
-              setTabIndex={setTabIndex}
-              emptyListString={`${getFirstName(
-                userProfile.fullName
-              )} could use some friends...`}
-            />
-          )}
-        </Grid>
+        )}
       </Paper>
     </div>
   );

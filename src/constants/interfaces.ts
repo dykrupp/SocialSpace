@@ -84,6 +84,15 @@ export interface SignInFormState {
   error: string;
 }
 
+export interface AccountInfoProps {
+  userProfile: UserProfileUID;
+  isUsersProfile: boolean;
+  isFollowingUser: boolean;
+  followUser: () => void;
+  unfollowUser: () => void;
+  rootWidth: number;
+}
+
 enum NotificationType {
   follower = 'follower',
   like = 'like',

@@ -1,15 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { UserProfileUID } from '../../../../constants/interfaces';
+import { AccountInfoProps } from '../../../../constants/interfaces';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getFirstName } from '../../../../utils/helperFunctions';
-import { FirebaseContext } from '../../../Firebase/context';
-import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { useHistory } from 'react-router';
 import * as ROUTES from '../../../../constants/routes';
 import { Typography } from '@material-ui/core';
@@ -20,11 +18,9 @@ const useStyles = makeStyles(() => ({
   },
   aboutMe: {
     display: 'flex',
-    justifyContent: 'center',
     overflowWrap: 'break-word',
     textAlign: 'center',
-    justifySelf: 'center',
-    margin: '0 auto',
+    width: '585px',
     flexDirection: 'column',
   },
   profileImage: {
@@ -50,6 +46,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
+    textAlign: 'center',
   },
   subHeading: {
     marginBottom: '-1px',
@@ -59,71 +56,24 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
-  aboutMeText: {
-    margin: '10px',
-  },
 }));
 
-interface AccountInfoProps {
-  userProfile: UserProfileUID;
-}
-
-export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
+export const AccountInfo: React.FC<AccountInfoProps> = ({
+  userProfile,
+  isUsersProfile,
+  isFollowingUser,
+  followUser,
+  unfollowUser,
+}) => {
   const classes = useStyles();
-  const firebase = useContext(FirebaseContext);
-  const authUser = useContext(AuthUserContext);
-  const [isFollowingUser, setIsFollowingUser] = useState(false);
   const history = useHistory();
-  let followerKey = '';
-  let followingKey = '';
-
-  const followUser = (): void => {
-    if (authUser) {
-      firebase
-        ?.followers(userProfile.uid)
-        .push({ userUID: authUser.uid })
-        .then((ref) => {
-          followerKey = ref.key ? ref.key : '';
-          setIsFollowingUser(true);
-        });
-
-      firebase
-        ?.followings(authUser.uid)
-        .push({ userUID: userProfile.uid })
-        .then((ref) => {
-          followingKey = ref.key ? ref.key : '';
-        });
-    }
-  };
-
-  const unFollowUser = (): void => {
-    if (authUser && firebase) {
-      firebase
-        .follower(userProfile.uid, followerKey)
-        .remove()
-        .then(() => setIsFollowingUser(false));
-
-      firebase.following(authUser.uid, followingKey).remove();
-    }
-  };
-
-  useEffect(() => {
-    if (authUser && userProfile && userProfile.followers) {
-      setIsFollowingUser(
-        userProfile.followers.some((x) => x.userUID === authUser.uid)
-      );
-    }
-  }, [authUser, userProfile]);
-
-  const isUsersProfile = authUser ? authUser.uid === userProfile.uid : false;
 
   return (
     <div className={classes.flex}>
       <div className={classes.accountImageColumn}>
-        {userProfile.profilePicURL === '' && (
+        {userProfile.profilePicURL === '' ? (
           <AccountCircle className={classes.profileImage} />
-        )}
-        {userProfile.profilePicURL !== '' && (
+        ) : (
           <img
             src={userProfile.profilePicURL}
             className={classes.profileImage}
@@ -153,7 +103,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
           <Button
             color="secondary"
             variant="contained"
-            onClick={(): void => unFollowUser()}
+            onClick={(): void => unfollowUser()}
           >
             Unfollow
           </Button>
@@ -200,7 +150,7 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
         </div>
         <div className={classes.aboutMe}>
           <h2 className={classes.subHeading}>About Me:</h2>
-          <Typography className={classes.aboutMeText} variant="h6">
+          <Typography variant="h6">
             {`${
               userProfile.aboutMe === ''
                 ? `We don't know anything about ${getFirstName(
@@ -217,4 +167,8 @@ export const AccountInfo: React.FC<AccountInfoProps> = ({ userProfile }) => {
 
 AccountInfo.propTypes = {
   userProfile: PropTypes.any.isRequired,
+  isUsersProfile: PropTypes.bool.isRequired,
+  isFollowingUser: PropTypes.bool.isRequired,
+  followUser: PropTypes.func.isRequired,
+  unfollowUser: PropTypes.func.isRequired,
 };
