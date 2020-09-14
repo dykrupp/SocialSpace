@@ -43,7 +43,8 @@ const postStyles = makeStyles(() => ({
   marginLeft: {
     marginLeft: '20px',
   },
-  imageMaxHeigt: {
+  postImage: {
+    maxWidth: '100%',
     maxHeight: '250px',
   },
 }));
@@ -108,11 +109,7 @@ export const PostItem: React.FC<PostStyleProps> = ({
         </Grid>
         <Grid item xs={12} className={classes.centeredRow}>
           {media !== '' && (
-            <img
-              className={classes.imageMaxHeigt}
-              src={media}
-              alt="postedMedia"
-            />
+            <img className={classes.postImage} src={media} alt="postedMedia" />
           )}
         </Grid>
         <Grid item xs={12} className={classes.centeredRow}>

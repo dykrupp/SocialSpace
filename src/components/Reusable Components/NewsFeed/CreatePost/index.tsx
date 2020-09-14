@@ -55,7 +55,8 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
   },
   postButton: {
-    width: '40%',
+    maxWidth: '300px',
+    width: '100%',
   },
   image: {
     height: 'auto',

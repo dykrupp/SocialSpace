@@ -34,6 +34,17 @@ const headerStyles = makeStyles(() => ({
     height: '55px',
     borderRadius: '50%',
   },
+  timeAgo: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'flex-end',
+    fontSize: '12px',
+    marginTop: '-10px',
+    marginBottom: '-10px',
+  },
+  deletePostButton: {
+    marginLeft: 'auto',
+  },
 }));
 
 interface HeaderProps {
@@ -56,29 +67,35 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <Grid item container xs={12} className={classes.gridRow}>
-      <div className={classes.profileInfo}>
-        {profilePicURL === '' && (
-          <AccountCircle className={classes.accountIconSize} />
-        )}
-        {profilePicURL !== '' && (
-          <img
-            src={profilePicURL}
-            className={classes.profileImage}
-            alt="Profile"
-          />
-        )}
-        <Link className={classes.link} to={`${ROUTES.PROFILE}/${userUID}`}>
-          {fullName}
-        </Link>
-      </div>
-      <p>{calcTimeSince(Date.parse(dateTime))}</p>
-      {fullName === authUser?.fullName && (
-        <Tooltip title="Delete Post">
-          <IconButton component="label" onClick={deletePost}>
-            <DeleteIcon color="primary" />
-          </IconButton>
-        </Tooltip>
-      )}
+      <p className={classes.timeAgo}>{calcTimeSince(Date.parse(dateTime))}</p>
+      <Grid item xs={12}>
+        <div className={classes.profileInfo}>
+          {profilePicURL === '' && (
+            <AccountCircle className={classes.accountIconSize} />
+          )}
+          {profilePicURL !== '' && (
+            <img
+              src={profilePicURL}
+              className={classes.profileImage}
+              alt="Profile"
+            />
+          )}
+          <Link className={classes.link} to={`${ROUTES.PROFILE}/${userUID}`}>
+            {fullName}
+          </Link>
+          {fullName === authUser?.fullName && (
+            <Tooltip title="Delete Post">
+              <IconButton
+                component="label"
+                onClick={deletePost}
+                className={classes.deletePostButton}
+              >
+                <DeleteIcon color="primary" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
+      </Grid>
     </Grid>
   );
 };

@@ -20,7 +20,6 @@ const useStyles = makeStyles(() => ({
     height: nonAuthHeaderHeight,
     justifyContent: 'space-evenly',
     flexDirection: 'row',
-    minWidth: '900px',
   },
   toolBar: {
     height: nonAuthHeaderHeight,
