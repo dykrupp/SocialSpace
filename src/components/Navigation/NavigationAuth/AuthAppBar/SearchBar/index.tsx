@@ -19,8 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     height: '35px',
-    marginRight: theme.spacing(3),
-    marginLeft: theme.spacing(3),
     maxWidth: '500px',
     width: '100%',
     display: 'flex',

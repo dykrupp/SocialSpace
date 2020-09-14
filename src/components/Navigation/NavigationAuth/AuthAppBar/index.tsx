@@ -5,13 +5,16 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import HomeIcon from '@material-ui/icons/Home';
 import * as ROUTES from '../../../../constants/routes';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { SearchBar } from './SearchBar';
 import { DesktopButtonNav } from './DesktopButtonNav';
 import { UserProfileUID } from '../../../../constants/interfaces';
 import { headerHeight } from '../index';
+import { useMobileComponents } from '../../../../utils/hooks/useMobileComponents';
+import { Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -25,18 +28,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
   },
   sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-      width: '200px',
-      justifyContent: 'center',
-    },
+    display: 'flex',
+    width: '200px',
+    justifyContent: 'center',
   },
   sectionMobile: {
     display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
+    marginRight: '-15px',
   },
   link: {
     color: 'white',
@@ -49,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolBar: {
     minHeight: headerHeight,
+  },
+  homeButton: {
+    marginLeft: '-15px',
   },
 }));
 
@@ -72,36 +73,53 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   unreadNotificationCount,
 }) => {
   const classes = useStyles();
+  const isMobile = useMobileComponents();
+  const history = useHistory();
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar className={classes.toolBar}>
-        <Typography className={classes.title} variant="h6" noWrap>
-          <Link
-            className={classes.link}
-            title="Go to SocialSpace Home"
-            to={ROUTES.HOME}
-          >
-            SocialSpace
-          </Link>
-        </Typography>
+        {isMobile ? (
+          <Tooltip title="Go to SocialSpace Home">
+            <IconButton
+              className={classes.homeButton}
+              onClick={(): void => history.push(ROUTES.HOME)}
+              color="inherit"
+            >
+              <HomeIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Typography className={classes.title} variant="h6" noWrap>
+            <Link
+              className={classes.link}
+              title="Go to SocialSpace Home"
+              to={ROUTES.HOME}
+            >
+              SocialSpace
+            </Link>
+          </Typography>
+        )}
         <div className={classes.searchBar}>
           <SearchBar users={users} />
         </div>
-        <div className={classes.sectionDesktop}>
-          <DesktopButtonNav
-            setIsMessageDrawerOpen={setIsMessageDrawerOpen}
-            handleUserMenuOpen={handleUserMenuOpen}
-            unreadMessageCount={unreadMessageCount}
-            unreadNotificationCount={unreadNotificationCount}
-            setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
-          />
-        </div>
-        <div className={classes.sectionMobile}>
-          <IconButton onClick={handleMobileMenuOpen} color="inherit">
-            <MoreIcon />
-          </IconButton>
-        </div>
+        {isMobile ? (
+          <div className={classes.sectionMobile}>
+            <IconButton onClick={handleMobileMenuOpen} color="inherit">
+              <MoreIcon />
+            </IconButton>
+          </div>
+        ) : (
+          <div className={classes.sectionDesktop}>
+            <DesktopButtonNav
+              setIsMessageDrawerOpen={setIsMessageDrawerOpen}
+              handleUserMenuOpen={handleUserMenuOpen}
+              unreadMessageCount={unreadMessageCount}
+              unreadNotificationCount={unreadNotificationCount}
+              setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
+            />
+          </div>
+        )}
       </Toolbar>
     </AppBar>
   );

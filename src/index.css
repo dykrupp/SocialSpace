@@ -5,6 +5,10 @@ body {
   height: 100%;
 }
 
+#App {
+  overflow-x: hidden;
+}
+
 .mainRoot {
   display: flex;
   justify-content: center;
