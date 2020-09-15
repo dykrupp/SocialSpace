@@ -1,0 +1,13 @@
+{
+    "name": "Social Space",
+    "short_name": "SS",
+    "icons": [
+      {
+        "src": "shareIcon.png",
+        "type": "image/png",
+        "sizes": "48x48"
+      }
+    ],
+    "author": "Dylan Krupp",
+    "description": "The social networking site that doesn't manipulate you!"
+  }

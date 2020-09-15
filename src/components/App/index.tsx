@@ -16,11 +16,13 @@ import ForgotPassword from '../View Components/ForgotPassword';
 import Settings from '../View Components/Settings';
 import ScrollToTop from 'react-scroll-to-top';
 import SignUpPage from '../View Components/Landing/SignUp';
+import { useMobileComponents } from '../../utils/hooks/useMobileComponents';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<UserProfileUID[]>([]);
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
+  const isMobile = useMobileComponents();
 
   useEffect(() => {
     const listener = firebase?.auth.onAuthStateChanged((authUser) => {
@@ -51,7 +53,11 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <div id="App">
-          <ScrollToTop smooth color="#3f51b5" />
+          <ScrollToTop
+            smooth
+            color="#3f51b5"
+            style={{ bottom: isMobile ? '100px' : '40px' }}
+          />
           <Navigation users={users} />
           <Route exact path={ROUTES.LANDING} component={Landing} />
           <Route
