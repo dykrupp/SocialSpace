@@ -5,7 +5,10 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { UserProfileUID, ChatUID } from '../../../../../utils/constants/interfaces';
+import {
+  UserProfileUID,
+  ChatUID,
+} from '../../../../../utils/constants/interfaces';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../../../Firebase/context';

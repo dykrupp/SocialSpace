@@ -110,7 +110,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
       if (picture) {
         await firebase.storage
           .ref(`users/${postUserUID}/posts/${postUID}/media`)
-          .put(picture)
+          .put(picture, { cacheControl: 'public, max-age=4000' })
           .then(async () => {
             setPicture(null);
             await setFirebasePost(postUID);

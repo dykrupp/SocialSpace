@@ -77,7 +77,7 @@ export const EditProfile: React.FC = () => {
     if (firebase && authUser && profilePicture) {
       await firebase.storage
         .ref(`users/${authUser.uid}/profilePicture`)
-        .put(profilePicture)
+        .put(profilePicture, { cacheControl: 'public, max-age=4000' })
         .then(async (taskSnapShot) => {
           await taskSnapShot.ref.getDownloadURL().then((url) => {
             firebase.user(authUser.uid).update({ profilePicURL: url });

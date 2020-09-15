@@ -5,7 +5,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { Notification, UserProfileUID } from '../../../../utils/constants/interfaces';
+import {
+  Notification,
+  UserProfileUID,
+} from '../../../../utils/constants/interfaces';
 import { CustomDivider } from '../../../Reusable Components/CustomDivider/index';
 import { NotificationList } from './NotificationList';
 import { Button, Tooltip } from '@material-ui/core';

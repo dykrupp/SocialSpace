@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Message, UserProfileUID } from '../../../../../utils/constants/interfaces';
+import {
+  Message,
+  UserProfileUID,
+} from '../../../../../utils/constants/interfaces';
 import { FirebaseContext } from '../../../../Firebase/context';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { makeStyles } from '@material-ui/core/styles';
