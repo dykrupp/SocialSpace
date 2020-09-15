@@ -6,8 +6,7 @@ import Firebase from './components/Firebase';
 import { FirebaseContext } from './components/Firebase/context';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
-//TODO -> Look into the storage bandwidth issues (We need to be caching these results so we aren't making so many requests)
+import * as serviceWorker from './serviceWorker';
 
 const customTheme = createMuiTheme({
   palette: {
@@ -42,3 +41,5 @@ ReactDOM.render(
   </ThemeProvider>,
   document.getElementById('root')
 );
+
+serviceWorker.register();

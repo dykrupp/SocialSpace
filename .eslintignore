@@ -1,3 +1,6 @@
-src/ServiceWorker.ts
+src/serviceWorker.ts
 src/**/__tests__/**
 /functions
+/src/sw-build.js
+/src/sw-custom.js
+build/
