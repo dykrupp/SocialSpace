@@ -9,7 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import {
   Notification,
   UserProfileUID,
-} from '../../../../../constants/interfaces';
+} from '../../../../../utils/constants/interfaces';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../../../Firebase/context';

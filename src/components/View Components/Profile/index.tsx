@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
-import { UserProfileUID } from '../../../constants/interfaces';
+import { UserProfileUID } from '../../../utils/constants/interfaces';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import { AccountInfoContainer } from './AccountInfoContainer';
 import Paper from '@material-ui/core/Paper';

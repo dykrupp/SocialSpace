@@ -3,9 +3,9 @@ import { AuthUserContext, AuthUser } from './context';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../Firebase/context';
 import { useHistory } from 'react-router';
-import { User } from '../../../constants/interfaces';
+import { User } from '../../../utils/constants/interfaces';
 import { makeStyles } from '@material-ui/core';
-import * as ROUTES from '../../../constants/routes';
+import * as ROUTES from '../../../utils/constants/routes';
 import { IsLoading } from '../../Reusable Components/IsLoading';
 
 const useStyles = makeStyles(() => ({

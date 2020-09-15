@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import NavigationNonAuth from './NavigationNonAuth';
 import { NavigationAuthContainer } from './NavigationAuth';
-import { UserProfileUID } from '../../constants/interfaces';
+import { UserProfileUID } from '../../utils/constants/interfaces';
 import PropTypes from 'prop-types';
 import { useMobileComponents } from '../../utils/hooks/useMobileComponents';
 import { Typography, makeStyles } from '@material-ui/core';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/constants/routes';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({

@@ -7,7 +7,7 @@ import Badge from '@material-ui/core/Badge';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../utils/constants/routes';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../../../Firebase/context';

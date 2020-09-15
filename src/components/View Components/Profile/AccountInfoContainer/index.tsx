@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { UserProfileUID } from '../../../../constants/interfaces';
+import { UserProfileUID } from '../../../../utils/constants/interfaces';
 import PropTypes from 'prop-types';
 import { FirebaseContext } from '../../../Firebase/context';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';

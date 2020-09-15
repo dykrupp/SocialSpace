@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import Post from './Post';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Following } from '../../../constants/interfaces';
+import { Following } from '../../../utils/constants/interfaces';
 import {
   Post as PostInterface,
   UserProfileUID,
-} from '../../../constants/interfaces';
+} from '../../../utils/constants/interfaces';
 import {
   addMediaUrl,
   getSortedObjects,

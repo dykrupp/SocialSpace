@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/constants/routes';
 import Navigation from '../Navigation';
 import { Home } from '../View Components/Home';
 import AuthProvider from '../Authentication/AuthProvider';
 import AuthProtectedRoute from '../Authentication/AuthProtectedRoute';
 import { Profile } from '../View Components/Profile';
 import { EditProfile } from '../View Components/EditProfile';
-import { UserProfileUID } from '../../constants/interfaces';
+import { UserProfileUID } from '../../utils/constants/interfaces';
 import { FirebaseContext } from '../Firebase/context';
 import { AuthUserContext } from '../Authentication/AuthProvider/context';
 import { convertToUserProfile } from '../../utils/helperFunctions';

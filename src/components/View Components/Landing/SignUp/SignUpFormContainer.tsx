@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { FirebaseError } from 'firebase';
 import { FirebaseContext } from '../../../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../../utils/constants/labels';
 import SignUpForm from './SignUpForm';
-import { User } from '../../../../constants/interfaces';
+import { User } from '../../../../utils/constants/interfaces';
 
 interface FormState {
   fullName: string;

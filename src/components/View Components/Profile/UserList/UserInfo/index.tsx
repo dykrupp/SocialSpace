@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../../../constants/routes';
+import * as ROUTES from '../../../../../utils/constants/routes';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { UserProfileUID } from '../../../../../constants/interfaces';
+import { UserProfileUID } from '../../../../../utils/constants/interfaces';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useMobileComponents } from '../../../../../utils/hooks/useMobileComponents';
 

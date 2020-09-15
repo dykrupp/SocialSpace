@@ -1,5 +1,5 @@
 import React from 'react';
-import { AccountInfoProps } from '../../../../constants/interfaces';
+import { AccountInfoProps } from '../../../../utils/constants/interfaces';
 import PropTypes from 'prop-types';
 import {
   Grid,
@@ -11,7 +11,7 @@ import {
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import { useHistory } from 'react-router-dom';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../utils/constants/routes';
 import { getFirstName } from '../../../../utils/helperFunctions';
 
 const useStyles = makeStyles(() => ({

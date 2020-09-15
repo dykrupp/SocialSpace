@@ -4,7 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SignInFormContainer from './SignInFormContainer';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../constants/routes';
+import * as ROUTES from '../../../utils/constants/routes';
 import { makeStyles } from '@material-ui/core';
 
 export const nonAuthHeaderHeight = '82px';

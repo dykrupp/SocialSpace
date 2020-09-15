@@ -8,7 +8,7 @@ import {
   Like,
   UserProfileUID,
   Post as PostInterface,
-} from '../../../../constants/interfaces';
+} from '../../../../utils/constants/interfaces';
 
 interface PostProps {
   post: PostInterface;

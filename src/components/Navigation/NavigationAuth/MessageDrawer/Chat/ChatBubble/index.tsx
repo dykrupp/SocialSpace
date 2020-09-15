@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Message,
   UserProfileUID,
-} from '../../../../../../constants/interfaces';
+} from '../../../../../../utils/constants/interfaces';
 import { AuthUserContext } from '../../../../../Authentication/AuthProvider/context';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -11,7 +11,7 @@ import {
   calcTimeSince,
 } from '../../../../../../utils/helperFunctions';
 import { ListItem, ListItemText } from '@material-ui/core';
-import * as ROUTES from '../../../../../../constants/routes';
+import * as ROUTES from '../../../../../../utils/constants/routes';
 import { useHistory } from 'react-router-dom';
 
 const borderRadius = '5px';

@@ -7,7 +7,7 @@ import { Tooltip } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import PropTypes from 'prop-types';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
-import * as ROUTES from '../../../../../constants/routes';
+import * as ROUTES from '../../../../../utils/constants/routes';
 import { useHistory } from 'react-router-dom';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { FirebaseContext } from '../../../../Firebase/context';

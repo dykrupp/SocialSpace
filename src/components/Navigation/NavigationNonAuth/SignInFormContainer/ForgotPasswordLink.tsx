@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../utils/constants/routes';
 import { Link } from 'react-router-dom';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 

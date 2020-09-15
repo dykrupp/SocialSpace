@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { UserInfo } from './UserInfo';
-import { UserProfileUID } from '../../../../constants/interfaces';
+import { UserProfileUID } from '../../../../utils/constants/interfaces';
 
 const useStyles = makeStyles(() => ({
   centerTextAlign: {

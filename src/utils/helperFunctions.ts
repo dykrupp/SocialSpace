@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Firebase from '../components/Firebase';
 import * as Collections from 'typescript-collections';
-import { Post, UserProfileUID, ChatUID } from '../constants/interfaces';
+import { Post, UserProfileUID, ChatUID } from './constants/interfaces';
 import { AuthUser } from '../components/Authentication/AuthProvider/context';
 
 export const calcTimeSince = (milliseconds: number): string => {
@@ -69,6 +69,7 @@ export const convertToUserProfile = (
   return userProfile;
 };
 
+//TODO -> This is the call in particular that is responsible for doing all these reads
 export const addMediaUrl = async (
   firebase: Firebase,
   userUID: string,

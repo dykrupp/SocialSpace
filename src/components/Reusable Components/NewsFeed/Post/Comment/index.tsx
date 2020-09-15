@@ -8,11 +8,11 @@ import { AuthUserContext } from '../../../../Authentication/AuthProvider/context
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../../../../../constants/routes';
+import * as ROUTES from '../../../../../utils/constants/routes';
 import {
   Comment as CommentInterface,
   UserProfileUID,
-} from '../../../../../constants/interfaces';
+} from '../../../../../utils/constants/interfaces';
 import { calcTimeSince } from '../../../../../utils/helperFunctions';
 
 interface CommentProps {

@@ -3,7 +3,7 @@ import NewsFeed from '../../Reusable Components/NewsFeed';
 import { Grid, makeStyles } from '@material-ui/core';
 import { AuthUserContext } from '../../Authentication/AuthProvider/context';
 import PropTypes from 'prop-types';
-import { UserProfileUID } from '../../../constants/interfaces';
+import { UserProfileUID } from '../../../utils/constants/interfaces';
 
 interface HomeProps {
   users: UserProfileUID[];

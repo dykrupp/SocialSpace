@@ -4,7 +4,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { UserProfileUID, ChatUID } from '../../../../constants/interfaces';
+import { UserProfileUID, ChatUID } from '../../../../utils/constants/interfaces';
 import { ChatList } from './ChatList';
 import { Chat } from './Chat';
 import { AuthUserContext } from '../../../Authentication/AuthProvider/context';

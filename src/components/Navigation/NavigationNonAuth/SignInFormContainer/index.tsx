@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { FirebaseError } from 'firebase';
 import { FirebaseContext } from '../../../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../../../constants/labels';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../../utils/constants/labels';
 import SignInForm from './SignInForm';
-import { SignInFormState } from '../../../../constants/interfaces';
+import { SignInFormState } from '../../../../utils/constants/interfaces';
 
 const initialFormState: SignInFormState = {
   email: '',

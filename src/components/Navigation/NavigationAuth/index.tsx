@@ -12,7 +12,7 @@ import {
   UserProfileUID,
   ChatUID,
   Notification,
-} from '../../../constants/interfaces';
+} from '../../../utils/constants/interfaces';
 
 export const headerHeight = '48px';
 

@@ -16,7 +16,7 @@ import {
   Like,
   Comment as CommentInterface,
   UserProfileUID,
-} from '../../../../constants/interfaces';
+} from '../../../../utils/constants/interfaces';
 import { OutlinedTextField } from '../../OutlinedTextField';
 import { areFriends } from '../../../../utils/helperFunctions';
 import AddCommentIcon from '@material-ui/icons/AddComment';

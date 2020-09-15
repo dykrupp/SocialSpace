@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { AccountInfoProps } from '../../../../constants/interfaces';
+import { AccountInfoProps } from '../../../../utils/constants/interfaces';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getFirstName } from '../../../../utils/helperFunctions';
 import { useHistory } from 'react-router';
-import * as ROUTES from '../../../../constants/routes';
+import * as ROUTES from '../../../../utils/constants/routes';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({

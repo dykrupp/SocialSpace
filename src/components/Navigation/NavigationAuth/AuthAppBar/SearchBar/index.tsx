@@ -4,9 +4,9 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
-import * as ROUTES from '../../../../../constants/routes';
+import * as ROUTES from '../../../../../utils/constants/routes';
 import { useHistory } from 'react-router-dom';
-import { UserProfileUID } from '../../../../../constants/interfaces';
+import { UserProfileUID } from '../../../../../utils/constants/interfaces';
 import PropTypes from 'prop-types';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 

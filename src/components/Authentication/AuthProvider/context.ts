@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { User } from '../../../constants/interfaces';
+import { User } from '../../../utils/constants/interfaces';
 
 export type AuthUser = (firebase.User & User) | null;
 

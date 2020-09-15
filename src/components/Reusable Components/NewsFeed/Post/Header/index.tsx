@@ -9,7 +9,7 @@ import { calcTimeSince } from '../../../../../utils/helperFunctions';
 import { AuthUserContext } from '../../../../Authentication/AuthProvider/context';
 import { Link } from 'react-router-dom';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import * as ROUTES from '../../../../../constants/routes';
+import * as ROUTES from '../../../../../utils/constants/routes';
 
 const headerStyles = makeStyles(() => ({
   link: {

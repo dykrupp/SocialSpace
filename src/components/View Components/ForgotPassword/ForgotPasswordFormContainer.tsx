@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { FirebaseContext } from '../../Firebase/context';
-import { FIREBASE_NOT_ACCESSIBLE } from '../../../constants/labels';
+import { FIREBASE_NOT_ACCESSIBLE } from '../../../utils/constants/labels';
 import { FirebaseError } from 'firebase';
 import { useHistory } from 'react-router';
-import * as ROUTES from '../../../constants/routes';
+import * as ROUTES from '../../../utils/constants/routes';
 import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface FormState {
