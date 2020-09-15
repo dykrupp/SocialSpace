@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserMenu } from './UserMenu';
 import { MobileMenu } from './MobileMenu';
 import { MessageDrawer } from './MessageDrawer';
 import { AuthAppBar } from './AuthAppBar';
@@ -38,7 +37,6 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [chatUIDS, setChatUIDS] = useState<ChatUID[]>([]);
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [mobileAnchor, setMobileAnchor] = useState<null | HTMLElement>(null);
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
@@ -52,15 +50,6 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setMobileAnchor(event.currentTarget);
-  };
-
-  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
-    setMenuAnchor(event.currentTarget);
-  };
-
-  const handleUserMenuClose = (): void => {
-    setMenuAnchor(null);
-    handleMobileMenuClose();
   };
 
   useEffect(() => {
@@ -140,7 +129,6 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
         users={users}
         setIsMessageDrawerOpen={setIsMessageDrawerOpen}
         handleMobileMenuOpen={handleMobileMenuOpen}
-        handleUserMenuOpen={handleUserMenuOpen}
         unreadNotificationCount={unreadNotificationCount}
         setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
       />
@@ -159,13 +147,11 @@ export const NavigationAuthContainer: React.FC<NavigationAuthProps> = ({
       <MobileMenu
         unreadMessageCount={unreadMessageCount}
         mobileMenuAnchor={mobileAnchor}
-        handleUserMenuOpen={handleUserMenuOpen}
         handleMobileMenuClose={handleMobileMenuClose}
         unreadNotificationCount={unreadNotificationCount}
         setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
         setIsMessageDrawerOpen={setIsMessageDrawerOpen}
       />
-      <UserMenu menuAnchor={menuAnchor} handleMenuClose={handleUserMenuClose} />
     </div>
   );
 };

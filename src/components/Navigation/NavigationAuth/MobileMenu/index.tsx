@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import PropTypes from 'prop-types';
@@ -7,11 +7,15 @@ import Badge from '@material-ui/core/Badge';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import * as ROUTES from '../../../../constants/routes';
+import { AuthUserContext } from '../../../Authentication/AuthProvider/context';
+import { useHistory } from 'react-router-dom';
+import { FirebaseContext } from '../../../Firebase/context';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 interface MobileMenuProps {
   mobileMenuAnchor: null | HTMLElement;
   handleMobileMenuClose: () => void;
-  handleUserMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   setIsNotificationDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
   setIsMessageDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
   unreadNotificationCount: number;
@@ -21,13 +25,16 @@ interface MobileMenuProps {
 export const MobileMenu: React.FC<MobileMenuProps> = ({
   mobileMenuAnchor,
   handleMobileMenuClose,
-  handleUserMenuOpen,
   setIsNotificationDrawerOpen,
   setIsMessageDrawerOpen,
   unreadNotificationCount,
   unreadMessageCount,
 }) => {
   const isMobileMenuOpen = Boolean(mobileMenuAnchor);
+  const authUser = useContext(AuthUserContext);
+  const history = useHistory();
+  const firebase = useContext(FirebaseContext);
+
   return (
     <Menu
       anchorEl={mobileMenuAnchor}
@@ -57,12 +64,28 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem onClick={handleUserMenuOpen}>
+      <MenuItem
+        onClick={(): void => {
+          history.push(`${ROUTES.PROFILE}/${authUser?.uid}`);
+        }}
+      >
         <IconButton color="inherit">
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+      {firebase && (
+        <MenuItem
+          onClick={(): void => {
+            firebase.signOut();
+          }}
+        >
+          <IconButton color="inherit">
+            <ExitToAppIcon />
+          </IconButton>
+          Logout
+        </MenuItem>
+      )}
     </Menu>
   );
 };
@@ -70,7 +93,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 MobileMenu.propTypes = {
   mobileMenuAnchor: PropTypes.any,
   handleMobileMenuClose: PropTypes.func.isRequired,
-  handleUserMenuOpen: PropTypes.func.isRequired,
   setIsMessageDrawerOpen: PropTypes.func.isRequired,
   setIsNotificationDrawerOpen: PropTypes.func.isRequired,
   unreadNotificationCount: PropTypes.number.isRequired,

@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sectionDesktop: {
     display: 'flex',
-    width: '200px',
     justifyContent: 'center',
   },
   sectionMobile: {
@@ -55,7 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface AuthAppBarProps {
   setIsMessageDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
-  handleUserMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleMobileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   setIsNotificationDrawerOpen: (isOpen: React.SetStateAction<boolean>) => void;
   unreadNotificationCount: number;
@@ -65,7 +63,6 @@ interface AuthAppBarProps {
 
 export const AuthAppBar: React.FC<AuthAppBarProps> = ({
   setIsMessageDrawerOpen,
-  handleUserMenuOpen,
   handleMobileMenuOpen,
   users,
   unreadMessageCount,
@@ -113,7 +110,6 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
           <div className={classes.sectionDesktop}>
             <DesktopButtonNav
               setIsMessageDrawerOpen={setIsMessageDrawerOpen}
-              handleUserMenuOpen={handleUserMenuOpen}
               unreadMessageCount={unreadMessageCount}
               unreadNotificationCount={unreadNotificationCount}
               setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
@@ -128,7 +124,6 @@ export const AuthAppBar: React.FC<AuthAppBarProps> = ({
 AuthAppBar.propTypes = {
   setIsMessageDrawerOpen: PropTypes.func.isRequired,
   handleMobileMenuOpen: PropTypes.func.isRequired,
-  handleUserMenuOpen: PropTypes.func.isRequired,
   setIsNotificationDrawerOpen: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
   unreadNotificationCount: PropTypes.number.isRequired,

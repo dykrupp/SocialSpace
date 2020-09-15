@@ -7,6 +7,8 @@ import { FirebaseContext } from './components/Firebase/context';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
+//TODO -> Look into the storage bandwidth issues (We need to be caching these results so we aren't making so many requests)
+
 const customTheme = createMuiTheme({
   palette: {
     background: {
