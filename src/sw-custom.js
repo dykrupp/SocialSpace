@@ -10,13 +10,12 @@ if ('function' === typeof importScripts) {
     // Disable logging
     workbox.setConfig({ debug: false });
 
-    //`generateSW` and `generateSWString` provide the option
-    // to force update an exiting service worker.
-    // Since we're using `injectManifest` to build SW,
-    // manually overriding the skipWaiting();
+    // //`generateSW` and `generateSWString` provide the option
+    // // to force update an exiting service worker.
+    // // Since we're using `injectManifest` to build SW,
+    // // manually overriding the skipWaiting();
     self.addEventListener('install', (event) => {
       self.skipWaiting();
-      if (window) window.location.reload();
     });
 
     // Manual injection point for manifest files.

@@ -68,9 +68,8 @@ function registerValidSW(swUrl: string, config?: Config) {
     .then((registration) => {
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
-        if (installingWorker == null) {
-          return;
-        }
+        if (installingWorker == null) return;
+
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
@@ -97,6 +96,10 @@ function registerValidSW(swUrl: string, config?: Config) {
                 config.onSuccess(registration);
               }
             }
+          }
+          else if (installingWorker.state === 'activated') {
+            //Needed to load our newly active custom service worker
+            window.location.reload();
           }
         };
       };
